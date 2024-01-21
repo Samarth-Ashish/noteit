@@ -23,42 +23,27 @@ class ThemeProvider extends ChangeNotifier {
   late bool isDark;
 
   ThemeData lightTheme = ThemeData(
-    brightness: Brightness.light, // LightMode
-    // colorScheme: ColorScheme.fromSwatch().copyWith(
-    //   inversePrimary: Colors.yellowAccent,
-    //   // brightness: Brightness.dark,
-    // ),
-    primarySwatch: Colors.blue,
-    //
-    // colorScheme: ColorScheme.fromSeed(
-    //   seedColor: Colors.blueAccent,
-    // ),
-    // useMaterial3: true,
-    //
+    // brightness: Brightness.light, // LightMode
+    colorScheme: ColorScheme.fromSeed(
+      seedColor: Colors.orangeAccent,
+      brightness: Brightness.light,
+    ),
+
+    useMaterial3: true,
+
     iconTheme: const IconThemeData(
-      color: Color.fromARGB(255, 193, 182, 81),
+      color: Colors.deepOrange,
     ),
 
     // scaffoldBackgroundColor: Colors.red,
   );
 
   ThemeData darkTheme_ = ThemeData(
-    brightness: Brightness.dark, // DarkMode
-    primarySwatch: Colors.blue,
-    // colorScheme: ColorScheme.fromSeed(seedColor: Colors.yellowAccent),
-    // colorScheme: ColorScheme.fromSwatch().copyWith(
-    //   inversePrimary: Colors.blueAccent,
-    //   // brightness: Brightness.dark,
-    // ),
-    // colorScheme: ColorScheme.fromSeed(
-    //   seedColor: Colors.blueAccent,
-    // ).copyWith(
-    //   brightness: Brightness.dark,
-    // ),
-    // colorScheme: ColorScheme.fromSeed(
-    //   seedColor: Colors.blueAccent,
-    // ),
-    // useMaterial3: true,
+    // brightness: Brightness.dark, // DarkMode
+    colorScheme: ColorScheme.fromSeed(
+      seedColor: Colors.lightBlue,
+      brightness: Brightness.dark,
+    ),
     iconTheme: const IconThemeData(
       color: Colors.yellow,
     ),
@@ -109,16 +94,16 @@ class _MyAppState extends State<MyApp> {
     return Consumer<ThemeProvider>(
       builder: (context, theme, _) => MaterialApp(
         title: 'Notes',
-        theme: Provider.of<ThemeProvider>(context, listen: false).lightTheme,
+        theme: Provider.of<ThemeProvider>(context, listen: false).currentTheme,
         // theme: ThemeData(
         //   colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         //   useMaterial3: true,
         // ),
-        darkTheme:
-            Provider.of<ThemeProvider>(context, listen: false).darkTheme_,
-        themeMode: Provider.of<ThemeProvider>(context, listen: false).isDark
-            ? ThemeMode.dark
-            : ThemeMode.light,
+        // darkTheme:
+        //     Provider.of<ThemeProvider>(context, listen: false).darkTheme_,
+        // themeMode: Provider.of<ThemeProvider>(context, listen: false).isDark
+        //     ? ThemeMode.dark
+        //     : ThemeMode.light,
         debugShowCheckedModeBanner: false,
         home: const MyHomePage(
           title: 'Notes',
@@ -178,11 +163,11 @@ class _MyHomePageState extends State<MyHomePage> {
           FractionallySizedBox(
             heightFactor: 0.7,
             child: Switch(
+              inactiveTrackColor: Theme.of(context).colorScheme.surface,
+              activeColor: Theme.of(context).colorScheme.surface,
               value: !Provider.of<ThemeProvider>(context, listen: false).isDark,
               onChanged: (value) => setState(() {
-                final themeProvider =
-                    Provider.of<ThemeProvider>(context, listen: false);
-                themeProvider.toggleMode();
+                Provider.of<ThemeProvider>(context, listen: false).toggleMode();
                 // print(Provider.of<ThemeProvider>(context, listen: false).isDark);
               }),
             ),
