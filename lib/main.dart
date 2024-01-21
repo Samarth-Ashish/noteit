@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'create_note.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
+
 void main() async {
   // runApp(MyApp());
   runApp(
-    MultiProvider( // create the provider
+    MultiProvider(
+      // create the provider
       providers: [
         ChangeNotifierProvider(
           create: (_) => ThemeProvider(),
@@ -16,6 +18,75 @@ void main() async {
   );
 }
 
+class ThemeProvider extends ChangeNotifier {
+  late ThemeData currentTheme;
+  late bool isDark;
+
+  ThemeData lightTheme = ThemeData(
+    brightness: Brightness.light, // LightMode
+    // colorScheme: ColorScheme.fromSwatch().copyWith(
+    //   inversePrimary: Colors.yellowAccent,
+    //   // brightness: Brightness.dark,
+    // ),
+    primarySwatch: Colors.blue,
+    //
+    // colorScheme: ColorScheme.fromSeed(
+    //   seedColor: Colors.blueAccent,
+    // ),
+    // useMaterial3: true,
+    //
+    iconTheme: const IconThemeData(
+      color: Color.fromARGB(255, 193, 182, 81),
+    ),
+
+    // scaffoldBackgroundColor: Colors.red,
+  );
+
+  ThemeData darkTheme_ = ThemeData(
+    brightness: Brightness.dark, // DarkMode
+    primarySwatch: Colors.blue,
+    // colorScheme: ColorScheme.fromSeed(seedColor: Colors.yellowAccent),
+    // colorScheme: ColorScheme.fromSwatch().copyWith(
+    //   inversePrimary: Colors.blueAccent,
+    //   // brightness: Brightness.dark,
+    // ),
+    // colorScheme: ColorScheme.fromSeed(
+    //   seedColor: Colors.blueAccent,
+    // ).copyWith(
+    //   brightness: Brightness.dark,
+    // ),
+    // colorScheme: ColorScheme.fromSeed(
+    //   seedColor: Colors.blueAccent,
+    // ),
+    // useMaterial3: true,
+    iconTheme: const IconThemeData(
+      color: Colors.yellow,
+    ),
+    // scaffoldBackgroundColor: Colors.green,
+  );
+
+  ThemeProvider() {
+    isDark = true;
+    currentTheme = darkTheme_;
+  }
+
+  void toggleMode() async {
+    isDark ? setLightMode() : setDarkmode();
+    isDark = !isDark;
+    notifyListeners();
+  }
+
+  void setLightMode() async {
+    currentTheme = lightTheme;
+    notifyListeners();
+  }
+
+  void setDarkmode() async {
+    currentTheme = darkTheme_;
+    notifyListeners();
+  }
+}
+
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
@@ -24,36 +95,37 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  ThemeMode themeMode = ThemeMode.dark;
-  void toggleTheme(){
-    setState(() {
-      themeMode = (themeMode==ThemeMode.dark) ? ThemeMode.light : ThemeMode.dark;
-      print(themeMode);
-    });
-  }
+  // ThemeMode themeMode = ThemeMode.dark;
+  // void toggleTheme(){
+  //   setState(() {
+  //     themeMode = (themeMode==ThemeMode.dark) ? ThemeMode.light : ThemeMode.dark;
+  //     print(themeMode);
+  //   });
+  // }
   // MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Notes',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      darkTheme: ThemeData(
-        brightness: Brightness.dark,
-        /* dark theme settings */
-      ),
-      themeMode: themeMode,
-      debugShowCheckedModeBanner: false,
-      home: const MyHomePage(
+    return Consumer<ThemeProvider>(
+      builder: (context, theme, _) => MaterialApp(
         title: 'Notes',
+        theme: Provider.of<ThemeProvider>(context, listen: false).lightTheme,
+        // theme: ThemeData(
+        //   colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        //   useMaterial3: true,
+        // ),
+        darkTheme:
+            Provider.of<ThemeProvider>(context, listen: false).darkTheme_,
+        themeMode: Provider.of<ThemeProvider>(context, listen: false).isDark
+            ? ThemeMode.dark
+            : ThemeMode.light,
+        debugShowCheckedModeBanner: false,
+        home: const MyHomePage(
+          title: 'Notes',
+        ),
       ),
     );
   }
-
-  
 }
 
 class MyHomePage extends StatefulWidget {
@@ -85,10 +157,12 @@ class _MyHomePageState extends State<MyHomePage> {
 
   // void toggleTheme(bool isDark) {
   //   setState(() {
-      
+
   //     // print(Theme.of(context).changeTheme(ThemeMode.light));
   //   });
   // }
+
+  // Color c = Theme.of(context).primaryColor;
 
   @override
   Widget build(BuildContext context) {
@@ -97,12 +171,28 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
         actions: [
-          const Icon(Icons.dark_mode),
-          Switch(
-            value: ThemeDa
-            onChanged: ,
+          const Icon(
+            Icons.dark_mode,
+            size: 20,
           ),
-          const Icon(Icons.light_mode),
+          FractionallySizedBox(
+            heightFactor: 0.7,
+            child: Switch(
+              value: !Provider.of<ThemeProvider>(context, listen: false).isDark,
+              onChanged: (value) => setState(() {
+                final themeProvider =
+                    Provider.of<ThemeProvider>(context, listen: false);
+                themeProvider.toggleMode();
+                // print(Provider.of<ThemeProvider>(context, listen: false).isDark);
+              }),
+            ),
+          ),
+          Icon(
+            Icons.light_mode,
+            // color: Colors.yellowAccent,
+            color: Theme.of(context).iconTheme.color,
+            size: 20,
+          ),
         ],
         centerTitle: true,
       ),
