@@ -41,7 +41,7 @@ class ThemeProvider extends ChangeNotifier {
   ThemeData darkTheme_ = ThemeData(
     // brightness: Brightness.dark, // DarkMode
     colorScheme: ColorScheme.fromSeed(
-      seedColor: Colors.lightBlue,
+      seedColor: Colors.blue,
       brightness: Brightness.dark,
     ),
     iconTheme: const IconThemeData(
@@ -156,15 +156,19 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
         actions: [
-          const Icon(
+          Icon(
             Icons.dark_mode,
+            color: Provider.of<ThemeProvider>(context, listen: false).isDark
+                ? Colors.lightBlue
+                : null,
             size: 20,
           ),
           FractionallySizedBox(
-            heightFactor: 0.7,
+            // heightFactor: 0.7,
+            // wid
             child: Switch(
-              inactiveTrackColor: Theme.of(context).colorScheme.surface,
-              activeColor: Theme.of(context).colorScheme.surface,
+              inactiveTrackColor: Theme.of(context).colorScheme.onPrimary,
+              activeColor: Theme.of(context).colorScheme.onPrimary,
               value: !Provider.of<ThemeProvider>(context, listen: false).isDark,
               onChanged: (value) => setState(() {
                 Provider.of<ThemeProvider>(context, listen: false).toggleMode();
@@ -175,7 +179,10 @@ class _MyHomePageState extends State<MyHomePage> {
           Icon(
             Icons.light_mode,
             // color: Colors.yellowAccent,
-            color: Theme.of(context).iconTheme.color,
+            // color: Theme.of(context).iconTheme.color,
+            color: Provider.of<ThemeProvider>(context, listen: false).isDark
+                ? null
+                : Colors.deepOrange,
             size: 20,
           ),
         ],
