@@ -7,7 +7,6 @@ void main() async {
   // runApp(MyApp());
   runApp(
     MultiProvider(
-      // create the provider
       providers: [
         ChangeNotifierProvider(
           create: (_) => ThemeProvider(),
@@ -23,36 +22,31 @@ class ThemeProvider extends ChangeNotifier {
   late bool isDark;
 
   ThemeData lightTheme = ThemeData(
-    // brightness: Brightness.light, // LightMode
     colorScheme: ColorScheme.fromSeed(
       seedColor: Colors.orangeAccent,
       brightness: Brightness.light,
     ),
-
     useMaterial3: true,
-
-    iconTheme: const IconThemeData(
-      color: Colors.deepOrange,
-    ),
-
+    // iconTheme: const IconThemeData(
+    //   color: Colors.deepOrange,
+    // ),
     // scaffoldBackgroundColor: Colors.red,
   );
 
-  ThemeData darkTheme_ = ThemeData(
-    // brightness: Brightness.dark, // DarkMode
+  ThemeData darkTheme = ThemeData(
     colorScheme: ColorScheme.fromSeed(
       seedColor: Colors.blue,
       brightness: Brightness.dark,
     ),
-    iconTheme: const IconThemeData(
-      color: Colors.yellow,
-    ),
+    // iconTheme: const IconThemeData(
+    //   color: Colors.yellow,
+    // ),
     // scaffoldBackgroundColor: Colors.green,
   );
 
   ThemeProvider() {
     isDark = true;
-    currentTheme = darkTheme_;
+    currentTheme = darkTheme;
   }
 
   void toggleMode() async {
@@ -67,7 +61,7 @@ class ThemeProvider extends ChangeNotifier {
   }
 
   void setDarkmode() async {
-    currentTheme = darkTheme_;
+    currentTheme = darkTheme;
     notifyListeners();
   }
 }
@@ -100,7 +94,7 @@ class _MyAppState extends State<MyApp> {
         //   useMaterial3: true,
         // ),
         // darkTheme:
-        //     Provider.of<ThemeProvider>(context, listen: false).darkTheme_,
+        //     Provider.of<ThemeProvider>(context, listen: false).darkTheme,
         // themeMode: Provider.of<ThemeProvider>(context, listen: false).isDark
         //     ? ThemeMode.dark
         //     : ThemeMode.light,
@@ -155,6 +149,7 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
+        // actionsIconTheme: IconThemeData(opticalSize: 15),
         actions: [
           Icon(
             Icons.dark_mode,
@@ -163,23 +158,23 @@ class _MyHomePageState extends State<MyHomePage> {
                 : null,
             size: 20,
           ),
-          FractionallySizedBox(
-            // heightFactor: 0.7,
-            // wid
-            child: Switch(
-              inactiveTrackColor: Theme.of(context).colorScheme.onPrimary,
-              activeColor: Theme.of(context).colorScheme.onPrimary,
-              value: !Provider.of<ThemeProvider>(context, listen: false).isDark,
-              onChanged: (value) => setState(() {
-                Provider.of<ThemeProvider>(context, listen: false).toggleMode();
-                // print(Provider.of<ThemeProvider>(context, listen: false).isDark);
-              }),
+          SizedBox(
+            width: 50,
+            child: FittedBox(
+              fit: BoxFit.fill,
+              child: Switch(
+                inactiveTrackColor: Theme.of(context).colorScheme.onPrimary,
+                activeColor: Theme.of(context).colorScheme.onPrimary,
+                value: !Provider.of<ThemeProvider>(context, listen: false).isDark,
+                onChanged: (value) => setState(() {
+                  Provider.of<ThemeProvider>(context, listen: false).toggleMode();
+                  // print(Provider.of<ThemeProvider>(context, listen: false).isDark);
+                }),
+              ),
             ),
           ),
           Icon(
             Icons.light_mode,
-            // color: Colors.yellowAccent,
-            // color: Theme.of(context).iconTheme.color,
             color: Provider.of<ThemeProvider>(context, listen: false).isDark
                 ? null
                 : Colors.deepOrange,

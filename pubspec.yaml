@@ -37,6 +37,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   shared_preferences: ^2.2.2
   provider: ^6.1.1
+  popover: ^0.2.9
   
 
 dev_dependencies:
