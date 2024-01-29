@@ -93,7 +93,7 @@ class _CreateNotePageState extends State<CreateNotePage> {
   void initState() {
     super.initState();
     focusNode.addListener(() {
-      debugPrint(focusNode.hasFocus ? 'in' : 'out');
+      print(focusNode.hasFocus ? 'in' : 'out');
       setState(() {});
     });
   }
@@ -115,12 +115,14 @@ class _CreateNotePageState extends State<CreateNotePage> {
               colorScheme: ColorScheme.fromSeed(
                 seedColor: currentColor!,
                 background: currentColor!,
+                inversePrimary: currentColor,
                 brightness: Provider.of<ThemeProvider>(context).isDark
                     ? Brightness.dark
                     : Brightness.light,
               ),
               appBarTheme: AppBarTheme(
                 backgroundColor: currentColor!,
+                // backgroundColor: Theme.of(context).colorScheme.background,
                 actionsIconTheme: IconThemeData(
                   color: darken(currentColor, .5),
                 ),
