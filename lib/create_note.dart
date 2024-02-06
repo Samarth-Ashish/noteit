@@ -39,61 +39,35 @@ class CreateNotePage extends StatefulWidget {
 }
 
 class _CreateNotePageState extends State<CreateNotePage> {
-  String currentTitle = '';
-  TextEditingController titleController = TextEditingController();
-  FocusNode focusNode = FocusNode();
-  bool isColorPickerActive = false;
-  Color? currentColor;
+  late String currentTitle;
+  late Color? currentColor;
+  late bool isColorPickerActive;
+  late TextEditingController titleController;
+
+  late FocusNode titleFocusNode;
+
   List<Color> colorList = [
     Colors.transparent,
     Colors.green,
     Colors.blue,
-    Colors.yellow,
+    // Colors.yellow,
     Colors.red,
     Colors.pink,
     // Colors.orange
   ];
 
-  Container titleTextField() {
-    return Container(
-      alignment: Alignment.center,
-      // color: Colors.white,
-      child: TextField(
-        style: const TextStyle(
-          fontSize: 20,
-          fontWeight: FontWeight.bold,
-        ),
-        textAlign: TextAlign.center,
-        focusNode: focusNode,
-        controller: titleController,
-        decoration: InputDecoration(
-          border: focusNode.hasFocus
-              ? const UnderlineInputBorder()
-              : InputBorder.none,
-          hintText: 'Title',
-          hintStyle: const TextStyle(
-            fontSize: 20,
-            // color: darken(currentColor, .9),
-            // decorationColor: Colors.yellow,
-            // backgroundColor: Colors.white,
-          ),
-        ),
-        // autofocus: true,
-        onChanged: (text) => {
-          setState(() {
-            currentTitle = titleController.text;
-            debugPrint(text);
-          })
-        },
-      ),
-    );
-  }
-
   @override
   void initState() {
     super.initState();
-    focusNode.addListener(() {
-      print(focusNode.hasFocus ? 'in' : 'out');
+
+    currentTitle = '';
+    currentColor = null;
+    isColorPickerActive = false;
+    titleFocusNode = FocusNode();
+    titleController = TextEditingController();
+
+    titleFocusNode.addListener(() {
+      print(titleFocusNode.hasFocus ? 'in' : 'out');
       setState(() {});
     });
   }
@@ -101,7 +75,7 @@ class _CreateNotePageState extends State<CreateNotePage> {
   @override
   void dispose() {
     titleController.dispose();
-    focusNode.dispose();
+    titleFocusNode.dispose();
     super.dispose();
   }
 
@@ -114,20 +88,30 @@ class _CreateNotePageState extends State<CreateNotePage> {
               // primarySwatch: MaterialColor(1, ),
               colorScheme: ColorScheme.fromSeed(
                 seedColor: currentColor!,
-                background: currentColor!,
-                inversePrimary: currentColor,
+                background: Provider.of<ThemeProvider>(context).isDark
+                    ? darken(currentColor!)
+                    : lighten(currentColor!),
+                // background: currentColor!,
+                // inversePrimary: currentColor,
                 brightness: Provider.of<ThemeProvider>(context).isDark
                     ? Brightness.dark
                     : Brightness.light,
               ),
               appBarTheme: AppBarTheme(
-                backgroundColor: currentColor!,
+                // backgroundColor: currentColor!,
                 // backgroundColor: Theme.of(context).colorScheme.background,
+                backgroundColor: Provider.of<ThemeProvider>(context).isDark
+                    ? darken(currentColor!, .15)
+                    : lighten(currentColor!, .15),
                 actionsIconTheme: IconThemeData(
-                  color: darken(currentColor, .5),
+                  color: Provider.of<ThemeProvider>(context).isDark
+                      ? lighten(currentColor!, .3)
+                      : darken(currentColor!, .3),
                 ),
                 iconTheme: IconThemeData(
-                  color: darken(currentColor, .5),
+                  color: Provider.of<ThemeProvider>(context).isDark
+                      ? lighten(currentColor!, .3)
+                      : darken(currentColor!, .3),
                 ),
               ),
             )
@@ -222,7 +206,7 @@ class _CreateNotePageState extends State<CreateNotePage> {
             // elevation: 10,
             itemBuilder: (context) => [
               PopupMenuItem(
-                // value: 1,
+                value: 1,
                 child: Row(
                   children: List.generate(
                     colorList.length,
@@ -232,7 +216,7 @@ class _CreateNotePageState extends State<CreateNotePage> {
                           print(colorList[index]);
                           currentColor = colorList[index] == Colors.transparent
                               ? null
-                              : colorList[index].withOpacity(0.5);
+                              : colorList[index];
                         });
                       },
                       icon: colorList[index] != Colors.transparent
@@ -259,11 +243,11 @@ class _CreateNotePageState extends State<CreateNotePage> {
             //   onPressed: () {},
             // )
             PopupMenuButton(
+              onOpened: () {},
               itemBuilder: (context) => [
                 // popupmenu item 1
                 const PopupMenuItem(
                   value: 1,
-                  // row has two child icon and text.
                   child: Row(
                     children: [
                       Icon(Icons.star),
@@ -276,20 +260,6 @@ class _CreateNotePageState extends State<CreateNotePage> {
                   ),
                 ),
                 // popupmenu item 2
-                const PopupMenuItem(
-                  value: 2,
-                  // row has two child icon and text
-                  child: Row(
-                    children: [
-                      Icon(Icons.chrome_reader_mode),
-                      SizedBox(
-                        // sized box with width 10
-                        width: 10,
-                      ),
-                      Text("About")
-                    ],
-                  ),
-                ),
               ],
               // offset: const Offset(0, 100),
               // color: Colors.grey,
@@ -297,15 +267,16 @@ class _CreateNotePageState extends State<CreateNotePage> {
             ),
           ],
         ),
-        body: const SizedBox(
+        body: SizedBox(
           width: double.infinity,
           height: double.infinity,
           // color: Colors.amber,
           child: Padding(
-            padding: EdgeInsets.all(10),
+            padding: const EdgeInsets.all(10),
             child: Column(
               children: [
-                TextField(
+                optionsMenu(),
+                const TextField(
                   keyboardType: TextInputType.multiline,
                   maxLines: null,
                   decoration: InputDecoration(
@@ -324,6 +295,69 @@ class _CreateNotePageState extends State<CreateNotePage> {
           },
           child: const Icon(Icons.check),
         ),
+      ),
+    );
+  }
+
+  Row optionsMenu() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        // Container(
+        //   width: 10,
+        //   height: 10,
+        //   color: Colors.blue,
+        // ),
+        const Icon(
+          Icons.notification_add,
+        ),
+        // Icon(
+        //   Icons.notifications_active,
+        // ),
+        Switch(
+          inactiveTrackColor: Theme.of(context).colorScheme.onPrimary,
+          activeColor: Theme.of(context).colorScheme.onPrimary,
+          value: !Provider.of<ThemeProvider>(context, listen: false).isDark,
+          onChanged: (value) => setState(() {
+            Provider.of<ThemeProvider>(context, listen: false).toggleMode();
+            // print(Provider.of<ThemeProvider>(context, listen: false).isDark);
+          }),
+        )
+      ],
+    );
+  }
+
+  Container titleTextField() {
+    return Container(
+      alignment: Alignment.center,
+      // color: Colors.white,
+      child: TextField(
+        style: const TextStyle(
+          fontSize: 18,
+          fontWeight: FontWeight.bold,
+        ),
+        textAlign: TextAlign.center,
+        focusNode: titleFocusNode,
+        controller: titleController,
+        decoration: InputDecoration(
+          border: titleFocusNode.hasFocus
+              ? const UnderlineInputBorder()
+              : InputBorder.none,
+          hintText: 'Title',
+          hintStyle: const TextStyle(
+            fontSize: 18,
+            // color: darken(currentColor, .9),
+            // decorationColor: Colors.yellow,
+            // backgroundColor: Colors.white,
+          ),
+        ),
+        // autofocus: true,
+        onChanged: (text) => {
+          setState(() {
+            currentTitle = titleController.text;
+            debugPrint(text);
+          })
+        },
       ),
     );
   }
