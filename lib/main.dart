@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'create_note.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
 import 'existing_notes_provider.dart';
+import 'theme_provider.dart';
 
 void main() async {
-  // runApp(MyApp());
   runApp(
     MultiProvider(
       providers: [
@@ -21,83 +20,6 @@ void main() async {
   );
 }
 
-class ThemeProvider extends ChangeNotifier {
-  late ThemeData currentTheme;
-  late bool isDark;
-
-  ThemeData lightTheme = ThemeData(
-    colorScheme: ColorScheme.fromSeed(
-      seedColor: Colors.orangeAccent,
-      brightness: Brightness.light,
-    ),
-    useMaterial3: true,
-    // iconTheme: const IconThemeData(
-    //   color: Colors.deepOrange,
-    // ),
-    // scaffoldBackgroundColor: Colors.red,
-  );
-
-  ThemeData darkTheme = ThemeData(
-    colorScheme: ColorScheme.fromSeed(
-      seedColor: Colors.blue,
-      brightness: Brightness.dark,
-    ),
-    // iconTheme: const IconThemeData(
-    //   color: Colors.yellow,
-    // ),
-    // scaffoldBackgroundColor: Colors.green,
-  );
-
-  ThemeProvider() {
-    isDark = true;
-    currentTheme = darkTheme;
-  }
-
-  void toggleMode() async {
-    isDark ? setLightMode() : setDarkmode();
-    isDark = !isDark;
-    notifyListeners();
-  }
-
-  void setLightMode() async {
-    currentTheme = lightTheme;
-    notifyListeners();
-  }
-
-  void setDarkmode() async {
-    currentTheme = darkTheme;
-    notifyListeners();
-  }
-}
-
-// !darken
-Color? darken(Color? color, [double amount = .1]) {
-  if (color == null) {
-    return null;
-  }
-
-  assert(amount >= 0 && amount <= 1);
-
-  final hsl = HSLColor.fromColor(color);
-  final hslDark = hsl.withLightness((hsl.lightness - amount).clamp(0.0, 1.0));
-
-  return hslDark.toColor();
-}
-
-// !lighten
-Color? lighten(Color? color, [double amount = .1]) {
-  if (color == null) {
-    return null;
-  }
-
-  assert(amount >= 0 && amount <= 1);
-
-  final hsl = HSLColor.fromColor(color);
-  final hslLight = hsl.withLightness((hsl.lightness + amount).clamp(0.0, 1.0));
-
-  return hslLight.toColor();
-}
-
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
@@ -106,30 +28,12 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  // ThemeMode themeMode = ThemeMode.dark;
-  // void toggleTheme(){
-  //   setState(() {
-  //     themeMode = (themeMode==ThemeMode.dark) ? ThemeMode.light : ThemeMode.dark;
-  //     print(themeMode);
-  //   });
-  // }
-  // MyApp({super.key});
-
   @override
   Widget build(BuildContext context) {
     return Consumer<ThemeProvider>(
       builder: (context, theme, _) => MaterialApp(
         title: 'Remindus',
         theme: Provider.of<ThemeProvider>(context, listen: false).currentTheme,
-        // theme: ThemeData(
-        //   colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        //   useMaterial3: true,
-        // ),
-        // darkTheme:
-        //     Provider.of<ThemeProvider>(context, listen: false).darkTheme,
-        // themeMode: Provider.of<ThemeProvider>(context, listen: false).isDark
-        //     ? ThemeMode.dark
-        //     : ThemeMode.light,
         debugShowCheckedModeBanner: false,
         home: const MyHomePage(
           title: 'Remindus',
@@ -164,17 +68,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   String selectedValue = "USA";
 
-  // ThemeMode themeMode = ThemeMode.dark;
-
-  // void toggleTheme(bool isDark) {
-  //   setState(() {
-
-  //     // print(Theme.of(context).changeTheme(ThemeMode.light));
-  //   });
-  // }
-
-  // Color c = Theme.of(context).primaryColor;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -185,7 +78,7 @@ class _MyHomePageState extends State<MyHomePage> {
         actions: [
           Icon(
             Icons.dark_mode,
-            color: Provider.of<ThemeProvider>(context, listen: false).isDark
+            color: Provider.of<ThemeProvider>(context).isDark
                 ? Colors.lightBlue
                 : null,
             size: 20,
@@ -202,7 +95,6 @@ class _MyHomePageState extends State<MyHomePage> {
                 onChanged: (value) => setState(() {
                   Provider.of<ThemeProvider>(context, listen: false)
                       .toggleMode();
-                  // print(Provider.of<ThemeProvider>(context, listen: false).isDark);
                 }),
               ),
             ),
@@ -226,9 +118,9 @@ class _MyHomePageState extends State<MyHomePage> {
               margin: const EdgeInsets.all(10),
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: Provider.of<ThemeProvider>(context).isDark
-                    ? (darken(item['currentColor'], .2) ?? Colors.grey)
-                    : (lighten(item['currentColor'], .2) ?? Colors.grey),
+                color: Provider.of<ThemeProvider>(context)
+                    .colorOfThemeBrightness(
+                        item['currentColor'], .2, Colors.grey),
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Center(
@@ -244,19 +136,12 @@ class _MyHomePageState extends State<MyHomePage> {
                         ),
                       ),
                     ),
-                    // Row(
-                    //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    //   children: List.generate(
-                    //     item['days'].keys.length,
-                    //     (index) => Text(item['days'].keys.elementAt(index)),
-                    //   ),
-                    // ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: List.generate(
                         item['days'].keys.length,
                         (index) => Container(
-                          padding: const EdgeInsets.all(2),
+                          padding: const EdgeInsets.all(1.5),
                           margin: const EdgeInsets.all(1),
                           width: 30,
                           height: 30,
@@ -265,14 +150,9 @@ class _MyHomePageState extends State<MyHomePage> {
                             color: item['days'][item['days']
                                     .keys
                                     .elementAt(index)] // !value
-                                ? ((Provider.of<ThemeProvider>(context).isDark
-                                        ? lighten(item['currentColor'], .2)
-                                        : darken(item['currentColor'], .2)) ??
-                                    Colors.grey)
-                                // ? ((Provider.of<ThemeProvider>(context).isDark
-                                //         ? (item['currentColor']?.withOpacity(0.2))
-                                //         : (item['currentColor']?.withOpacity(0.8))) ??
-                                //     Colors.black)
+                                ? (Provider.of<ThemeProvider>(context)
+                                    .colorOfAntiThemeBrightness(
+                                        item['currentColor'], .2, Colors.grey))
                                 : null,
                           ),
                           child: Padding(
@@ -281,22 +161,14 @@ class _MyHomePageState extends State<MyHomePage> {
                               child: Text(
                                 '${item['days'].keys.elementAt(index)}',
                                 style: TextStyle(
-                                  // color: Provider.of<ThemeProvider>(context)
-                                  //         .isDark
-                                  //     ? Colors.white
-                                  //     : Colors.black,
-                                  color: (Provider.of<ThemeProvider>(context)
-                                          .isDark)
-                                      ? (item['days'][item['days']
+                                  color: Provider.of<ThemeProvider>(context)
+                                      .colorOfThemeBrightnessIfTrueAndViceVersa(
+                                          item['days'][item['days']
                                               .keys
-                                              .elementAt(index)]
-                                          ? darken(item['currentColor'], .2)
-                                          : lighten(item['currentColor'], .2))
-                                      : (item['days'][item['days']
-                                              .keys
-                                              .elementAt(index)]
-                                          ? lighten(item['currentColor'], .2)
-                                          : darken(item['currentColor'], .2)),
+                                              .elementAt(index)],
+                                          item['currentColor'],
+                                          .2,
+                                          Colors.grey),
                                   // fontSize: 10,
                                   fontWeight: FontWeight.w600,
                                 ),
@@ -448,9 +320,8 @@ class _MyHomePageState extends State<MyHomePage> {
         return StatefulBuilder(
           builder: (context, setState) {
             return AlertDialog(
-              backgroundColor: Provider.of<ThemeProvider>(context).isDark
-                  ? darken(currentColor, .2)
-                  : lighten(currentColor, .2),
+              backgroundColor: Provider.of<ThemeProvider>(context)
+                  .colorOfThemeBrightness(currentColor, .2),
               title: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 // mainAxisSize: MainAxisSize.max,
@@ -477,9 +348,8 @@ class _MyHomePageState extends State<MyHomePage> {
                       isColorPickerActive
                           ? Icons.palette_outlined
                           : Icons.palette,
-                      color: (Provider.of<ThemeProvider>(context).isDark
-                          ? lighten(currentColor, .2)
-                          : darken(currentColor, .2)),
+                      color: Provider.of<ThemeProvider>(context)
+                          .colorOfAntiThemeBrightness(currentColor, .2),
                       // Icons.palette,
                     ),
                     // elevation: 10,
@@ -525,25 +395,20 @@ class _MyHomePageState extends State<MyHomePage> {
                       onTapOutside: (event) {
                         setState(() {
                           titleFocusNode.unfocus();
-                          // print('onTapOutside');
                         });
                       },
                       onEditingComplete: () {
                         setState(() {
                           titleFocusNode.unfocus();
-                          // print('onEditingComplete');
                         });
                       },
                       onSubmitted: (value) {
                         setState(() {
                           titleFocusNode.unfocus();
-                          // print('onSubmitted');
                         });
                       },
                       onTap: () {
-                        setState(() {
-                          // print('onTap');
-                        });
+                        setState(() {});
                       },
                       style: const TextStyle(
                         fontSize: 18,
@@ -587,7 +452,6 @@ class _MyHomePageState extends State<MyHomePage> {
                         onChanged: (value) => setState(() {
                           Provider.of<ThemeProvider>(context, listen: false)
                               .toggleMode();
-                          // print(Provider.of<ThemeProvider>(context, listen: false).isDark);
                         }),
                       ),
                     ),
@@ -617,14 +481,9 @@ class _MyHomePageState extends State<MyHomePage> {
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               color: days[entry.key]
-                                  ? ((Provider.of<ThemeProvider>(context).isDark
-                                          ? lighten(currentColor, .2)
-                                          : darken(currentColor, .2)) ??
-                                      Colors.grey)
-                                  // ? ((Provider.of<ThemeProvider>(context).isDark
-                                  //         ? (currentColor?.withOpacity(0.2))
-                                  //         : (currentColor?.withOpacity(0.8))) ??
-                                  //     Colors.black)
+                                  ? Provider.of<ThemeProvider>(context)
+                                      .colorOfAntiThemeBrightness(
+                                          currentColor, .2, Colors.grey)
                                   : null,
                             ),
                             child: Padding(
@@ -633,18 +492,13 @@ class _MyHomePageState extends State<MyHomePage> {
                                 child: Text(
                                   '${entry.key}',
                                   style: TextStyle(
-                                    // color: Provider.of<ThemeProvider>(context)
-                                    //         .isDark
-                                    //     ? Colors.white
-                                    //     : Colors.black,
-                                    color: (Provider.of<ThemeProvider>(context)
-                                            .isDark)
-                                        ? (entry.value
-                                            ? darken(currentColor, .2)
-                                            : lighten(currentColor, .2))
-                                        : (entry.value
-                                            ? lighten(currentColor, .2)
-                                            : darken(currentColor, .2)),
+                                    color: days[entry.key]
+                                        ? Provider.of<ThemeProvider>(context)
+                                            .colorOfThemeBrightness(
+                                                currentColor, .2, Colors.grey)
+                                        : Provider.of<ThemeProvider>(context)
+                                            .colorOfAntiThemeBrightness(
+                                                currentColor, .2, Colors.grey),
                                     // fontSize: 10,
                                     fontWeight: FontWeight.w600,
                                   ),
@@ -676,25 +530,25 @@ class _MyHomePageState extends State<MyHomePage> {
                     setState(() {
                       Provider.of<ListsProvider>(context, listen: false)
                           .increment();
-                      print(Provider.of<ListsProvider>(context, listen: false)
-                          .value);
+                      // print(Provider.of<ListsProvider>(context, listen: false)
+                      // .value);
                       Provider.of<ListsProvider>(context, listen: false)
                           .addToList({
                         'currentColor': currentColor,
                         'currentTitle': currentTitle,
                         'days': days,
                       });
-                      print(Provider.of<ListsProvider>(context, listen: false)
-                          .lists);
+                      // print(Provider.of<ListsProvider>(context, listen: false)
+                      // .lists);
                       Navigator.pop(context);
                     });
                   },
                   child: Text(
                     'Create',
                     style: TextStyle(
-                      color: (Provider.of<ThemeProvider>(context).isDark
+                      color: Provider.of<ThemeProvider>(context).isDark
                           ? Colors.white
-                          : Colors.black),
+                          : Colors.black,
                     ),
                   ),
                 ),
