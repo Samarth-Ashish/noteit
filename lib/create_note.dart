@@ -31,20 +31,14 @@
 //   return hslLight.toColor();
 // }
 
-// class ExistingNotePage extends StatefulWidget {
-//   String? currentTitle;
-//   Color? currentColor;
-//   bool isColorPickerActive;
-//   TextEditingController titleController;
-//   FocusNode titleFocusNode;
-
-//   ExistingNotePage({currentTitle, super.key});
+// class CreateNotePage extends StatefulWidget {
+//   const CreateNotePage({super.key});
 
 //   @override
-//   State<ExistingNotePage> createState() => _ExistingNotePageState();
+//   State<CreateNotePage> createState() => _CreateNotePageState();
 // }
 
-// class _ExistingNotePageState extends State<ExistingNotePage> {
+// class _CreateNotePageState extends State<CreateNotePage> {
 //   late String currentTitle;
 //   late Color? currentColor;
 //   late bool isColorPickerActive;

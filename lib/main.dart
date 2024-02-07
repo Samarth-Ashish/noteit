@@ -70,6 +70,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
+    final listsProvider = Provider.of<ListsProvider>(context);
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
@@ -87,16 +90,7 @@ class _MyHomePageState extends State<MyHomePage> {
             width: 50,
             child: FittedBox(
               fit: BoxFit.fill,
-              child: Switch(
-                inactiveTrackColor: Theme.of(context).colorScheme.onPrimary,
-                activeColor: Theme.of(context).colorScheme.onPrimary,
-                value:
-                    !Provider.of<ThemeProvider>(context, listen: false).isDark,
-                onChanged: (value) => setState(() {
-                  Provider.of<ThemeProvider>(context, listen: false)
-                      .toggleMode();
-                }),
-              ),
+              child: themeModeSwitch(context, themeProvider),
             ),
           ),
           Icon(
@@ -111,16 +105,15 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: Center(
         child: ListView.builder(
-          itemCount: Provider.of<ListsProvider>(context).lists.length,
+          itemCount: listsProvider.lists.length,
           itemBuilder: (context, index) {
-            final item = Provider.of<ListsProvider>(context).lists[index];
+            final item = listsProvider.lists[index];
             return Container(
               margin: const EdgeInsets.all(10),
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: Provider.of<ThemeProvider>(context)
-                    .colorOfThemeBrightness(
-                        item['currentColor'], .2, Colors.grey),
+                color: themeProvider.colorOfThemeBrightness(
+                    item['currentColor'], .2, Colors.grey),
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Center(
@@ -150,9 +143,8 @@ class _MyHomePageState extends State<MyHomePage> {
                             color: item['days'][item['days']
                                     .keys
                                     .elementAt(index)] // !value
-                                ? (Provider.of<ThemeProvider>(context)
-                                    .colorOfAntiThemeBrightness(
-                                        item['currentColor'], .2, Colors.grey))
+                                ? themeProvider.colorOfAntiThemeBrightness(
+                                    item['currentColor'], .2, Colors.grey)
                                 : null,
                           ),
                           child: Padding(
@@ -161,7 +153,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               child: Text(
                                 '${item['days'].keys.elementAt(index)}',
                                 style: TextStyle(
-                                  color: Provider.of<ThemeProvider>(context)
+                                  color: themeProvider
                                       .colorOfThemeBrightnessIfTrueAndViceVersa(
                                           item['days'][item['days']
                                               .keys
@@ -261,11 +253,20 @@ class _MyHomePageState extends State<MyHomePage> {
           // Navigator.of(context).push(
           //     MaterialPageRoute(builder: (context) => const CreateNotePage()));
           // showModal(context);
-          showAlertDialog(context);
+          showAlertDialog(context, themeProvider, listsProvider);
         },
         tooltip: 'Add new note',
         child: const Icon(Icons.add),
       ),
+    );
+  }
+
+  Switch themeModeSwitch(BuildContext context, ThemeProvider themeProvider) {
+    return Switch(
+      inactiveTrackColor: Theme.of(context).colorScheme.onPrimary,
+      activeColor: Theme.of(context).colorScheme.onPrimary,
+      value: !themeProvider.isDark,
+      onChanged: (value) => themeProvider.toggleMode(),
     );
   }
 
@@ -286,7 +287,8 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  void showAlertDialog(BuildContext context) {
+  void showAlertDialog(BuildContext context, ThemeProvider themeProvider,
+      ListsProvider listsProvider) {
     bool isColorPickerActive = false;
     Color? currentColor;
     String currentTitle = '';
@@ -320,8 +322,8 @@ class _MyHomePageState extends State<MyHomePage> {
         return StatefulBuilder(
           builder: (context, setState) {
             return AlertDialog(
-              backgroundColor: Provider.of<ThemeProvider>(context)
-                  .colorOfThemeBrightness(currentColor, .2),
+              backgroundColor:
+                  themeProvider.colorOfThemeBrightness(currentColor, .2),
               title: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 // mainAxisSize: MainAxisSize.max,
@@ -348,8 +350,8 @@ class _MyHomePageState extends State<MyHomePage> {
                       isColorPickerActive
                           ? Icons.palette_outlined
                           : Icons.palette,
-                      color: Provider.of<ThemeProvider>(context)
-                          .colorOfAntiThemeBrightness(currentColor, .2),
+                      color: themeProvider.colorOfAntiThemeBrightness(
+                          currentColor, .2),
                       // Icons.palette,
                     ),
                     // elevation: 10,
@@ -442,18 +444,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     width: 50,
                     child: FittedBox(
                       fit: BoxFit.contain,
-                      child: Switch(
-                        inactiveTrackColor:
-                            Theme.of(context).colorScheme.onPrimary,
-                        activeColor: Theme.of(context).colorScheme.onPrimary,
-                        value:
-                            !Provider.of<ThemeProvider>(context, listen: false)
-                                .isDark,
-                        onChanged: (value) => setState(() {
-                          Provider.of<ThemeProvider>(context, listen: false)
-                              .toggleMode();
-                        }),
-                      ),
+                      child: themeModeSwitch(context, themeProvider),
                     ),
                   ),
                 ],
@@ -481,9 +472,8 @@ class _MyHomePageState extends State<MyHomePage> {
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               color: days[entry.key]
-                                  ? Provider.of<ThemeProvider>(context)
-                                      .colorOfAntiThemeBrightness(
-                                          currentColor, .2, Colors.grey)
+                                  ? themeProvider.colorOfAntiThemeBrightness(
+                                      currentColor, .2, Colors.grey)
                                   : null,
                             ),
                             child: Padding(
@@ -492,13 +482,12 @@ class _MyHomePageState extends State<MyHomePage> {
                                 child: Text(
                                   '${entry.key}',
                                   style: TextStyle(
-                                    color: days[entry.key]
-                                        ? Provider.of<ThemeProvider>(context)
-                                            .colorOfThemeBrightness(
-                                                currentColor, .2, Colors.grey)
-                                        : Provider.of<ThemeProvider>(context)
-                                            .colorOfAntiThemeBrightness(
-                                                currentColor, .2, Colors.grey),
+                                    color: themeProvider
+                                        .colorOfThemeBrightnessIfTrueAndViceVersa(
+                                            days[entry.key],
+                                            currentColor,
+                                            .2,
+                                            Colors.grey),
                                     // fontSize: 10,
                                     fontWeight: FontWeight.w600,
                                   ),
@@ -525,12 +514,10 @@ class _MyHomePageState extends State<MyHomePage> {
                 TextButton(
                   onPressed: () {
                     setState(() {
-                      Provider.of<ListsProvider>(context, listen: false)
-                          .increment();
+                      listsProvider.increment();
                       // print(Provider.of<ListsProvider>(context, listen: false)
                       // .value);
-                      Provider.of<ListsProvider>(context, listen: false)
-                          .addToList({
+                      listsProvider.addToList({
                         'currentColor': currentColor,
                         'currentTitle': currentTitle,
                         'days': days,
@@ -543,9 +530,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   child: Text(
                     'Create',
                     style: TextStyle(
-                      color: Provider.of<ThemeProvider>(context).isDark
-                          ? Colors.white
-                          : Colors.black,
+                      color: themeProvider.isDark ? Colors.white : Colors.black,
                     ),
                   ),
                 ),
