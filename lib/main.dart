@@ -518,9 +518,6 @@ class _MyHomePageState extends State<MyHomePage> {
                   child: const Text(
                     'Cancel',
                     style: TextStyle(
-                      // color: (Provider.of<ThemeProvider>(context).isDark
-                      //     ? lighten(currentColor, .2)
-                      //     : darken(currentColor, .2)),
                       color: Colors.grey,
                     ),
                   ),

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 class ListsProvider extends ChangeNotifier {
   int value = 0;
-  List lists = [];
+  List<Map> lists = [];
 
   void increment() {
     value++;

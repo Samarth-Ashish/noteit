@@ -17,7 +17,6 @@ class ThemeProvider extends ChangeNotifier {
     // ),
     // scaffoldBackgroundColor: Colors.red,
   );
-
   ThemeData darkTheme = ThemeData(
     colorScheme: ColorScheme.fromSeed(
       seedColor: Colors.blue,
