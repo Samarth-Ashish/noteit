@@ -67,9 +67,7 @@ class _MyHomePageState extends State<MyHomePage> {
         actions: [
           Icon(
             Icons.dark_mode,
-            color: Provider.of<ThemeProvider>(context).isDark
-                ? Colors.lightBlue
-                : null,
+            color: Provider.of<ThemeProvider>(context).isDark ? Colors.lightBlue : null,
             size: 20,
           ),
           SizedBox(
@@ -81,9 +79,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           Icon(
             Icons.light_mode,
-            color: Provider.of<ThemeProvider>(context, listen: false).isDark
-                ? null
-                : Colors.deepOrange,
+            color: Provider.of<ThemeProvider>(context, listen: false).isDark ? null : Colors.deepOrange,
             size: 20,
           ),
         ],
@@ -99,9 +95,7 @@ class _MyHomePageState extends State<MyHomePage> {
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
                 color: themeProvider.colorOfThemeBrightness(
-                  (item['currentColorIndex'] == null)
-                      ? null
-                      : listsProvider.colorList[item['currentColorIndex']],
+                  (item['currentColorIndex'] == null) ? null : listsProvider.colorList[item['currentColorIndex']],
                   .2,
                   Colors.grey,
                 ),
@@ -135,13 +129,11 @@ class _MyHomePageState extends State<MyHomePage> {
                             height: 30,
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
-                              color: item['days']
-                                      [item['days'].keys.elementAt(index)]
+                              color: item['days'][item['days'].keys.elementAt(index)]
                                   ? themeProvider.colorOfAntiThemeBrightness(
                                       (item['currentColorIndex'] == null)
                                           ? null
-                                          : listsProvider.colorList[
-                                              item['currentColorIndex']],
+                                          : listsProvider.colorList[item['currentColorIndex']],
                                       .2,
                                       Colors.grey,
                                     )
@@ -154,10 +146,8 @@ class _MyHomePageState extends State<MyHomePage> {
                                 child: Text(
                                   '${item['days'].keys.elementAt(index)}',
                                   style: TextStyle(
-                                    color: themeProvider
-                                        .colorOfThemeBrightnessIfTrueAndViceVersa(
-                                      item['days']
-                                          [item['days'].keys.elementAt(index)],
+                                    color: themeProvider.colorOfThemeBrightnessIfTrueAndViceVersa(
+                                      item['days'][item['days'].keys.elementAt(index)],
                                       item['currentColorIndex'],
                                       .2,
                                       Colors.grey,
@@ -293,8 +283,7 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  void showAlertDialog(BuildContext context, ThemeProvider themeProvider,
-      ListsProvider listsProvider) {
+  void showAlertDialog(BuildContext context, ThemeProvider themeProvider, ListsProvider listsProvider) {
     bool isColorPickerActive = false;
     Color? currentColor;
     String currentTitle = '';
@@ -328,8 +317,7 @@ class _MyHomePageState extends State<MyHomePage> {
         return StatefulBuilder(
           builder: (context, setState) {
             return AlertDialog(
-              backgroundColor:
-                  themeProvider.colorOfThemeBrightness(currentColor, .2),
+              backgroundColor: themeProvider.colorOfThemeBrightness(currentColor, .2),
               title: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 // mainAxisSize: MainAxisSize.max,
@@ -353,9 +341,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       });
                     },
                     icon: Icon(
-                      isColorPickerActive
-                          ? Icons.palette_outlined
-                          : Icons.palette,
+                      isColorPickerActive ? Icons.palette_outlined : Icons.palette,
                       color: themeProvider.colorOfAntiThemeBrightness(
                         currentColor,
                         .2,
@@ -373,15 +359,12 @@ class _MyHomePageState extends State<MyHomePage> {
                               onPressed: () {
                                 setState(() {
                                   // print(colorList[index]);
-                                  currentColor =
-                                      listsProvider.colorList[index] ==
-                                              Colors.transparent
-                                          ? null
-                                          : listsProvider.colorList[index];
+                                  currentColor = listsProvider.colorList[index] == Colors.transparent
+                                      ? null
+                                      : listsProvider.colorList[index];
                                 });
                               },
-                              icon: listsProvider.colorList[index] !=
-                                      Colors.transparent
+                              icon: listsProvider.colorList[index] != Colors.transparent
                                   ? Icon(
                                       Icons.circle,
                                       color: listsProvider.colorList[index],
@@ -432,9 +415,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         focusNode: titleFocusNode,
                         controller: titleController,
                         decoration: InputDecoration(
-                          border: titleFocusNode.hasFocus
-                              ? const UnderlineInputBorder()
-                              : InputBorder.none,
+                          border: titleFocusNode.hasFocus ? const UnderlineInputBorder() : InputBorder.none,
                           hintText: 'Title',
                           hintStyle: const TextStyle(
                             fontSize: 18,
@@ -465,8 +446,7 @@ class _MyHomePageState extends State<MyHomePage> {
               content: FittedBox(
                 fit: BoxFit.fill,
                 child: Row(
-                  mainAxisAlignment:
-                      MainAxisAlignment.spaceEvenly, // Distribute evenly
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly, // Distribute evenly
                   // mainAxisSize: MainAxisSize.min,
                   children: days.entries
                       .map(
@@ -498,8 +478,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                 child: Text(
                                   '${entry.key}',
                                   style: TextStyle(
-                                    color: themeProvider
-                                        .colorOfThemeBrightnessIfTrueAndViceVersa(
+                                    color: themeProvider.colorOfThemeBrightnessIfTrueAndViceVersa(
                                       days[entry.key],
                                       currentColor,
                                       .2,
@@ -535,9 +514,8 @@ class _MyHomePageState extends State<MyHomePage> {
                       // print(Provider.of<ListsProvider>(context, listen: false)
                       // .value);
                       listsProvider.addToList({
-                        'currentColorIndex': (currentColor == null)
-                            ? null
-                            : listsProvider.colorList.indexOf(currentColor!),
+                        'currentColorIndex':
+                            (currentColor == null) ? null : listsProvider.colorList.indexOf(currentColor!),
                         'currentTitle': currentTitle,
                         'days': days,
                       });

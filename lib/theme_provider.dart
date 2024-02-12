@@ -97,7 +97,7 @@ class ThemeProvider extends ChangeNotifier {
   }
 }
 
-// ! darken
+// ! darken/
 Color? darken(Color? color, [double amount = .1]) {
   if (color == null) {
     return null;
@@ -124,3 +124,4 @@ Color? lighten(Color? color, [double amount = .1]) {
 
   return hslLight.toColor();
 }
+

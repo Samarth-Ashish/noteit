@@ -1,3 +1,4 @@
+// import 'dart:ui';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -17,6 +18,8 @@ class ListsProvider extends ChangeNotifier {
       // Colors.pink,
       Colors.orange
     ];
+
+    
 
   ListsProvider() {
     getLists();
@@ -53,3 +56,18 @@ class ListsProvider extends ChangeNotifier {
     notifyListeners();
   }
 }
+
+// Color getColorFromString(String colorString) {
+//   // Strip 'Colors.' prefix from the color string
+//   var colorName = colorString.split('.')[1];
+  
+//   // Convert color name to lowercase and capitalize the first letter
+//   var colorNameCapitalized =
+//       colorName.substring(0, 1).toUpperCase() + colorName.substring(1).toLowerCase();
+  
+//   // Use reflection to access Color class from dart:ui
+//   var colorClass = Color;
+  
+//   // Use reflection to get the color object by invoking the getter method with the color name
+//   return colorClass.invokeGetter(colorNameCapitalized);
+// }
