@@ -36,7 +36,8 @@ class _MyAppState extends State<MyApp> {
         theme: Provider.of<ThemeProvider>(context, listen: false).currentTheme,
         debugShowCheckedModeBanner: false,
         home: const MyHomePage(
-          title: 'Remindus',
+          // title: 'Remindus',
+          title: '',
         ),
       ),
     );
@@ -53,21 +54,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  List<DropdownMenuItem<String>> get dropdownItems {
-    List<DropdownMenuItem<String>> menuItems = [
-      const DropdownMenuItem(
-        value: "USA",
-        child: Text("USA"),
-      ),
-      const DropdownMenuItem(value: "Canada", child: Text("Canada")),
-      const DropdownMenuItem(value: "Brazil", child: Text("Brazil")),
-      const DropdownMenuItem(value: "England", child: Text("England")),
-    ];
-    return menuItems;
-  }
-
-  String selectedValue = "USA";
-
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
@@ -113,56 +99,76 @@ class _MyHomePageState extends State<MyHomePage> {
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
                 color: themeProvider.colorOfThemeBrightness(
-                    item['currentColor'], .2, Colors.grey),
+                  (item['currentColorIndex'] == null)
+                      ? null
+                      : listsProvider.colorList[item['currentColorIndex']],
+                  .2,
+                  Colors.grey,
+                ),
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Center(
                 child: Column(
+                  // crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 10),
-                      child: Text(
-                        item['currentTitle'],
-                        style: const TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w600,
+                    if (item['currentTitle'] != '')
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 10),
+                        child: Text(
+                          item['currentTitle'],
+                          style: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
                       ),
-                    ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      mainAxisSize: MainAxisSize.max,
                       children: List.generate(
                         item['days'].keys.length,
-                        (index) => Container(
-                          padding: const EdgeInsets.all(1.5),
-                          margin: const EdgeInsets.all(1),
-                          width: 30,
-                          height: 30,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: item['days'][item['days']
-                                    .keys
-                                    .elementAt(index)] // !value
-                                ? themeProvider.colorOfAntiThemeBrightness(
-                                    item['currentColor'], .2, Colors.grey)
-                                : null,
-                          ),
-                          child: Padding(
+                        (index) => Flexible(
+                          child: Container(
                             padding: const EdgeInsets.all(2),
-                            child: FittedBox(
-                              child: Text(
-                                '${item['days'].keys.elementAt(index)}',
-                                style: TextStyle(
-                                  color: themeProvider
-                                      .colorOfThemeBrightnessIfTrueAndViceVersa(
-                                          item['days'][item['days']
-                                              .keys
-                                              .elementAt(index)],
-                                          item['currentColor'],
-                                          .2,
-                                          Colors.grey),
-                                  // fontSize: 10,
-                                  fontWeight: FontWeight.w600,
+                            margin: const EdgeInsets.all(1),
+                            width: 30,
+                            height: 30,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: item['days']
+                                      [item['days'].keys.elementAt(index)]
+                                  ? themeProvider.colorOfAntiThemeBrightness(
+                                      (item['currentColorIndex'] == null)
+                                          ? null
+                                          : listsProvider.colorList[
+                                              item['currentColorIndex']],
+                                      .2,
+                                      Colors.grey,
+                                    )
+                                  : null,
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(2),
+                              child: FittedBox(
+                                // fit: BoxFit.fitHeight,
+                                child: Text(
+                                  '${item['days'].keys.elementAt(index)}',
+                                  style: TextStyle(
+                                    color: themeProvider
+                                        .colorOfThemeBrightnessIfTrueAndViceVersa(
+                                      item['days']
+                                          [item['days'].keys.elementAt(index)],
+                                      item['currentColorIndex'],
+                                      .2,
+                                      Colors.grey,
+                                    ),
+                                    // overflow: TextOverflow
+                                    //     .ellipsis, // Handle potential overflow
+                                    // fontSize: 10,
+                                    // fontWeight: FontWeight.w600,
+                                    fontWeight: FontWeight.w600,
+                                    // backgroundColor: Colors.blue,
+                                  ),
                                 ),
                               ),
                             ),
@@ -295,16 +301,16 @@ class _MyHomePageState extends State<MyHomePage> {
     TextEditingController titleController = TextEditingController();
     FocusNode titleFocusNode = FocusNode();
 
-    List<Color> colorList = [
-      Colors.transparent,
-      Colors.green,
-      Colors.blue,
-      // Colors.yellow,
-      Colors.red,
-      Colors.purple,
-      // Colors.pink,
-      Colors.orange
-    ];
+    // List<Color> colorList = [
+    //   Colors.transparent,
+    //   Colors.green,
+    //   Colors.blue,
+    //   // Colors.yellow,
+    //   Colors.red,
+    //   Colors.purple,
+    //   // Colors.pink,
+    //   Colors.orange
+    // ];
 
     Map days = {
       'Mo': false,
@@ -351,7 +357,9 @@ class _MyHomePageState extends State<MyHomePage> {
                           ? Icons.palette_outlined
                           : Icons.palette,
                       color: themeProvider.colorOfAntiThemeBrightness(
-                          currentColor, .2),
+                        currentColor,
+                        .2,
+                      ),
                       // Icons.palette,
                     ),
                     // elevation: 10,
@@ -360,21 +368,23 @@ class _MyHomePageState extends State<MyHomePage> {
                         value: 1,
                         child: Row(
                           children: List.generate(
-                            colorList.length,
+                            listsProvider.colorList.length,
                             (index) => IconButton(
                               onPressed: () {
                                 setState(() {
                                   // print(colorList[index]);
                                   currentColor =
-                                      colorList[index] == Colors.transparent
+                                      listsProvider.colorList[index] ==
+                                              Colors.transparent
                                           ? null
-                                          : colorList[index];
+                                          : listsProvider.colorList[index];
                                 });
                               },
-                              icon: colorList[index] != Colors.transparent
+                              icon: listsProvider.colorList[index] !=
+                                      Colors.transparent
                                   ? Icon(
                                       Icons.circle,
-                                      color: colorList[index],
+                                      color: listsProvider.colorList[index],
                                     )
                                   : Icon(
                                       Icons.water_drop_rounded,
@@ -389,55 +399,58 @@ class _MyHomePageState extends State<MyHomePage> {
                     // color: Colors.grey,
                     // elevation: 2,
                   ),
-                  Container(
-                    alignment: Alignment.center,
-                    width: 100,
-                    // color: Colors.white,
-                    child: TextField(
-                      onTapOutside: (event) {
-                        setState(() {
-                          titleFocusNode.unfocus();
-                        });
-                      },
-                      onEditingComplete: () {
-                        setState(() {
-                          titleFocusNode.unfocus();
-                        });
-                      },
-                      onSubmitted: (value) {
-                        setState(() {
-                          titleFocusNode.unfocus();
-                        });
-                      },
-                      onTap: () {
-                        setState(() {});
-                      },
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      textAlign: TextAlign.center,
-                      focusNode: titleFocusNode,
-                      controller: titleController,
-                      decoration: InputDecoration(
-                        border: titleFocusNode.hasFocus
-                            ? const UnderlineInputBorder()
-                            : InputBorder.none,
-                        hintText: 'Title',
-                        hintStyle: const TextStyle(
+                  Flexible(
+                    fit: FlexFit.loose,
+                    child: Container(
+                      alignment: Alignment.center,
+                      // width: 100,
+                      // color: Colors.white,
+                      child: TextField(
+                        onTapOutside: (event) {
+                          setState(() {
+                            titleFocusNode.unfocus();
+                          });
+                        },
+                        onEditingComplete: () {
+                          setState(() {
+                            titleFocusNode.unfocus();
+                          });
+                        },
+                        onSubmitted: (value) {
+                          setState(() {
+                            titleFocusNode.unfocus();
+                          });
+                        },
+                        onTap: () {
+                          setState(() {});
+                        },
+                        style: const TextStyle(
                           fontSize: 18,
-                          // color: darken(currentColor, .9),
-                          // decorationColor: Colors.yellow,
-                          // backgroundColor: Colors.white,
+                          fontWeight: FontWeight.bold,
                         ),
+                        textAlign: TextAlign.center,
+                        focusNode: titleFocusNode,
+                        controller: titleController,
+                        decoration: InputDecoration(
+                          border: titleFocusNode.hasFocus
+                              ? const UnderlineInputBorder()
+                              : InputBorder.none,
+                          hintText: 'Title',
+                          hintStyle: const TextStyle(
+                            fontSize: 18,
+                            // color: darken(currentColor, .9),
+                            // decorationColor: Colors.yellow,
+                            // backgroundColor: Colors.white,
+                          ),
+                        ),
+                        // autofocus: true,
+                        onChanged: (text) => {
+                          setState(() {
+                            currentTitle = titleController.text;
+                            debugPrint(text);
+                          })
+                        },
                       ),
-                      // autofocus: true,
-                      onChanged: (text) => {
-                        setState(() {
-                          currentTitle = titleController.text;
-                          debugPrint(text);
-                        })
-                      },
                     ),
                   ),
                   SizedBox(
@@ -473,7 +486,10 @@ class _MyHomePageState extends State<MyHomePage> {
                               shape: BoxShape.circle,
                               color: days[entry.key]
                                   ? themeProvider.colorOfAntiThemeBrightness(
-                                      currentColor, .2, Colors.grey)
+                                      currentColor,
+                                      .2,
+                                      Colors.grey,
+                                    )
                                   : null,
                             ),
                             child: Padding(
@@ -484,10 +500,11 @@ class _MyHomePageState extends State<MyHomePage> {
                                   style: TextStyle(
                                     color: themeProvider
                                         .colorOfThemeBrightnessIfTrueAndViceVersa(
-                                            days[entry.key],
-                                            currentColor,
-                                            .2,
-                                            Colors.grey),
+                                      days[entry.key],
+                                      currentColor,
+                                      .2,
+                                      Colors.grey,
+                                    ),
                                     // fontSize: 10,
                                     fontWeight: FontWeight.w600,
                                   ),
@@ -518,7 +535,9 @@ class _MyHomePageState extends State<MyHomePage> {
                       // print(Provider.of<ListsProvider>(context, listen: false)
                       // .value);
                       listsProvider.addToList({
-                        'currentColor': currentColor,
+                        'currentColorIndex': (currentColor == null)
+                            ? null
+                            : listsProvider.colorList.indexOf(currentColor!),
                         'currentTitle': currentTitle,
                         'days': days,
                       });
