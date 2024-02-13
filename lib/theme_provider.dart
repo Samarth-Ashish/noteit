@@ -29,8 +29,8 @@ class ThemeProvider extends ChangeNotifier {
   );
 
   ThemeProvider() {
-    // isDark = true;
-    // currentTheme = darkTheme;
+    isDark = true;
+    currentTheme = darkTheme;
     loadThemePreference();
   }
 

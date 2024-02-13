@@ -148,7 +148,9 @@ class _MyHomePageState extends State<MyHomePage> {
                                   style: TextStyle(
                                     color: themeProvider.colorOfThemeBrightnessIfTrueAndViceVersa(
                                       item['days'][item['days'].keys.elementAt(index)],
-                                      item['currentColorIndex'],
+                                      (item['currentColorIndex'] == null)
+                                          ? null
+                                          : listsProvider.colorList[item['currentColorIndex']],
                                       .2,
                                       Colors.grey,
                                     ),
@@ -510,9 +512,6 @@ class _MyHomePageState extends State<MyHomePage> {
                 TextButton(
                   onPressed: () {
                     setState(() {
-                      listsProvider.increment();
-                      // print(Provider.of<ListsProvider>(context, listen: false)
-                      // .value);
                       listsProvider.addToList({
                         'currentColorIndex':
                             (currentColor == null) ? null : listsProvider.colorList.indexOf(currentColor!),
