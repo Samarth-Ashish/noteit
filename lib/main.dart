@@ -601,6 +601,8 @@ class _MyHomePageState extends State<MyHomePage> {
                           onTimeChange: (dateTime) {
                             setState(() {
                               selectedTime = dateTime;
+                              print(selectedTime!.hour);
+                              print(selectedTime!.minute);
                             });
                           },
                         ),
@@ -627,6 +629,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         'colorIndex': (currentColor == null) ? null : listsProvider.colorList.indexOf(currentColor!),
                         'title': title,
                         'days': days,
+                        // 'time': selectedTime.
                       });
                       // print(Provider.of<ListsProvider>(context, listen: false)
                       // .lists);
