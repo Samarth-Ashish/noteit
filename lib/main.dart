@@ -3,8 +3,9 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'existing_notes_provider.dart';
 import 'theme_provider.dart';
-import 'package:time_picker_spinner_pop_up/time_picker_spinner_pop_up.dart';
-import 'package:time_picker_spinner/time_picker_spinner.dart';
+// import 'package:time_picker_spinner_pop_up/time_picker_spinner_pop_up.dart';
+// import 'package:time_picker_spinner/time_picker_spinner.dart';
+import 'manual_packages/time_picker_edited.dart';
 
 void main() async {
   runApp(
@@ -321,6 +322,7 @@ class _MyHomePageState extends State<MyHomePage> {
     String title = '';
     TextEditingController titleController = TextEditingController();
     FocusNode titleFocusNode = FocusNode();
+    DateTime now = DateTime.now();
 
     Map days = {
       'Mo': false,
@@ -543,19 +545,42 @@ class _MyHomePageState extends State<MyHomePage> {
                   //   onChange: (dateTime) {
                   //     // Implement your logic with select dateTime
                   //   },
-                  // )
-                  FittedBox(
+                  // ),
+                  Container(
+                    // decoration: ShapeDecoration(
+                    //   color: themeProvider.colorOfThemeBrightness(
+                    //     currentColor,
+                    //     0.25,
+                    //   ),
+                    //   shape: ,
+                    // ),
+                    decoration: BoxDecoration(
+                        border: Border.all(
+                          color: themeProvider.colorOfAntiThemeBrightness(currentColor, 0.2, Colors.white)!,
+                        ),
+                        borderRadius: const BorderRadius.all(Radius.circular(30))),
                     child: TimePickerSpinner(
-                      locale: const Locale('en', ''),
-                      // time: dateTime,
-                      is24HourMode: false,
-                      spacing: 5,
+                      time: now,
+                      // spacing: 10,
+                      itemHeight: 35,
+                      minutesInterval: 5,
+                      // alignment: Alignment.center,
+                      // itemWidth: 40,
+                      // separator: ':',
                       isShowSeconds: false,
-                      itemHeight: 10,
-                      normalTextStyle: const TextStyle(
-                        fontSize: 24,
+                      normalTextStyle: TextStyle(
+                        fontSize: 17,
+                        fontWeight: FontWeight.w500,
+                        color: themeProvider.colorOfThemeBrightness(
+                          currentColor,
+                          0.3,
+                        ),
                       ),
-                      highlightedTextStyle: const TextStyle(fontSize: 24, color: Colors.blue),
+                      highlightedTextStyle: TextStyle(
+                        fontSize: 25,
+                        fontWeight: FontWeight.w600,
+                        color: themeProvider.colorOfAntiThemeBrightness(currentColor, 0.2, Colors.white),
+                      ),
                       isForce2Digits: true,
                       onTimeChange: (time) {
                         setState(() {
