@@ -317,12 +317,16 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void showAlertDialog(BuildContext context, ThemeProvider themeProvider, ListsProvider listsProvider) {
+    // others
+    TextEditingController titleController = TextEditingController();
+    FocusNode titleFocusNode = FocusNode();
+
+    DateTime now = DateTime.now();
+
     bool isColorPickerActive = false;
     Color? currentColor;
     String title = '';
-    TextEditingController titleController = TextEditingController();
-    FocusNode titleFocusNode = FocusNode();
-    DateTime now = DateTime.now();
+    DateTime? selectedTime;
 
     Map days = {
       'Mo': false,
@@ -546,49 +550,63 @@ class _MyHomePageState extends State<MyHomePage> {
                   //     // Implement your logic with select dateTime
                   //   },
                   // ),
-                  Container(
-                    // decoration: ShapeDecoration(
-                    //   color: themeProvider.colorOfThemeBrightness(
-                    //     currentColor,
-                    //     0.25,
-                    //   ),
-                    //   shape: ,
-                    // ),
-                    decoration: BoxDecoration(
+                  FittedBox(
+                    child: Container(
+                      // decoration: ShapeDecoration(
+                      //   color: themeProvider.colorOfThemeBrightness(
+                      //     currentColor,
+                      //     0.25,
+                      //   ),
+                      //   shape: ,
+                      // ),
+                      decoration: BoxDecoration(
                         border: Border.all(
+                          width: 2,
                           color: themeProvider.colorOfAntiThemeBrightness(currentColor, 0.2, Colors.white)!,
                         ),
-                        borderRadius: const BorderRadius.all(Radius.circular(30))),
-                    child: TimePickerSpinner(
-                      time: now,
-                      // spacing: 10,
-                      itemHeight: 35,
-                      minutesInterval: 5,
-                      // alignment: Alignment.center,
-                      // itemWidth: 40,
-                      // separator: ':',
-                      isShowSeconds: false,
-                      normalTextStyle: TextStyle(
-                        fontSize: 17,
-                        fontWeight: FontWeight.w500,
-                        color: themeProvider.colorOfThemeBrightness(
-                          currentColor,
-                          0.3,
+                        borderRadius: const BorderRadius.all(
+                          Radius.circular(30),
                         ),
                       ),
-                      highlightedTextStyle: TextStyle(
-                        fontSize: 25,
-                        fontWeight: FontWeight.w600,
-                        color: themeProvider.colorOfAntiThemeBrightness(currentColor, 0.2, Colors.white),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 5),
+                        child: TimePickerSpinner(
+                          time: now,
+                          // spacing: 10,
+                          itemHeight: 35,
+                          minutesInterval: 5,
+                          // alignment: Alignment.center,
+                          // itemWidth: 40,
+                          // separator: ':',
+                          isShowSeconds: false,
+                          normalTextStyle: TextStyle(
+                            fontSize: 17,
+                            fontWeight: FontWeight.w500,
+                            color: themeProvider.colorOfThemeBrightness(
+                              currentColor,
+                              0.3,
+                              Colors.white,
+                            ),
+                          ),
+                          highlightedTextStyle: TextStyle(
+                            fontSize: 25,
+                            fontWeight: FontWeight.w600,
+                            color: themeProvider.colorOfAntiThemeBrightness(
+                              currentColor,
+                              0.2,
+                              Colors.blueGrey,
+                            ),
+                          ),
+                          isForce2Digits: true,
+                          onTimeChange: (dateTime) {
+                            setState(() {
+                              selectedTime = dateTime;
+                            });
+                          },
+                        ),
                       ),
-                      isForce2Digits: true,
-                      onTimeChange: (time) {
-                        setState(() {
-                          // dateTime = time;
-                        });
-                      },
                     ),
-                  )
+                  ),
                 ],
               ),
               // backgroundColor: Colors.grey[200],
