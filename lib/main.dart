@@ -3,6 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'existing_notes_provider.dart';
 import 'theme_provider.dart';
+import 'package:intl/intl.dart';
 // import 'package:time_picker_spinner_pop_up/time_picker_spinner_pop_up.dart';
 // import 'package:time_picker_spinner/time_picker_spinner.dart';
 import 'manual_packages/time_picker_edited.dart';
@@ -180,7 +181,7 @@ class _MyHomePageState extends State<MyHomePage> {
           // Navigator.of(context).push(
           //     MaterialPageRoute(builder: (context) => const CreateNotePage()));
           // showModal(context);
-          showAlertDialog(context, themeProvider, listsProvider);
+          showNewAlertDialog(context, themeProvider, listsProvider);
         },
         tooltip: 'Add new note',
         child: const Icon(Icons.add),
@@ -268,6 +269,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                     ),
                   ),
+                  Text(DateTime.fromMillisecondsSinceEpoch(item['time']).toString())
                 ],
               ),
             ),
@@ -316,17 +318,17 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  void showAlertDialog(BuildContext context, ThemeProvider themeProvider, ListsProvider listsProvider) {
+  void showNewAlertDialog(BuildContext context, ThemeProvider themeProvider, ListsProvider listsProvider) {
     // others
     TextEditingController titleController = TextEditingController();
     FocusNode titleFocusNode = FocusNode();
+    bool isColorPickerActive = false;
 
     DateTime now = DateTime.now();
 
-    bool isColorPickerActive = false;
     Color? currentColor;
     String title = '';
-    DateTime? selectedTime;
+    DateTime selectedTime = now;
 
     Map days = {
       'Mo': false,
@@ -385,10 +387,12 @@ class _MyHomePageState extends State<MyHomePage> {
                           value: 1,
                           child: FittedBox(
                             child: Row(
+                              mainAxisSize: MainAxisSize.max,
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: List.generate(
                                 listsProvider.colorList.length,
-                                (index) => IconButton(
-                                  onPressed: () {
+                                (index) => GestureDetector(
+                                  onTap: () {
                                     setState(() {
                                       // print(colorList[index]);
                                       currentColor = listsProvider.colorList[index] == Colors.transparent
@@ -396,15 +400,27 @@ class _MyHomePageState extends State<MyHomePage> {
                                           : listsProvider.colorList[index];
                                     });
                                   },
-                                  icon: listsProvider.colorList[index] != Colors.transparent
-                                      ? Icon(
-                                          Icons.circle,
-                                          color: listsProvider.colorList[index],
-                                        )
-                                      : Icon(
-                                          Icons.water_drop_rounded,
-                                          color: Theme.of(context).highlightColor,
-                                        ),
+                                  // icon: listsProvider.colorList[index] != Colors.transparent
+                                  //     ? Icon(
+                                  //         Icons.circle,
+                                  //         color: listsProvider.colorList[index],
+                                  //       )
+                                  //     : Icon(
+                                  //         Icons.water_drop_rounded,
+                                  //         color: Theme.of(context).highlightColor,
+                                  //       ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 3),
+                                    child: listsProvider.colorList[index] != Colors.transparent
+                                        ? Icon(
+                                            Icons.circle,
+                                            color: listsProvider.colorList[index],
+                                          )
+                                        : Icon(
+                                            Icons.water_drop_rounded,
+                                            color: Theme.of(context).highlightColor,
+                                          ),
+                                  ),
                                 ),
                               ),
                             ),
@@ -544,12 +560,6 @@ class _MyHomePageState extends State<MyHomePage> {
                           .toList(),
                     ),
                   ),
-                  // TimePickerSpinnerPopUp(
-                  //   initTime: DateTime.now(),
-                  //   onChange: (dateTime) {
-                  //     // Implement your logic with select dateTime
-                  //   },
-                  // ),
                   FittedBox(
                     child: Container(
                       // decoration: ShapeDecoration(
@@ -570,7 +580,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 5),
-                        child: TimePickerSpinner(
+                        child: TimePickerSpinner( //! time picker
                           time: now,
                           // spacing: 10,
                           itemHeight: 35,
@@ -601,8 +611,8 @@ class _MyHomePageState extends State<MyHomePage> {
                           onTimeChange: (dateTime) {
                             setState(() {
                               selectedTime = dateTime;
-                              print(selectedTime!.hour);
-                              print(selectedTime!.minute);
+                              // print(selectedTime.hour);
+                              // print(selectedTime.minute);
                             });
                           },
                         ),
@@ -629,7 +639,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         'colorIndex': (currentColor == null) ? null : listsProvider.colorList.indexOf(currentColor!),
                         'title': title,
                         'days': days,
-                        // 'time': selectedTime.
+                        'time': selectedTime.millisecondsSinceEpoch,
                       });
                       // print(Provider.of<ListsProvider>(context, listen: false)
                       // .lists);
