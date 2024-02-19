@@ -269,7 +269,13 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                     ),
                   ),
-                  Text(DateTime.fromMillisecondsSinceEpoch(item['time']).toString())
+                  Text(
+                    DateFormat.jm().format(DateTime.fromMillisecondsSinceEpoch(item['time'])).toString(),
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 20,
+                    ),
+                  )
                 ],
               ),
             ),
@@ -292,37 +298,12 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  Switch themeModeSwitch(BuildContext context, ThemeProvider themeProvider) {
-    return Switch(
-      inactiveTrackColor: Theme.of(context).colorScheme.onPrimary,
-      activeColor: Theme.of(context).colorScheme.onPrimary,
-      value: !themeProvider.isDark,
-      onChanged: (value) => themeProvider.toggleMode(),
-    );
-  }
-
-  void showModal(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      builder: (BuildContext builder) {
-        return const SizedBox(
-          height: 200.0,
-          child: Center(
-            child: Text(
-              'This is a modal!',
-              style: TextStyle(fontSize: 20.0),
-            ),
-          ),
-        );
-      },
-    );
-  }
-
   void showNewAlertDialog(BuildContext context, ThemeProvider themeProvider, ListsProvider listsProvider) {
     // others
     TextEditingController titleController = TextEditingController();
     FocusNode titleFocusNode = FocusNode();
     bool isColorPickerActive = false;
+    bool enabled = true;
 
     DateTime now = DateTime.now();
 
@@ -493,7 +474,29 @@ class _MyHomePageState extends State<MyHomePage> {
                       width: 50,
                       child: FittedBox(
                         fit: BoxFit.contain,
-                        child: themeModeSwitch(context, themeProvider),
+                        // child: themeModeSwitch(context, themeProvider),
+                        child: Switch(
+                          // inactiveTrackColor: Colors.grey,
+                          inactiveThumbColor: themeProvider.colorOfThemeBrightness(
+                            Colors.grey,
+                            .2,
+                          ),
+                          // activeColor: Theme.of(context).colorScheme.onPrimary,
+                          activeTrackColor: themeProvider.colorOfAntiThemeBrightness(
+                            currentColor,
+                            .2,
+                          ),
+                          activeColor: themeProvider.colorOfThemeBrightness(
+                            currentColor,
+                            .2,
+                          ),
+                          value: enabled,
+                          onChanged: (value) => {
+                            setState(() {
+                              enabled = value;
+                            })
+                          },
+                        ),
                       ),
                     ),
                   ],
@@ -580,7 +583,8 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 5),
-                        child: TimePickerSpinner( //! time picker
+                        child: TimePickerSpinner(
+                          //! time picker
                           time: now,
                           // spacing: 10,
                           itemHeight: 35,
@@ -656,6 +660,32 @@ class _MyHomePageState extends State<MyHomePage> {
               ],
             );
           },
+        );
+      },
+    );
+  }
+
+  Widget themeModeSwitch(BuildContext context, ThemeProvider themeProvider) {
+    return Switch(
+      inactiveTrackColor: Theme.of(context).colorScheme.onPrimary,
+      activeColor: Theme.of(context).colorScheme.onPrimary,
+      value: !themeProvider.isDark,
+      onChanged: (value) => themeProvider.toggleMode(),
+    );
+  }
+
+  void showModal(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext builder) {
+        return const SizedBox(
+          height: 200.0,
+          child: Center(
+            child: Text(
+              'This is a modal!',
+              style: TextStyle(fontSize: 20.0),
+            ),
+          ),
         );
       },
     );

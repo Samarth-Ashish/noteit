@@ -65,18 +65,12 @@ class ThemeProvider extends ChangeNotifier {
 
   //
 
-  Color? colorOfThemeBrightness(Color? color,
-      [double amount = .1, Color? defaultColor]) {
-    return isDark
-        ? darken(color ?? defaultColor, amount)
-        : lighten(color ?? defaultColor, amount);
+  Color? colorOfThemeBrightness(Color? color, [double amount = .1, Color? defaultColor]) {
+    return isDark ? darken(color ?? defaultColor, amount) : lighten(color ?? defaultColor, amount);
   }
 
-  Color? colorOfAntiThemeBrightness(Color? color,
-      [double amount = .1, Color? defaultColor]) {
-    return isDark
-        ? lighten(color ?? defaultColor, amount)
-        : darken(color ?? defaultColor, amount);
+  Color? colorOfAntiThemeBrightness(Color? color, [double amount = .1, Color? defaultColor]) {
+    return isDark ? lighten(color ?? defaultColor, amount) : darken(color ?? defaultColor, amount);
   }
 
   //
@@ -88,9 +82,16 @@ class ThemeProvider extends ChangeNotifier {
         : colorOfAntiThemeBrightness(color, amount, defaultColor);
   }
 
-  Color? colorOfAntiThemeBrightnessIfTrueAndViceVersa(
-      bool condition, Color? color,
+  Color? colorOfAntiThemeBrightnessIfTrueAndViceVersa(bool condition, Color? color,
       [double amount = .1, Color? defaultColor]) {
+    return condition
+        ? colorOfAntiThemeBrightness(color, amount, defaultColor)
+        : colorOfThemeBrightness(color, amount, defaultColor);
+  }
+
+  //
+
+  Color? colorFromBrightnessOf(bool condition, Color? color, [double amount = .1, Color? defaultColor]) {
     return condition
         ? colorOfAntiThemeBrightness(color, amount, defaultColor)
         : colorOfThemeBrightness(color, amount, defaultColor);
@@ -125,3 +126,12 @@ Color? lighten(Color? color, [double amount = .1]) {
   return hslLight.toColor();
 }
 
+Color? returnColorFromBrightnessOf(Color? fromColor, Color? colorToConvert) {
+  if (fromColor == null) {
+    return null;
+  }
+  colorToConvert = colorToConvert ?? Colors.grey;
+
+  final hslOfFromColor = HSLColor.fromColor(fromColor);
+  final hslLight = hsl.withLightness((hsl.lightness + amount).clamp(0.0, 1.0));
+}
