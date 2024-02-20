@@ -271,9 +271,14 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                   Text(
                     DateFormat.jm().format(DateTime.fromMillisecondsSinceEpoch(item['time'])).toString(),
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontWeight: FontWeight.w500,
                       fontSize: 20,
+                      color: themeProvider.colorOfAntiThemeBrightness(
+                        (item['colorIndex'] == null) ? null : listsProvider.colorList[item['colorIndex']],
+                        .2,
+                        Colors.grey,
+                      ),
                     ),
                   )
                 ],
@@ -476,11 +481,13 @@ class _MyHomePageState extends State<MyHomePage> {
                         fit: BoxFit.contain,
                         // child: themeModeSwitch(context, themeProvider),
                         child: Switch(
-                          // inactiveTrackColor: Colors.grey,
-                          inactiveThumbColor: themeProvider.colorOfThemeBrightness(
-                            Colors.grey,
-                            .2,
-                          ),
+                          //
+                          inactiveTrackColor: themeProvider.colorOfThemeBrightness(currentColor, .2, Colors.white),
+                          // inactiveThumbColor: themeProvider.colorOfThemeBrightness(
+                          //   Colors.grey,
+                          //   .2,
+                          // ),
+                          //
                           // activeColor: Theme.of(context).colorScheme.onPrimary,
                           activeTrackColor: themeProvider.colorOfAntiThemeBrightness(
                             currentColor,
@@ -490,6 +497,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             currentColor,
                             .2,
                           ),
+                          //
                           value: enabled,
                           onChanged: (value) => {
                             setState(() {
@@ -506,6 +514,13 @@ class _MyHomePageState extends State<MyHomePage> {
               content: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
+                  SizedBox(
+                    width: 50,
+                    child: FittedBox(
+                      fit: BoxFit.contain,
+                      child: themeModeSwitch(context, themeProvider),
+                    ),
+                  ),
                   SizedBox(
                     width: double.infinity,
                     height: 50,
@@ -575,7 +590,11 @@ class _MyHomePageState extends State<MyHomePage> {
                       decoration: BoxDecoration(
                         border: Border.all(
                           width: 2,
-                          color: themeProvider.colorOfAntiThemeBrightness(currentColor, 0.2, Colors.white)!,
+                          color: themeProvider.colorOfAntiThemeBrightness(
+                            currentColor,
+                            0.2,
+                            Colors.blueGrey,
+                          )!,
                         ),
                         borderRadius: const BorderRadius.all(
                           Radius.circular(30),
@@ -595,12 +614,12 @@ class _MyHomePageState extends State<MyHomePage> {
                           isShowSeconds: false,
                           normalTextStyle: TextStyle(
                             fontSize: 17,
-                            fontWeight: FontWeight.w500,
+                            fontWeight: FontWeight.w600,
                             color: themeProvider.colorOfThemeBrightness(
-                              currentColor,
-                              0.3,
-                              Colors.white,
-                            ),
+                                  currentColor,
+                                  0.3,
+                                ) ??
+                                (themeProvider.isDark ? Colors.grey.shade700 : Colors.grey.shade400),
                           ),
                           highlightedTextStyle: TextStyle(
                             fontSize: 25,
@@ -644,6 +663,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         'title': title,
                         'days': days,
                         'time': selectedTime.millisecondsSinceEpoch,
+                        'enabled': enabled,
                       });
                       // print(Provider.of<ListsProvider>(context, listen: false)
                       // .lists);
