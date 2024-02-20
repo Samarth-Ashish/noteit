@@ -212,17 +212,60 @@ class _MyHomePageState extends State<MyHomePage> {
               child: Column(
                 // crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  if (item['title'] != '')
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 10),
-                      child: Text(
-                        item['title'],
-                        style: const TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w600,
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          DateFormat.jm().format(DateTime.fromMillisecondsSinceEpoch(item['time'])).toString(),
+                          style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 18,
+                            color: themeProvider.colorOfAntiThemeBrightness(
+                              (item['colorIndex'] == null) ? null : listsProvider.colorList[item['colorIndex']],
+                              .2,
+                              Colors.grey,
+                            ),
+                          ),
                         ),
-                      ),
+                        if (item['title'] != '')
+                          Text(
+                            item['title'],
+                            style: const TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        SizedBox(
+                          width: 50,
+                          child: FittedBox(
+                            fit: BoxFit.contain,
+                            // child: themeModeSwitch(context, themeProvider),
+                            child: Switch(
+                              //
+                              inactiveTrackColor: themeProvider.colorOfThemeBrightness(
+                                (item['colorIndex'] == null) ? null : listsProvider.colorList[item['colorIndex']],
+                                .2,
+                                Colors.grey,
+                              ),
+                              activeTrackColor: themeProvider.colorOfAntiThemeBrightness(
+                                  (item['colorIndex'] == null) ? null : listsProvider.colorList[item['colorIndex']],
+                                  .2,
+                                  Colors.grey.shade600),
+                              activeColor: themeProvider.colorOfThemeBrightness(
+                                  (item['colorIndex'] == null) ? null : listsProvider.colorList[item['colorIndex']],
+                                  .2,
+                                  Colors.grey.shade600),
+                              //
+                              value: item['enabled'] ?? false,
+                              onChanged: (value) => {listsProvider.setEnable(item, value)},
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
+                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     mainAxisSize: MainAxisSize.max,
@@ -269,18 +312,6 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                     ),
                   ),
-                  Text(
-                    DateFormat.jm().format(DateTime.fromMillisecondsSinceEpoch(item['time'])).toString(),
-                    style: TextStyle(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 20,
-                      color: themeProvider.colorOfAntiThemeBrightness(
-                        (item['colorIndex'] == null) ? null : listsProvider.colorList[item['colorIndex']],
-                        .2,
-                        Colors.grey,
-                      ),
-                    ),
-                  )
                 ],
               ),
             ),
@@ -297,7 +328,7 @@ class _MyHomePageState extends State<MyHomePage> {
               Colors.grey,
             ),
             iconSize: 20,
-          )
+          ),
         ],
       ),
     );
@@ -482,20 +513,20 @@ class _MyHomePageState extends State<MyHomePage> {
                         // child: themeModeSwitch(context, themeProvider),
                         child: Switch(
                           //
-                          inactiveTrackColor: themeProvider.colorOfThemeBrightness(currentColor, .2, Colors.white),
-                          // inactiveThumbColor: themeProvider.colorOfThemeBrightness(
-                          //   Colors.grey,
-                          //   .2,
-                          // ),
-                          //
-                          // activeColor: Theme.of(context).colorScheme.onPrimary,
+                          inactiveTrackColor: themeProvider.colorOfThemeBrightness(
+                            currentColor,
+                            .2,
+                            // Colors.grey,
+                          ),
                           activeTrackColor: themeProvider.colorOfAntiThemeBrightness(
                             currentColor,
                             .2,
+                            Colors.grey.shade600,
                           ),
                           activeColor: themeProvider.colorOfThemeBrightness(
                             currentColor,
                             .2,
+                            Colors.grey.shade600,
                           ),
                           //
                           value: enabled,
@@ -514,13 +545,13 @@ class _MyHomePageState extends State<MyHomePage> {
               content: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  SizedBox(
-                    width: 50,
-                    child: FittedBox(
-                      fit: BoxFit.contain,
-                      child: themeModeSwitch(context, themeProvider),
-                    ),
-                  ),
+                  // SizedBox(
+                  //   width: 50,
+                  //   child: FittedBox(
+                  //     fit: BoxFit.contain,
+                  //     child: themeModeSwitch(context, themeProvider),
+                  //   ),
+                  // ),
                   SizedBox(
                     width: double.infinity,
                     height: 50,

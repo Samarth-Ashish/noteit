@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ListsProvider extends ChangeNotifier {
-  
   late List<Map<dynamic, dynamic>> lists;
 
   List<Color> colorList = [
@@ -39,20 +38,26 @@ class ListsProvider extends ChangeNotifier {
     await prefs.setString('lists', jsonLists);
   }
 
-  void addToList(value) async {
-    lists.add(value);
+  void addToList(item) async {
+    lists.add(item);
     saveLists();
     notifyListeners();
   }
 
-  void removeFromList(value) async {
-    lists.remove(value);
+  void removeFromList(item) async {
+    lists.remove(item);
     saveLists();
     notifyListeners();
   }
 
   void resetNotes() async {
     lists = [];
+    saveLists();
+    notifyListeners();
+  }
+
+  void setEnable(item, value) async {
+    lists[lists.indexOf(item)]['enabled']=value;
     saveLists();
     notifyListeners();
   }
