@@ -197,7 +197,7 @@ class _MyHomePageState extends State<MyHomePage> {
         alignment: Alignment.bottomRight,
         children: [
           Container(
-            margin: const EdgeInsets.only(top: 5, bottom: 17, left: 5, right: 5),
+            margin: const EdgeInsets.only(top: 5, bottom: 17, left: 8, right: 8),
             // margin: const EdgeInsets.all(5),
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
@@ -206,7 +206,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 .2,
                 Colors.grey,
               ),
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(25),
             ),
             child: Center(
               child: Column(
@@ -373,6 +373,11 @@ class _MyHomePageState extends State<MyHomePage> {
                   // mainAxisSize: MainAxisSize.max,
                   children: [
                     PopupMenuButton(
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(20),
+                        ),
+                      ),
                       //!PopupMenuButton
                       onOpened: () {
                         setState(() {
@@ -384,12 +389,12 @@ class _MyHomePageState extends State<MyHomePage> {
                           isColorPickerActive = false;
                         });
                       },
-                      onSelected: (value) {
-                        setState(() {
-                          isColorPickerActive = false;
-                          debugPrint('tapped');
-                        });
-                      },
+                      // onSelected: (value) {
+                      //   setState(() {
+                      //     isColorPickerActive = false;
+                      //     debugPrint('tapped');
+                      //   });
+                      // },
                       icon: Icon(
                         isColorPickerActive ? Icons.palette_outlined : Icons.palette,
                         color: themeProvider.colorOfAntiThemeBrightness(
@@ -402,7 +407,8 @@ class _MyHomePageState extends State<MyHomePage> {
                       itemBuilder: (context) => [
                         PopupMenuItem(
                           value: 1,
-                          child: FittedBox(
+                          child: SizedBox(
+                            width: double.infinity,
                             child: Row(
                               mainAxisSize: MainAxisSize.max,
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -427,7 +433,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                   //         color: Theme.of(context).highlightColor,
                                   //       ),
                                   child: Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 3),
+                                    padding: const EdgeInsets.all(5),
                                     child: listsProvider.colorList[index] != Colors.transparent
                                         ? Icon(
                                             Icons.circle,
@@ -444,9 +450,399 @@ class _MyHomePageState extends State<MyHomePage> {
                           ),
                         ),
                       ],
-                      offset: const Offset(0, -60),
+                      offset: const Offset(-10, -90),
                       // color: Colors.grey,
-                      // elevation: 2,
+                      elevation: 10,
+                    ),
+                    const SizedBox(
+                      width: 5,
+                    ),
+                    Flexible(
+                      fit: FlexFit.loose,
+                      child: Container(
+                        alignment: Alignment.center,
+                        // width: 100,
+                        // color: Colors.white,
+                        child: TextField(
+                          onTapOutside: (event) {
+                            setState(() {
+                              titleFocusNode.unfocus();
+                            });
+                          },
+                          onEditingComplete: () {
+                            setState(() {
+                              titleFocusNode.unfocus();
+                            });
+                          },
+                          onSubmitted: (value) {
+                            setState(() {
+                              titleFocusNode.unfocus();
+                            });
+                          },
+                          onTap: () {
+                            setState(() {});
+                          },
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          textAlign: TextAlign.center,
+                          focusNode: titleFocusNode,
+                          controller: titleController,
+                          decoration: InputDecoration(
+                            border: titleFocusNode.hasFocus ? const UnderlineInputBorder() : InputBorder.none,
+                            hintText: 'Title',
+                            hintStyle: const TextStyle(
+                              fontSize: 18,
+                              // color: darken(currentColor, .9),
+                              // decorationColor: Colors.yellow,
+                              // backgroundColor: Colors.white,
+                            ),
+                          ),
+                          // autofocus: true,
+                          onChanged: (text) => {
+                            setState(() {
+                              title = titleController.text;
+                              debugPrint(text);
+                            })
+                          },
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 5,
+                    ),
+                    SizedBox(
+                      width: 50,
+                      child: FittedBox(
+                        fit: BoxFit.contain,
+                        // child: themeModeSwitch(context, themeProvider),
+                        child: Switch(
+                          //
+                          inactiveTrackColor: themeProvider.colorOfThemeBrightness(
+                            currentColor,
+                            .2,
+                            // Colors.grey,
+                          ),
+                          activeTrackColor: themeProvider.colorOfAntiThemeBrightness(
+                            currentColor,
+                            .2,
+                            Colors.grey.shade600,
+                          ),
+                          activeColor: themeProvider.colorOfThemeBrightness(
+                            currentColor,
+                            .2,
+                            Colors.grey.shade600,
+                          ),
+                          //
+                          value: enabled,
+                          onChanged: (value) => {
+                            setState(() {
+                              enabled = value;
+                            })
+                          },
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              // ! content
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // SizedBox(
+                  //   width: 50,
+                  //   child: FittedBox(
+                  //     fit: BoxFit.contain,
+                  //     child: themeModeSwitch(context, themeProvider),
+                  //   ),
+                  // ),
+                  SizedBox(
+                    width: double.infinity,
+                    height: 50,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      mainAxisSize: MainAxisSize.max,
+                      // crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: days.entries
+                          .map(
+                            (entry) => Flexible(
+                              child: GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    days[entry.key] = !days[entry.key];
+                                  });
+                                },
+                                child: AnimatedContainer(
+                                  duration: const Duration(milliseconds: 200),
+                                  padding: const EdgeInsets.all(1),
+                                  margin: const EdgeInsets.all(1),
+                                  width: 30,
+                                  height: 30,
+                                  // width: MediaQuery.of(context).size.width * 0.1,
+                                  // height: MediaQuery.of(context).size.width * 0.1,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: days[entry.key]
+                                        ? themeProvider.colorOfAntiThemeBrightness(
+                                            currentColor,
+                                            .2,
+                                            Colors.grey,
+                                          )
+                                        : null,
+                                  ),
+                                  child: FittedBox(
+                                    fit: BoxFit.scaleDown,
+                                    child: Text(
+                                      '${entry.key}',
+                                      style: TextStyle(
+                                        color: themeProvider.colorOfThemeBrightnessIfTrueAndViceVersa(
+                                          days[entry.key],
+                                          currentColor,
+                                          .2,
+                                          Colors.grey,
+                                        ),
+                                        // fontSize: 10,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          )
+                          .toList(),
+                    ),
+                  ),
+                  FittedBox(
+                    child: Container(
+                      // decoration: ShapeDecoration(
+                      //   color: themeProvider.colorOfThemeBrightness(
+                      //     currentColor,
+                      //     0.25,
+                      //   ),
+                      //   shape: ,
+                      // ),
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          width: 2,
+                          color: themeProvider.colorOfAntiThemeBrightness(
+                            currentColor,
+                            0.2,
+                            Colors.blueGrey,
+                          )!,
+                        ),
+                        borderRadius: const BorderRadius.all(
+                          Radius.circular(30),
+                        ),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 5),
+                        child: TimePickerSpinner(
+                          //! time picker
+                          time: now,
+                          // spacing: 10,
+                          itemHeight: 35,
+                          minutesInterval: 5,
+                          // alignment: Alignment.center,
+                          // itemWidth: 40,
+                          // separator: ':',
+                          isShowSeconds: false,
+                          normalTextStyle: TextStyle(
+                            fontSize: 17,
+                            fontWeight: FontWeight.w600,
+                            color: themeProvider.colorOfThemeBrightness(
+                                  currentColor,
+                                  0.3,
+                                ) ??
+                                (themeProvider.isDark ? Colors.grey.shade700 : Colors.grey.shade400),
+                          ),
+                          highlightedTextStyle: TextStyle(
+                            fontSize: 25,
+                            fontWeight: FontWeight.w600,
+                            color: themeProvider.colorOfAntiThemeBrightness(
+                              currentColor,
+                              0.2,
+                              Colors.blueGrey,
+                            ),
+                          ),
+                          isForce2Digits: true,
+                          onTimeChange: (dateTime) {
+                            setState(() {
+                              selectedTime = dateTime;
+                              // print(selectedTime.hour);
+                              // print(selectedTime.minute);
+                            });
+                          },
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              // backgroundColor: Colors.grey[200],
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context), // Close the dialog
+                  child: const Text(
+                    'Cancel',
+                    style: TextStyle(
+                      color: Colors.grey,
+                    ),
+                  ),
+                ),
+                TextButton(
+                  onPressed: () {
+                    setState(() {
+                      listsProvider.addToList({
+                        'colorIndex': (currentColor == null) ? null : listsProvider.colorList.indexOf(currentColor!),
+                        'title': title,
+                        'days': days,
+                        'time': selectedTime.millisecondsSinceEpoch,
+                        'enabled': enabled,
+                      });
+                      // print(Provider.of<ListsProvider>(context, listen: false)
+                      // .lists);
+                      Navigator.pop(context);
+                    });
+                  },
+                  child: Text(
+                    'Create',
+                    style: TextStyle(
+                      color: themeProvider.isDark ? Colors.white : Colors.black,
+                    ),
+                  ),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+
+  void showAlertDialogFromItem(
+      BuildContext context, ThemeProvider themeProvider, ListsProvider listsProvider, Map item) {
+    
+    // others
+    TextEditingController titleController = TextEditingController();
+    FocusNode titleFocusNode = FocusNode();
+    bool isColorPickerActive = false;
+    bool enabled = item['enabled'];
+
+    DateTime now = item['time'];
+
+    Color? currentColor;
+    String title = '';
+    DateTime selectedTime = now;
+
+    Map days = {
+      'Mo': false,
+      'Tu': false,
+      'We': false,
+      'Th': false,
+      'Fr': false,
+      'Sa': false,
+      'Su': false,
+    };
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              insetPadding: EdgeInsets.zero,
+              backgroundColor: themeProvider.colorOfThemeBrightness(currentColor, .2),
+              title: SizedBox(
+                width: MediaQuery.of(context).size.width * 0.8,
+                height: 50,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  // mainAxisSize: MainAxisSize.max,
+                  children: [
+                    PopupMenuButton(
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(20),
+                        ),
+                      ),
+                      //!PopupMenuButton
+                      onOpened: () {
+                        setState(() {
+                          isColorPickerActive = true;
+                        });
+                      },
+                      onCanceled: () {
+                        setState(() {
+                          isColorPickerActive = false;
+                        });
+                      },
+                      // onSelected: (value) {
+                      //   setState(() {
+                      //     isColorPickerActive = false;
+                      //     debugPrint('tapped');
+                      //   });
+                      // },
+                      icon: Icon(
+                        isColorPickerActive ? Icons.palette_outlined : Icons.palette,
+                        color: themeProvider.colorOfAntiThemeBrightness(
+                          currentColor,
+                          .2,
+                        ),
+                        // Icons.palette,
+                      ),
+                      // elevation: 10,
+                      itemBuilder: (context) => [
+                        PopupMenuItem(
+                          value: 1,
+                          child: SizedBox(
+                            width: double.infinity,
+                            child: Row(
+                              mainAxisSize: MainAxisSize.max,
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: List.generate(
+                                listsProvider.colorList.length,
+                                (index) => GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      // print(colorList[index]);
+                                      currentColor = listsProvider.colorList[index] == Colors.transparent
+                                          ? null
+                                          : listsProvider.colorList[index];
+                                    });
+                                  },
+                                  // icon: listsProvider.colorList[index] != Colors.transparent
+                                  //     ? Icon(
+                                  //         Icons.circle,
+                                  //         color: listsProvider.colorList[index],
+                                  //       )
+                                  //     : Icon(
+                                  //         Icons.water_drop_rounded,
+                                  //         color: Theme.of(context).highlightColor,
+                                  //       ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(5),
+                                    child: listsProvider.colorList[index] != Colors.transparent
+                                        ? Icon(
+                                            Icons.circle,
+                                            color: listsProvider.colorList[index],
+                                          )
+                                        : Icon(
+                                            Icons.water_drop_rounded,
+                                            color: Theme.of(context).highlightColor,
+                                          ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                      offset: const Offset(-10, -90),
+                      // color: Colors.grey,
+                      elevation: 10,
                     ),
                     const SizedBox(
                       width: 5,
