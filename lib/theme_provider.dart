@@ -9,6 +9,7 @@ class ThemeProvider extends ChangeNotifier {
     colorScheme: ColorScheme.fromSeed(
       seedColor: Colors.orangeAccent,
       brightness: Brightness.light,
+      // background: Colors.redAccent,
     ),
     useMaterial3: true,
     // iconTheme: const IconThemeData(

@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -192,146 +193,155 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  AnimatedContainer reminderContainerFromItem(
-      ThemeProvider themeProvider, Map<dynamic, dynamic> item, ListsProvider listsProvider) {
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 1000),
+  Widget reminderContainerFromItem(ThemeProvider themeProvider, Map<dynamic, dynamic> item, ListsProvider listsProvider) {
+    return BackdropFilter(
+      filter: ImageFilter.blur(
+        sigmaX: 2,
+        sigmaY: 2,
+      ),
       child: Stack(
-        alignment: Alignment.bottomRight,
         children: [
           Container(
-            margin: const EdgeInsets.only(top: 5, bottom: 17, left: 8, right: 8),
-            // margin: const EdgeInsets.all(5),
-            padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              color: themeProvider.colorOfThemeBrightness(
-                (item['colorIndex'] == null) ? null : listsProvider.colorList[item['colorIndex']],
-                .2,
-                Colors.grey,
-              ),
-              borderRadius: BorderRadius.circular(25),
-            ),
-            child: Center(
-              child: Column(
-                // crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            // duration: const Duration(milliseconds: 1000),
+            child: Stack(
+              alignment: Alignment.bottomRight,
+              children: [
+                Container(
+                  margin: const EdgeInsets.only(top: 5, bottom: 17, left: 8, right: 8),
+                  // margin: const EdgeInsets.all(5),
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: themeProvider.colorOfThemeBrightness(
+                      (item['colorIndex'] == null) ? null : listsProvider.colorList[item['colorIndex']],
+                      .2,
+                      Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(25),
+                  ),
+                  child: Center(
+                    child: Column(
+                      // crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        Text(
-                          DateFormat.jm().format(DateTime.fromMillisecondsSinceEpoch(item['time'])).toString(),
-                          style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 18,
-                            color: themeProvider.colorOfAntiThemeBrightness(
-                              (item['colorIndex'] == null) ? null : listsProvider.colorList[item['colorIndex']],
-                              .2,
-                              Colors.grey,
-                            ),
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 10),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                DateFormat.jm().format(DateTime.fromMillisecondsSinceEpoch(item['time'])).toString(),
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 18,
+                                  color: themeProvider.colorOfAntiThemeBrightness(
+                                    (item['colorIndex'] == null) ? null : listsProvider.colorList[item['colorIndex']],
+                                    .2,
+                                    Colors.grey,
+                                  ),
+                                ),
+                              ),
+                              if (item['title'] != '')
+                                Text(
+                                  item['title'],
+                                  style: const TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              SizedBox(
+                                width: 50,
+                                child: FittedBox(
+                                  fit: BoxFit.contain,
+                                  // child: themeModeSwitch(context, themeProvider),
+                                  child: Switch(
+                                    //
+                                    inactiveTrackColor: themeProvider.colorOfThemeBrightness(
+                                      (item['colorIndex'] == null) ? null : listsProvider.colorList[item['colorIndex']],
+                                      .2,
+                                      Colors.grey,
+                                    ),
+                                    activeTrackColor: themeProvider.colorOfAntiThemeBrightness(
+                                        (item['colorIndex'] == null) ? null : listsProvider.colorList[item['colorIndex']],
+                                        .2,
+                                        Colors.grey.shade600),
+                                    activeColor: themeProvider.colorOfThemeBrightness(
+                                        (item['colorIndex'] == null) ? null : listsProvider.colorList[item['colorIndex']],
+                                        .2,
+                                        Colors.grey.shade600),
+                                    //
+                                    value: item['enabled'] ?? false,
+                                    onChanged: (value) => {listsProvider.setEnable(item, value)},
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                        if (item['title'] != '')
-                          Text(
-                            item['title'],
-                            style: const TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        SizedBox(
-                          width: 50,
-                          child: FittedBox(
-                            fit: BoxFit.contain,
-                            // child: themeModeSwitch(context, themeProvider),
-                            child: Switch(
-                              //
-                              inactiveTrackColor: themeProvider.colorOfThemeBrightness(
-                                (item['colorIndex'] == null) ? null : listsProvider.colorList[item['colorIndex']],
-                                .2,
-                                Colors.grey,
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          mainAxisSize: MainAxisSize.max,
+                          children: List.generate(
+                            item['days'].keys.length,
+                            (index) => Flexible(
+                              child: Container(
+                                // padding: const EdgeInsets.all(3),
+                                padding: const EdgeInsets.all(2),
+                                margin: const EdgeInsets.all(1),
+                                width: 30,
+                                height: 30,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: item['days'][item['days'].keys.elementAt(index)]
+                                      ? themeProvider.colorOfAntiThemeBrightness(
+                                          (item['colorIndex'] == null) ? null : listsProvider.colorList[item['colorIndex']],
+                                          .2,
+                                          Colors.grey,
+                                        )
+                                      : null,
+                                ),
+                                child: FittedBox(
+                                  fit: BoxFit.scaleDown,
+                                  child: Text(
+                                    '${item['days'].keys.elementAt(index)}',
+                                    style: TextStyle(
+                                      color: themeProvider.colorOfThemeBrightnessIfTrueAndViceVersa(
+                                        item['days'][item['days'].keys.elementAt(index)],
+                                        (item['colorIndex'] == null) ? null : listsProvider.colorList[item['colorIndex']],
+                                        .2,
+                                        Colors.grey,
+                                      ),
+                                      // overflow: TextOverflow
+                                      //     .ellipsis, // Handle potential overflow
+                                      // fontSize: 10,
+                                      fontWeight: FontWeight.w600,
+                                      // fontWeight: FontWeight.bold,
+                                      // backgroundColor: Colors.blue,
+                                    ),
+                                  ),
+                                ),
                               ),
-                              activeTrackColor: themeProvider.colorOfAntiThemeBrightness(
-                                  (item['colorIndex'] == null) ? null : listsProvider.colorList[item['colorIndex']],
-                                  .2,
-                                  Colors.grey.shade600),
-                              activeColor: themeProvider.colorOfThemeBrightness(
-                                  (item['colorIndex'] == null) ? null : listsProvider.colorList[item['colorIndex']],
-                                  .2,
-                                  Colors.grey.shade600),
-                              //
-                              value: item['enabled'] ?? false,
-                              onChanged: (value) => {listsProvider.setEnable(item, value)},
                             ),
                           ),
                         ),
                       ],
                     ),
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    mainAxisSize: MainAxisSize.max,
-                    children: List.generate(
-                      item['days'].keys.length,
-                      (index) => Flexible(
-                        child: Container(
-                          // padding: const EdgeInsets.all(3),
-                          padding: const EdgeInsets.all(2),
-                          margin: const EdgeInsets.all(1),
-                          width: 30,
-                          height: 30,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: item['days'][item['days'].keys.elementAt(index)]
-                                ? themeProvider.colorOfAntiThemeBrightness(
-                                    (item['colorIndex'] == null) ? null : listsProvider.colorList[item['colorIndex']],
-                                    .2,
-                                    Colors.grey,
-                                  )
-                                : null,
-                          ),
-                          child: FittedBox(
-                            fit: BoxFit.scaleDown,
-                            child: Text(
-                              '${item['days'].keys.elementAt(index)}',
-                              style: TextStyle(
-                                color: themeProvider.colorOfThemeBrightnessIfTrueAndViceVersa(
-                                  item['days'][item['days'].keys.elementAt(index)],
-                                  (item['colorIndex'] == null) ? null : listsProvider.colorList[item['colorIndex']],
-                                  .2,
-                                  Colors.grey,
-                                ),
-                                // overflow: TextOverflow
-                                //     .ellipsis, // Handle potential overflow
-                                // fontSize: 10,
-                                fontWeight: FontWeight.w600,
-                                // fontWeight: FontWeight.bold,
-                                // backgroundColor: Colors.blue,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
+                ),
+                IconButton(
+                  onPressed: () {
+                    listsProvider.removeFromList(item);
+                  },
+                  icon: const FaIcon(FontAwesomeIcons.solidTrashCan),
+                  // color: Colors.redAccent,
+                  color: themeProvider.colorOfAntiThemeBrightness(
+                    (item['colorIndex'] == null) ? null : listsProvider.colorList[item['colorIndex']],
+                    .2,
+                    Colors.grey,
                   ),
-                ],
-              ),
+                  iconSize: 20,
+                ),
+              ],
             ),
-          ),
-          IconButton(
-            onPressed: () {
-              listsProvider.removeFromList(item);
-            },
-            icon: const FaIcon(FontAwesomeIcons.solidTrashCan),
-            // color: Colors.redAccent,
-            color: themeProvider.colorOfAntiThemeBrightness(
-              (item['colorIndex'] == null) ? null : listsProvider.colorList[item['colorIndex']],
-              .2,
-              Colors.grey,
-            ),
-            iconSize: 20,
-          ),
+          )
         ],
       ),
     );
@@ -421,9 +431,8 @@ class _MyHomePageState extends State<MyHomePage> {
                                   onTap: () {
                                     setState(() {
                                       // print(colorList[index]);
-                                      currentColor = listsProvider.colorList[index] == Colors.transparent
-                                          ? null
-                                          : listsProvider.colorList[index];
+                                      currentColor =
+                                          listsProvider.colorList[index] == Colors.transparent ? null : listsProvider.colorList[index];
                                     });
                                   },
                                   // icon: listsProvider.colorList[index] != Colors.transparent
@@ -699,11 +708,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   onPressed: () {
                     setState(() {
                       listsProvider.addToList(
-                          colorIndexFromColor: currentColor,
-                          title: title,
-                          days: days,
-                          selectedTime: selectedTime,
-                          enabled: enabled);
+                          colorIndexFromColor: currentColor, title: title, days: days, selectedTime: selectedTime, enabled: enabled);
                       // print(Provider.of<ListsProvider>(context, listen: false)
                       // .lists);
                       Navigator.pop(context);
@@ -724,8 +729,7 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  void showAlertDialogFromItem(
-      BuildContext context, ThemeProvider themeProvider, ListsProvider listsProvider, Map item) {
+  void showAlertDialogFromItem(BuildContext context, ThemeProvider themeProvider, ListsProvider listsProvider, Map item) {
     // others
     TextEditingController titleController = TextEditingController();
     FocusNode titleFocusNode = FocusNode();
@@ -809,9 +813,8 @@ class _MyHomePageState extends State<MyHomePage> {
                                   onTap: () {
                                     setState(() {
                                       // print(colorList[index]);
-                                      currentColor = listsProvider.colorList[index] == Colors.transparent
-                                          ? null
-                                          : listsProvider.colorList[index];
+                                      currentColor =
+                                          listsProvider.colorList[index] == Colors.transparent ? null : listsProvider.colorList[index];
                                     });
                                   },
                                   // icon: listsProvider.colorList[index] != Colors.transparent
