@@ -1,8 +1,8 @@
 import 'dart:developer';
-import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:glass_kit/glass_kit.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -194,154 +194,147 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Widget reminderContainerFromItem(ThemeProvider themeProvider, Map<dynamic, dynamic> item, ListsProvider listsProvider) {
-    return BackdropFilter(
-      filter: ImageFilter.blur(
-        sigmaX: 2,
-        sigmaY: 2,
-      ),
+    return GlassContainer.clearGlass(
+      borderRadius: BorderRadius.circular(50),
+      width: MediaQuery.of(context).size.width - 40,
+      height: 150,
+      // duration: const Duration(milliseconds: 1000),
       child: Stack(
+        alignment: Alignment.bottomRight,
         children: [
           Container(
-            // duration: const Duration(milliseconds: 1000),
-            child: Stack(
-              alignment: Alignment.bottomRight,
-              children: [
-                Container(
-                  margin: const EdgeInsets.only(top: 5, bottom: 17, left: 8, right: 8),
-                  // margin: const EdgeInsets.all(5),
-                  padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    color: themeProvider.colorOfThemeBrightness(
-                      (item['colorIndex'] == null) ? null : listsProvider.colorList[item['colorIndex']],
-                      .2,
-                      Colors.grey,
-                    ),
-                    borderRadius: BorderRadius.circular(25),
-                  ),
-                  child: Center(
-                    child: Column(
-                      // crossAxisAlignment: CrossAxisAlignment.stretch,
+            margin: const EdgeInsets.only(top: 5, bottom: 17, left: 8, right: 8),
+            // margin: const EdgeInsets.all(5),
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: themeProvider.colorOfThemeBrightness(
+                (item['colorIndex'] == null) ? null : listsProvider.colorList[item['colorIndex']],
+                .2,
+                Colors.grey,
+              ),
+              borderRadius: BorderRadius.circular(25),
+            ),
+            child: Center(
+              child: Column(
+                // crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 10),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                DateFormat.jm().format(DateTime.fromMillisecondsSinceEpoch(item['time'])).toString(),
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 18,
-                                  color: themeProvider.colorOfAntiThemeBrightness(
-                                    (item['colorIndex'] == null) ? null : listsProvider.colorList[item['colorIndex']],
-                                    .2,
-                                    Colors.grey,
-                                  ),
-                                ),
-                              ),
-                              if (item['title'] != '')
-                                Text(
-                                  item['title'],
-                                  style: const TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                              SizedBox(
-                                width: 50,
-                                child: FittedBox(
-                                  fit: BoxFit.contain,
-                                  // child: themeModeSwitch(context, themeProvider),
-                                  child: Switch(
-                                    //
-                                    inactiveTrackColor: themeProvider.colorOfThemeBrightness(
-                                      (item['colorIndex'] == null) ? null : listsProvider.colorList[item['colorIndex']],
-                                      .2,
-                                      Colors.grey,
-                                    ),
-                                    activeTrackColor: themeProvider.colorOfAntiThemeBrightness(
-                                        (item['colorIndex'] == null) ? null : listsProvider.colorList[item['colorIndex']],
-                                        .2,
-                                        Colors.grey.shade600),
-                                    activeColor: themeProvider.colorOfThemeBrightness(
-                                        (item['colorIndex'] == null) ? null : listsProvider.colorList[item['colorIndex']],
-                                        .2,
-                                        Colors.grey.shade600),
-                                    //
-                                    value: item['enabled'] ?? false,
-                                    onChanged: (value) => {listsProvider.setEnable(item, value)},
-                                  ),
-                                ),
-                              ),
-                            ],
+                        Text(
+                          DateFormat.jm().format(DateTime.fromMillisecondsSinceEpoch(item['time'])).toString(),
+                          style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 18,
+                            color: themeProvider.colorOfAntiThemeBrightness(
+                              (item['colorIndex'] == null) ? null : listsProvider.colorList[item['colorIndex']],
+                              .2,
+                              Colors.grey,
+                            ),
                           ),
                         ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          mainAxisSize: MainAxisSize.max,
-                          children: List.generate(
-                            item['days'].keys.length,
-                            (index) => Flexible(
-                              child: Container(
-                                // padding: const EdgeInsets.all(3),
-                                padding: const EdgeInsets.all(2),
-                                margin: const EdgeInsets.all(1),
-                                width: 30,
-                                height: 30,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: item['days'][item['days'].keys.elementAt(index)]
-                                      ? themeProvider.colorOfAntiThemeBrightness(
-                                          (item['colorIndex'] == null) ? null : listsProvider.colorList[item['colorIndex']],
-                                          .2,
-                                          Colors.grey,
-                                        )
-                                      : null,
-                                ),
-                                child: FittedBox(
-                                  fit: BoxFit.scaleDown,
-                                  child: Text(
-                                    '${item['days'].keys.elementAt(index)}',
-                                    style: TextStyle(
-                                      color: themeProvider.colorOfThemeBrightnessIfTrueAndViceVersa(
-                                        item['days'][item['days'].keys.elementAt(index)],
-                                        (item['colorIndex'] == null) ? null : listsProvider.colorList[item['colorIndex']],
-                                        .2,
-                                        Colors.grey,
-                                      ),
-                                      // overflow: TextOverflow
-                                      //     .ellipsis, // Handle potential overflow
-                                      // fontSize: 10,
-                                      fontWeight: FontWeight.w600,
-                                      // fontWeight: FontWeight.bold,
-                                      // backgroundColor: Colors.blue,
-                                    ),
-                                  ),
-                                ),
+                        if (item['title'] != '')
+                          Text(
+                            item['title'],
+                            style: const TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        SizedBox(
+                          width: 50,
+                          child: FittedBox(
+                            fit: BoxFit.contain,
+                            // child: themeModeSwitch(context, themeProvider),
+                            child: Switch(
+                              //
+                              inactiveTrackColor: themeProvider.colorOfThemeBrightness(
+                                (item['colorIndex'] == null) ? null : listsProvider.colorList[item['colorIndex']],
+                                .2,
+                                Colors.grey,
                               ),
+                              activeTrackColor: themeProvider.colorOfAntiThemeBrightness(
+                                  (item['colorIndex'] == null) ? null : listsProvider.colorList[item['colorIndex']],
+                                  .2,
+                                  Colors.grey.shade600),
+                              activeColor: themeProvider.colorOfThemeBrightness(
+                                  (item['colorIndex'] == null) ? null : listsProvider.colorList[item['colorIndex']],
+                                  .2,
+                                  Colors.grey.shade600),
+                              //
+                              value: item['enabled'] ?? false,
+                              onChanged: (value) => {listsProvider.setEnable(item, value)},
                             ),
                           ),
                         ),
                       ],
                     ),
                   ),
-                ),
-                IconButton(
-                  onPressed: () {
-                    listsProvider.removeFromList(item);
-                  },
-                  icon: const FaIcon(FontAwesomeIcons.solidTrashCan),
-                  // color: Colors.redAccent,
-                  color: themeProvider.colorOfAntiThemeBrightness(
-                    (item['colorIndex'] == null) ? null : listsProvider.colorList[item['colorIndex']],
-                    .2,
-                    Colors.grey,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    mainAxisSize: MainAxisSize.max,
+                    children: List.generate(
+                      item['days'].keys.length,
+                      (index) => Flexible(
+                        child: Container(
+                          // padding: const EdgeInsets.all(3),
+                          padding: const EdgeInsets.all(2),
+                          margin: const EdgeInsets.all(1),
+                          width: 30,
+                          height: 30,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: item['days'][item['days'].keys.elementAt(index)]
+                                ? themeProvider.colorOfAntiThemeBrightness(
+                                    (item['colorIndex'] == null) ? null : listsProvider.colorList[item['colorIndex']],
+                                    .2,
+                                    Colors.grey,
+                                  )
+                                : null,
+                          ),
+                          child: FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: Text(
+                              '${item['days'].keys.elementAt(index)}',
+                              style: TextStyle(
+                                color: themeProvider.colorOfThemeBrightnessIfTrueAndViceVersa(
+                                  item['days'][item['days'].keys.elementAt(index)],
+                                  (item['colorIndex'] == null) ? null : listsProvider.colorList[item['colorIndex']],
+                                  .2,
+                                  Colors.grey,
+                                ),
+                                // overflow: TextOverflow
+                                //     .ellipsis, // Handle potential overflow
+                                // fontSize: 10,
+                                fontWeight: FontWeight.w600,
+                                // fontWeight: FontWeight.bold,
+                                // backgroundColor: Colors.blue,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
                   ),
-                  iconSize: 20,
-                ),
-              ],
+                ],
+              ),
             ),
-          )
+          ),
+          IconButton(
+            onPressed: () {
+              listsProvider.removeFromList(item);
+            },
+            icon: const FaIcon(FontAwesomeIcons.solidTrashCan),
+            // color: Colors.redAccent,
+            color: themeProvider.colorOfAntiThemeBrightness(
+              (item['colorIndex'] == null) ? null : listsProvider.colorList[item['colorIndex']],
+              .2,
+              Colors.grey,
+            ),
+            iconSize: 20,
+          ),
         ],
       ),
     );
