@@ -65,7 +65,11 @@ class ThemeProvider extends ChangeNotifier {
 
   //
 
-  Color? colorOfThemeBrightness(Color? color, [double amount = .1, Color? defaultColor,]) {
+  Color? colorOfThemeBrightness(
+    Color? color, [
+    double amount = .1,
+    Color? defaultColor,
+  ]) {
     return isDark ? darken(color ?? defaultColor, amount) : lighten(color ?? defaultColor, amount);
   }
 
@@ -127,6 +131,7 @@ Color? lighten(Color? color, [double amount = .1]) {
   return hslLight.toColor();
 }
 
+// ! returnColorFromBrightnessOf
 Color? returnColorFromBrightnessOf({Color? fromColor, Color colorToConvert = Colors.grey}) {
   if (fromColor == null) {
     return null;
@@ -144,4 +149,14 @@ Color? returnColorFromBrightnessOf({Color? fromColor, Color colorToConvert = Col
   );
 
   return hslBlended.toColor();
+}
+
+//!themeModeSwitch
+Widget themeModeSwitch(BuildContext context, ThemeProvider themeProvider) {
+  return Switch(
+    inactiveTrackColor: Theme.of(context).colorScheme.onPrimary,
+    activeColor: Theme.of(context).colorScheme.onPrimary,
+    value: !themeProvider.isDark,
+    onChanged: (value) => themeProvider.toggleMode(),
+  );
 }

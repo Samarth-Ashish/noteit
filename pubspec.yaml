@@ -41,6 +41,7 @@ dependencies:
   progressive_time_picker: ^1.0.0
   time_picker_spinner_pop_up: ^1.3.0
   time_picker_spinner: ^0.0.1
+  intl: ^0.18.1
 
 
 dev_dependencies:

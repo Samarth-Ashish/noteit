@@ -1,12 +1,13 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:provider/provider.dart';
-import 'existing_notes_provider.dart';
-import 'theme_provider.dart';
 import 'package:intl/intl.dart';
-// import 'package:time_picker_spinner_pop_up/time_picker_spinner_pop_up.dart';
-// import 'package:time_picker_spinner/time_picker_spinner.dart';
+import 'package:provider/provider.dart';
+
+import 'existing_notes_provider.dart';
 import 'manual_packages/time_picker_edited.dart';
+import 'theme_provider.dart';
 
 void main() async {
   runApp(
@@ -63,128 +64,130 @@ class _MyHomePageState extends State<MyHomePage> {
     final themeProvider = Provider.of<ThemeProvider>(context);
     final listsProvider = Provider.of<ListsProvider>(context);
 
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
-        // actionsIconTheme: IconThemeData(opticalSize: 15),
-        actions: [
-          Icon(
-            Icons.dark_mode,
-            color: Provider.of<ThemeProvider>(context).isDark ? Colors.lightBlue : null,
-            size: 20,
-          ),
-          SizedBox(
-            width: 50,
-            child: FittedBox(
-              fit: BoxFit.fill,
-              child: themeModeSwitch(context, themeProvider),
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+          title: Text(widget.title),
+          // actionsIconTheme: IconThemeData(opticalSize: 15),
+          actions: [
+            Icon(
+              Icons.dark_mode,
+              color: themeProvider.isDark ? Colors.lightBlue : null,
+              size: 20,
             ),
-          ),
-          Icon(
-            Icons.light_mode,
-            color: Provider.of<ThemeProvider>(context, listen: false).isDark ? null : Colors.deepOrange,
-            size: 20,
-          ),
-        ],
-        centerTitle: true,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.only(top: 10),
-        child: Center(
-          child: ListView.builder(
-            physics: const BouncingScrollPhysics(),
-            itemCount: listsProvider.lists.length,
-            itemBuilder: (context, index) {
-              final item = listsProvider.lists[index];
-              return reminderContainerFromItem(themeProvider, item, listsProvider);
-            },
-          ),
-        ),
-      ),
-      drawer: Drawer(
-        child: ListView(
-          padding: const EdgeInsets.all(0),
-          children: [
-            DrawerHeader(
-              decoration: BoxDecoration(
-                color: themeProvider.currentTheme.primaryColor,
-              ), //BoxDecoration
-              child: UserAccountsDrawerHeader(
-                decoration: BoxDecoration(
-                  color: themeProvider.currentTheme.primaryColor,
-                ),
-                accountName: const Text(
-                  "Name",
-                  // style: TextStyle(fontSize: 18),
-                ),
-                accountEmail: const Text("name@gmail.com"),
-                currentAccountPictureSize: const Size.square(50),
-                currentAccountPicture: const CircleAvatar(
-                  backgroundColor: Color.fromARGB(255, 165, 255, 137),
-                  child: Text(
-                    "",
-                    style: TextStyle(fontSize: 30.0, color: Colors.blue),
-                  ), //Text
-                ), //circleAvatar
-              ), //UserAccountDrawerHeader
-            ), //DrawerHeader
-            ListTile(
-              leading: const Icon(Icons.person),
-              title: const Text(' My Profile '),
-              onTap: () {
-                Navigator.pop(context);
-              },
+            SizedBox(
+              width: 50,
+              child: FittedBox(
+                fit: BoxFit.fill,
+                child: themeModeSwitch(context, themeProvider),
+              ),
             ),
-            ListTile(
-              leading: const Icon(Icons.book),
-              title: const Text(' My Course '),
-              onTap: () {
-                Navigator.pop(context);
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.workspace_premium),
-              title: const Text(' Go Premium '),
-              onTap: () {
-                Navigator.pop(context);
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.video_label),
-              title: const Text(' Saved Videos '),
-              onTap: () {
-                Navigator.pop(context);
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.edit),
-              title: const Text(' Edit Profile '),
-              onTap: () {
-                Navigator.pop(context);
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.logout),
-              title: const Text('LogOut'),
-              onTap: () {
-                listsProvider.resetNotes();
-                Navigator.pop(context);
-              },
+            Icon(
+              Icons.light_mode,
+              color: themeProvider.isDark ? null : Colors.deepOrange,
+              size: 20,
             ),
           ],
+          centerTitle: true,
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        elevation: 10,
-        onPressed: () {
-          // Navigator.of(context).push(
-          //     MaterialPageRoute(builder: (context) => const CreateNotePage()));
-          // showModal(context);
-          showNewAlertDialog(context, themeProvider, listsProvider);
-        },
-        tooltip: 'Add new note',
-        child: const Icon(Icons.add),
+        body: Padding(
+          padding: const EdgeInsets.only(top: 10),
+          child: Center(
+            child: ListView.builder(
+              physics: const BouncingScrollPhysics(),
+              itemCount: listsProvider.lists.length,
+              itemBuilder: (context, index) {
+                final item = listsProvider.lists[index];
+                return reminderContainerFromItem(themeProvider, item, listsProvider);
+              },
+            ),
+          ),
+        ),
+        drawer: Drawer(
+          child: ListView(
+            padding: const EdgeInsets.all(0),
+            children: [
+              DrawerHeader(
+                decoration: BoxDecoration(
+                  color: themeProvider.currentTheme.primaryColor,
+                ), //BoxDecoration
+                child: UserAccountsDrawerHeader(
+                  decoration: BoxDecoration(
+                    color: themeProvider.currentTheme.primaryColor,
+                  ),
+                  accountName: const Text(
+                    "Name",
+                    // style: TextStyle(fontSize: 18),
+                  ),
+                  accountEmail: const Text("name@gmail.com"),
+                  currentAccountPictureSize: const Size.square(50),
+                  currentAccountPicture: const CircleAvatar(
+                    backgroundColor: Color.fromARGB(255, 165, 255, 137),
+                    child: Text(
+                      "",
+                      style: TextStyle(fontSize: 30.0, color: Colors.blue),
+                    ), //Text
+                  ), //circleAvatar
+                ), //UserAccountDrawerHeader
+              ), //DrawerHeader
+              ListTile(
+                leading: const Icon(Icons.person),
+                title: const Text(' My Profile '),
+                onTap: () {
+                  Navigator.pop(context);
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.book),
+                title: const Text(' My Course '),
+                onTap: () {
+                  Navigator.pop(context);
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.workspace_premium),
+                title: const Text(' Go Premium '),
+                onTap: () {
+                  Navigator.pop(context);
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.video_label),
+                title: const Text(' Saved Videos '),
+                onTap: () {
+                  Navigator.pop(context);
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.edit),
+                title: const Text(' Edit Profile '),
+                onTap: () {
+                  Navigator.pop(context);
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.logout),
+                title: const Text('LogOut'),
+                onTap: () {
+                  listsProvider.resetNotes();
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+          ),
+        ),
+        floatingActionButton: FloatingActionButton(
+          elevation: 10,
+          onPressed: () {
+            // Navigator.of(context).push(
+            //     MaterialPageRoute(builder: (context) => const CreateNotePage()));
+            // showModal(context);
+            showNewAlertDialog(context, themeProvider, listsProvider);
+          },
+          tooltip: 'Add new note',
+          child: const Icon(Icons.add),
+        ),
       ),
     );
   }
@@ -695,13 +698,12 @@ class _MyHomePageState extends State<MyHomePage> {
                 TextButton(
                   onPressed: () {
                     setState(() {
-                      listsProvider.addToList({
-                        'colorIndex': (currentColor == null) ? null : listsProvider.colorList.indexOf(currentColor!),
-                        'title': title,
-                        'days': days,
-                        'time': selectedTime.millisecondsSinceEpoch,
-                        'enabled': enabled,
-                      });
+                      listsProvider.addToList(
+                          colorIndexFromColor: currentColor,
+                          title: title,
+                          days: days,
+                          selectedTime: selectedTime,
+                          enabled: enabled);
                       // print(Provider.of<ListsProvider>(context, listen: false)
                       // .lists);
                       Navigator.pop(context);
@@ -724,7 +726,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void showAlertDialogFromItem(
       BuildContext context, ThemeProvider themeProvider, ListsProvider listsProvider, Map item) {
-    
     // others
     TextEditingController titleController = TextEditingController();
     FocusNode titleFocusNode = FocusNode();
@@ -893,7 +894,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           onChanged: (text) => {
                             setState(() {
                               title = titleController.text;
-                              debugPrint(text);
+                              log(text);
                             })
                           },
                         ),
@@ -1085,13 +1086,13 @@ class _MyHomePageState extends State<MyHomePage> {
                 TextButton(
                   onPressed: () {
                     setState(() {
-                      listsProvider.addToList({
-                        'colorIndex': (currentColor == null) ? null : listsProvider.colorList.indexOf(currentColor!),
-                        'title': title,
-                        'days': days,
-                        'time': selectedTime.millisecondsSinceEpoch,
-                        'enabled': enabled,
-                      });
+                      listsProvider.addToList(
+                        colorIndexFromColor: currentColor,
+                        title: title,
+                        days: days,
+                        selectedTime: selectedTime,
+                        enabled: enabled,
+                      );
                       // print(Provider.of<ListsProvider>(context, listen: false)
                       // .lists);
                       Navigator.pop(context);
@@ -1109,15 +1110,6 @@ class _MyHomePageState extends State<MyHomePage> {
           },
         );
       },
-    );
-  }
-
-  Widget themeModeSwitch(BuildContext context, ThemeProvider themeProvider) {
-    return Switch(
-      inactiveTrackColor: Theme.of(context).colorScheme.onPrimary,
-      activeColor: Theme.of(context).colorScheme.onPrimary,
-      value: !themeProvider.isDark,
-      onChanged: (value) => themeProvider.toggleMode(),
     );
   }
 

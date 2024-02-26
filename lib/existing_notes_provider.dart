@@ -1,5 +1,5 @@
-// import 'dart:ui';
 import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -26,7 +26,7 @@ class ListsProvider extends ChangeNotifier {
     final prefs = await SharedPreferences.getInstance();
     final jsonLists = prefs.getString('lists');
     if (jsonLists != null) {
-      final decodedLists = jsonDecode(jsonLists) as List<dynamic>; // Explicit cast
+      final decodedLists = jsonDecode(jsonLists) as List<dynamic>;
       lists = decodedLists.cast<Map<dynamic, dynamic>>();
     }
     notifyListeners();
@@ -38,8 +38,14 @@ class ListsProvider extends ChangeNotifier {
     await prefs.setString('lists', jsonLists);
   }
 
-  void addToList(item) async {
-    lists.add(item);
+  void addToList({Color? colorIndexFromColor, String title = '', Map? days, DateTime? selectedTime, bool? enabled}) async {
+    lists.add({
+      'colorIndex': (colorIndexFromColor == null) ? null : colorList.indexOf(colorIndexFromColor),
+      'title': title,
+      'days': days,
+      'time': selectedTime!.millisecondsSinceEpoch,
+      'enabled': enabled,
+    });
     saveLists();
     notifyListeners();
   }
@@ -57,7 +63,7 @@ class ListsProvider extends ChangeNotifier {
   }
 
   void setEnable(item, value) async {
-    lists[lists.indexOf(item)]['enabled']=value;
+    lists[lists.indexOf(item)]['enabled'] = value;
     saveLists();
     notifyListeners();
   }
