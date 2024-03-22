@@ -194,10 +194,35 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Widget reminderContainerFromItem(ThemeProvider themeProvider, Map<dynamic, dynamic> item, ListsProvider listsProvider) {
-    return GlassContainer.clearGlass(
-      borderRadius: BorderRadius.circular(50),
-      width: MediaQuery.of(context).size.width - 40,
-      height: 150,
+    return GlassContainer.frostedGlass(
+      gradient: LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: [
+          // Colors.white.withOpacity(0.3),
+          themeProvider
+              .colorOfThemeBrightness(
+                (item['colorIndex'] == null) ? null : listsProvider.colorList[item['colorIndex']],
+                .1,
+                Colors.grey,
+              )!
+              .withOpacity(0.6),
+          themeProvider
+              .colorOfThemeBrightness(
+                (item['colorIndex'] == null) ? null : listsProvider.colorList[item['colorIndex']],
+                .1,
+                Colors.grey,
+              )!
+              .withOpacity(0.6),
+        ],
+      ),
+      blur: 15.0,
+      frostedOpacity: 0.4,
+      margin: const EdgeInsets.all(5),
+      borderRadius: BorderRadius.circular(25),
+      borderWidth: 0,
+      width: MediaQuery.of(context).size.width,
+      height: 120,
       // duration: const Duration(milliseconds: 1000),
       child: Stack(
         alignment: Alignment.bottomRight,
@@ -207,11 +232,11 @@ class _MyHomePageState extends State<MyHomePage> {
             // margin: const EdgeInsets.all(5),
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-              color: themeProvider.colorOfThemeBrightness(
-                (item['colorIndex'] == null) ? null : listsProvider.colorList[item['colorIndex']],
-                .2,
-                Colors.grey,
-              ),
+              // color: themeProvider.colorOfThemeBrightness(
+              //   (item['colorIndex'] == null) ? null : listsProvider.colorList[item['colorIndex']],
+              //   .2,
+              //   Colors.grey,
+              // ),
               borderRadius: BorderRadius.circular(25),
             ),
             child: Center(
@@ -278,22 +303,32 @@ class _MyHomePageState extends State<MyHomePage> {
                     children: List.generate(
                       item['days'].keys.length,
                       (index) => Flexible(
-                        child: Container(
+                        child: GlassContainer.frostedGlass(
+                          borderWidth: 0,
+                          shape: BoxShape.circle,
+                          
                           // padding: const EdgeInsets.all(3),
                           padding: const EdgeInsets.all(2),
                           margin: const EdgeInsets.all(1),
                           width: 30,
                           height: 30,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: item['days'][item['days'].keys.elementAt(index)]
-                                ? themeProvider.colorOfAntiThemeBrightness(
-                                    (item['colorIndex'] == null) ? null : listsProvider.colorList[item['colorIndex']],
-                                    .2,
-                                    Colors.grey,
-                                  )
-                                : null,
-                          ),
+                          // decoration: BoxDecoration(
+                          //   shape: BoxShape.circle,
+                          //   color: item['days'][item['days'].keys.elementAt(index)]
+                          //       ? themeProvider.colorOfAntiThemeBrightness(
+                          //           (item['colorIndex'] == null) ? null : listsProvider.colorList[item['colorIndex']],
+                          //           .2,
+                          //           Colors.grey,
+                          //         )
+                          //       : null,
+                          // ),
+                          color: item['days'][item['days'].keys.elementAt(index)]
+                              ? themeProvider.colorOfAntiThemeBrightness(
+                                  (item['colorIndex'] == null) ? null : listsProvider.colorList[item['colorIndex']],
+                                  .2,
+                                  Colors.grey,
+                                )
+                              : null,
                           child: FittedBox(
                             fit: BoxFit.scaleDown,
                             child: Text(

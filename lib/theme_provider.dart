@@ -6,10 +6,11 @@ class ThemeProvider extends ChangeNotifier {
   late ThemeData currentTheme;
 
   ThemeData lightTheme = ThemeData(
+    scaffoldBackgroundColor: Colors.white70,
     colorScheme: ColorScheme.fromSeed(
       seedColor: Colors.orangeAccent,
       brightness: Brightness.light,
-      background: Colors.redAccent,
+      // background: Colors.redAccent,
     ),
     useMaterial3: true,
     // iconTheme: const IconThemeData(
@@ -21,7 +22,7 @@ class ThemeProvider extends ChangeNotifier {
     colorScheme: ColorScheme.fromSeed(
       seedColor: Colors.blue,
       brightness: Brightness.dark,
-      background: Colors.redAccent,
+      // background: Colors.redAccent,
     ),
     useMaterial3: true,
     // iconTheme: const IconThemeData(
