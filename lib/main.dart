@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -67,8 +68,22 @@ class _MyHomePageState extends State<MyHomePage> {
 
     return SafeArea(
       child: Scaffold(
+        extendBodyBehindAppBar: true,
         appBar: AppBar(
-          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+          backgroundColor: Colors.grey.withOpacity(0),
+          elevation: 0,
+          flexibleSpace: ClipRect(
+            child: BackdropFilter(
+              filter: ImageFilter.blur(
+                sigmaX: 3,
+                sigmaY: 3,
+              ),
+              child: Container(
+                color: Colors.transparent,
+              ),
+            ),
+          ),
+          // backgroundColor: Theme.of(context).colorScheme.inversePrimary,
           title: Text(widget.title),
           // actionsIconTheme: IconThemeData(opticalSize: 15),
           actions: [
@@ -93,7 +108,7 @@ class _MyHomePageState extends State<MyHomePage> {
           centerTitle: true,
         ),
         body: Padding(
-          padding: const EdgeInsets.only(top: 10),
+          padding: const EdgeInsets.only(top: 0),
           child: Center(
             child: ListView.builder(
               physics: const BouncingScrollPhysics(),
@@ -203,7 +218,7 @@ class _MyHomePageState extends State<MyHomePage> {
           themeProvider
               .colorOfThemeBrightness(
                 (item['colorIndex'] == null) ? null : listsProvider.colorList[item['colorIndex']],
-                .1,
+                .3,
                 Colors.grey,
               )!
               .withOpacity(0.6),
@@ -306,7 +321,6 @@ class _MyHomePageState extends State<MyHomePage> {
                         child: GlassContainer.frostedGlass(
                           borderWidth: 0,
                           shape: BoxShape.circle,
-                          
                           // padding: const EdgeInsets.all(3),
                           padding: const EdgeInsets.all(2),
                           margin: const EdgeInsets.all(1),
@@ -329,6 +343,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                   Colors.grey,
                                 )
                               : null,
+                          frostedOpacity: 0.5,
                           child: FittedBox(
                             fit: BoxFit.scaleDown,
                             child: Text(
