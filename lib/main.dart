@@ -89,7 +89,7 @@ class _MyHomePageState extends State<MyHomePage> {
           actions: [
             Icon(
               Icons.dark_mode,
-              color: themeProvider.isDark ? Colors.lightBlue : null,
+              color: themeProvider.isDark ? Colors.blueAccent : null,
               size: 20,
             ),
             SizedBox(
@@ -101,7 +101,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             Icon(
               Icons.light_mode,
-              color: themeProvider.isDark ? null : Colors.deepOrange,
+              color: themeProvider.isDark ? null : Colors.orangeAccent,
               size: 20,
             ),
           ],
@@ -210,29 +210,36 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Widget reminderContainerFromItem(ThemeProvider themeProvider, Map<dynamic, dynamic> item, ListsProvider listsProvider) {
     return GlassContainer.frostedGlass(
-      gradient: LinearGradient(
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-        colors: [
-          // Colors.white.withOpacity(0.3),
-          themeProvider
-              .colorOfThemeBrightness(
-                (item['colorIndex'] == null) ? null : listsProvider.colorList[item['colorIndex']],
-                .3,
-                Colors.grey,
-              )!
-              .withOpacity(0.6),
-          themeProvider
-              .colorOfThemeBrightness(
-                (item['colorIndex'] == null) ? null : listsProvider.colorList[item['colorIndex']],
-                .1,
-                Colors.grey,
-              )!
-              .withOpacity(0.6),
-        ],
-      ),
-      blur: 15.0,
-      frostedOpacity: 0.4,
+      // gradient: LinearGradient(
+      //   begin: Alignment.topLeft,
+      //   end: Alignment.bottomRight,
+      //   colors: [
+      //     // Colors.white.withOpacity(0.3),
+      //     themeProvider
+      //         .colorOfThemeBrightness(
+      //           (item['colorIndex'] == null) ? null : listsProvider.colorList[item['colorIndex']],
+      //           .3,
+      //           Colors.grey,
+      //         )!
+      //         .withOpacity(0.4),
+      //     themeProvider
+      //         .colorOfThemeBrightness(
+      //           (item['colorIndex'] == null) ? null : listsProvider.colorList[item['colorIndex']],
+      //           .1,
+      //           Colors.grey,
+      //         )!
+      //         .withOpacity(0.4),
+      //   ],
+      // ),
+      color: themeProvider
+          .colorOfThemeBrightness(
+            (item['colorIndex'] == null) ? null : listsProvider.colorList[item['colorIndex']],
+            .3,
+            Colors.grey,
+          )!
+          .withOpacity(0.5),
+      // blur: 15.0,
+      frostedOpacity: 0.3,
       margin: const EdgeInsets.all(5),
       borderRadius: BorderRadius.circular(25),
       borderWidth: 0,
@@ -338,12 +345,19 @@ class _MyHomePageState extends State<MyHomePage> {
                           // ),
                           color: item['days'][item['days'].keys.elementAt(index)]
                               ? themeProvider.colorOfAntiThemeBrightness(
-                                  (item['colorIndex'] == null) ? null : listsProvider.colorList[item['colorIndex']],
+                                  (item['colorIndex'] == null) ? null : listsProvider.colorList[item['colorIndex']].withOpacity(0.6),
                                   .2,
                                   Colors.grey,
                                 )
-                              : null,
-                          frostedOpacity: 0.5,
+                              : themeProvider
+                                  .colorOfThemeBrightness(
+                                    (item['colorIndex'] == null) ? null : listsProvider.colorList[item['colorIndex']],
+                                    .3,
+                                    Colors.grey,
+                                  )!
+                                  .withOpacity(0),
+                            blur: 2,
+                          frostedOpacity: item['days'][item['days'].keys.elementAt(index)]? 0.6 : 0,
                           child: FittedBox(
                             fit: BoxFit.scaleDown,
                             child: Text(
@@ -352,7 +366,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                 color: themeProvider.colorOfThemeBrightnessIfTrueAndViceVersa(
                                   item['days'][item['days'].keys.elementAt(index)],
                                   (item['colorIndex'] == null) ? null : listsProvider.colorList[item['colorIndex']],
-                                  .2,
+                                  .4,
                                   Colors.grey,
                                 ),
                                 // overflow: TextOverflow

@@ -6,7 +6,7 @@ class ThemeProvider extends ChangeNotifier {
   late ThemeData currentTheme;
 
   ThemeData lightTheme = ThemeData(
-    scaffoldBackgroundColor: Colors.white70,
+    // scaffoldBackgroundColor: Colors.white70,
     colorScheme: ColorScheme.fromSeed(
       seedColor: Colors.orangeAccent,
       brightness: Brightness.light,
@@ -157,8 +157,17 @@ Color? returnColorFromBrightnessOf({Color? fromColor, Color colorToConvert = Col
 //!themeModeSwitch
 Widget themeModeSwitch(BuildContext context, ThemeProvider themeProvider) {
   return Switch(
-    inactiveTrackColor: Theme.of(context).colorScheme.onPrimary,
-    activeColor: Theme.of(context).colorScheme.onPrimary,
+    // inactiveTrackColor: Theme.of(context).colorScheme.onPrimary,
+    // activeColor: Theme.of(context).colorScheme.onPrimary,
+    //
+    // inactiveTrackColor: Colors.black,
+    // activeTrackColor: Colors.grey,
+    //
+    inactiveTrackColor: Colors.blue[900],
+    // hoverColor: Colors.redAccent,
+    // inactiveThumbColor: Colors.grey,
+    activeTrackColor: Colors.orangeAccent,
+    //
     value: !themeProvider.isDark,
     onChanged: (value) => themeProvider.toggleMode(),
   );
