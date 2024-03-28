@@ -215,34 +215,35 @@ class _MyHomePageState extends State<MyHomePage> {
         Padding(
           padding: const EdgeInsets.only(bottom: 10),
           child: GlassContainer.frostedGlass(
-            // gradient: LinearGradient(
-            //   begin: Alignment.topLeft,
-            //   end: Alignment.bottomRight,
-            //   colors: [
-            //     // Colors.white.withOpacity(0.3),
-            //     themeProvider
-            //         .colorOfThemeBrightness(
-            //           (item['colorIndex'] == null) ? null : listsProvider.colorList[item['colorIndex']],
-            //           .3,
-            //           Colors.grey,
-            //         )!
-            //         .withOpacity(0.4),
-            //     themeProvider
-            //         .colorOfThemeBrightness(
-            //           (item['colorIndex'] == null) ? null : listsProvider.colorList[item['colorIndex']],
-            //           .1,
-            //           Colors.grey,
-            //         )!
-            //         .withOpacity(0.4),
-            //   ],
-            // ),
-            color: themeProvider
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                themeProvider
+                    .colorOfThemeBrightness(
+                      (item['colorIndex'] == null) ? null : listsProvider.colorList[item['colorIndex']],
+                      .3,
+                      Colors.grey,
+                    )!
+                    .withOpacity(0.4),
+                themeProvider
                 .colorOfThemeBrightness(
                   (item['colorIndex'] == null) ? null : listsProvider.colorList[item['colorIndex']],
                   .3,
                   Colors.grey,
                 )!
-                .withOpacity(0.5),
+                .withOpacity(0.7),
+              ],
+            ),
+            //
+            // color: themeProvider
+            //     .colorOfThemeBrightness(
+            //       (item['colorIndex'] == null) ? null : listsProvider.colorList[item['colorIndex']],
+            //       .3,
+            //       Colors.grey,
+            //     )!
+            //     .withOpacity(0.5),
+            //
             // blur: 15.0,
             frostedOpacity: 0.3,
             margin: const EdgeInsets.all(5),
@@ -253,7 +254,7 @@ class _MyHomePageState extends State<MyHomePage> {
             // duration: const Duration(milliseconds: 1000),
             child: Container(
               // margin: const EdgeInsets.only(top: 5, bottom: 17, left: 8, right: 8),
-              margin: const EdgeInsets.all(5),
+              // margin: const EdgeInsets.only(left: 10,right: 10),
               padding: const EdgeInsets.all(5),
               // decoration: BoxDecoration(
               //   // color: themeProvider.colorOfThemeBrightness(
@@ -268,7 +269,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   // crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(bottom: 10),
+                      padding: const EdgeInsets.only(top:5,bottom: 10, left: 15, right: 15),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -348,7 +349,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             color: item['days'][item['days'].keys.elementAt(index)]
                                 ? themeProvider.colorOfAntiThemeBrightness(
                                     (item['colorIndex'] == null) ? null : listsProvider.colorList[item['colorIndex']].withOpacity(0.6),
-                                    .2,
+                                    .3,
                                     Colors.grey,
                                   )
                                 : themeProvider
@@ -368,14 +369,14 @@ class _MyHomePageState extends State<MyHomePage> {
                                   color: themeProvider.colorOfThemeBrightnessIfTrueAndViceVersa(
                                     item['days'][item['days'].keys.elementAt(index)],
                                     (item['colorIndex'] == null) ? null : listsProvider.colorList[item['colorIndex']],
-                                    .4,
+                                    .3,
                                     Colors.grey,
                                   ),
                                   // overflow: TextOverflow
                                   //     .ellipsis, // Handle potential overflow
                                   fontSize: 18,
-                                  fontWeight: FontWeight.w600,
-                                  // fontWeight: FontWeight.bold,
+                                  // fontWeight: FontWeight.w600,
+                                  fontWeight: FontWeight.bold,
                                   // backgroundColor: Colors.blue,
                                 ),
                               ),
