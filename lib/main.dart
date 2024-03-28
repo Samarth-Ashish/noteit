@@ -209,184 +209,191 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Widget reminderContainerFromItem(ThemeProvider themeProvider, Map<dynamic, dynamic> item, ListsProvider listsProvider) {
-    return GlassContainer.frostedGlass(
-      // gradient: LinearGradient(
-      //   begin: Alignment.topLeft,
-      //   end: Alignment.bottomRight,
-      //   colors: [
-      //     // Colors.white.withOpacity(0.3),
-      //     themeProvider
-      //         .colorOfThemeBrightness(
-      //           (item['colorIndex'] == null) ? null : listsProvider.colorList[item['colorIndex']],
-      //           .3,
-      //           Colors.grey,
-      //         )!
-      //         .withOpacity(0.4),
-      //     themeProvider
-      //         .colorOfThemeBrightness(
-      //           (item['colorIndex'] == null) ? null : listsProvider.colorList[item['colorIndex']],
-      //           .1,
-      //           Colors.grey,
-      //         )!
-      //         .withOpacity(0.4),
-      //   ],
-      // ),
-      color: themeProvider
-          .colorOfThemeBrightness(
-            (item['colorIndex'] == null) ? null : listsProvider.colorList[item['colorIndex']],
-            .3,
-            Colors.grey,
-          )!
-          .withOpacity(0.5),
-      // blur: 15.0,
-      frostedOpacity: 0.3,
-      margin: const EdgeInsets.all(5),
-      borderRadius: BorderRadius.circular(25),
-      borderWidth: 0,
-      width: MediaQuery.of(context).size.width,
-      height: 120,
-      // duration: const Duration(milliseconds: 1000),
-      child: Stack(
-        alignment: Alignment.bottomRight,
-        children: [
-          Container(
-            margin: const EdgeInsets.only(top: 5, bottom: 17, left: 8, right: 8),
-            // margin: const EdgeInsets.all(5),
-            padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              // color: themeProvider.colorOfThemeBrightness(
-              //   (item['colorIndex'] == null) ? null : listsProvider.colorList[item['colorIndex']],
-              //   .2,
-              //   Colors.grey,
+    return Stack(
+      // alignment: Alignment.bottomRight,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(bottom: 10),
+          child: GlassContainer.frostedGlass(
+            // gradient: LinearGradient(
+            //   begin: Alignment.topLeft,
+            //   end: Alignment.bottomRight,
+            //   colors: [
+            //     // Colors.white.withOpacity(0.3),
+            //     themeProvider
+            //         .colorOfThemeBrightness(
+            //           (item['colorIndex'] == null) ? null : listsProvider.colorList[item['colorIndex']],
+            //           .3,
+            //           Colors.grey,
+            //         )!
+            //         .withOpacity(0.4),
+            //     themeProvider
+            //         .colorOfThemeBrightness(
+            //           (item['colorIndex'] == null) ? null : listsProvider.colorList[item['colorIndex']],
+            //           .1,
+            //           Colors.grey,
+            //         )!
+            //         .withOpacity(0.4),
+            //   ],
+            // ),
+            color: themeProvider
+                .colorOfThemeBrightness(
+                  (item['colorIndex'] == null) ? null : listsProvider.colorList[item['colorIndex']],
+                  .3,
+                  Colors.grey,
+                )!
+                .withOpacity(0.5),
+            // blur: 15.0,
+            frostedOpacity: 0.3,
+            margin: const EdgeInsets.all(5),
+            borderRadius: BorderRadius.circular(25),
+            borderWidth: 0,
+            width: MediaQuery.of(context).size.width,
+            height: 100,
+            // duration: const Duration(milliseconds: 1000),
+            child: Container(
+              // margin: const EdgeInsets.only(top: 5, bottom: 17, left: 8, right: 8),
+              margin: const EdgeInsets.all(5),
+              padding: const EdgeInsets.all(5),
+              // decoration: BoxDecoration(
+              //   // color: themeProvider.colorOfThemeBrightness(
+              //   //   (item['colorIndex'] == null) ? null : listsProvider.colorList[item['colorIndex']],
+              //   //   .2,
+              //   //   Colors.grey,
+              //   // ),
+              //   borderRadius: BorderRadius.circular(25),
               // ),
-              borderRadius: BorderRadius.circular(25),
-            ),
-            child: Center(
-              child: Column(
-                // crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          DateFormat.jm().format(DateTime.fromMillisecondsSinceEpoch(item['time'])).toString(),
-                          style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 18,
-                            color: themeProvider.colorOfAntiThemeBrightness(
-                              (item['colorIndex'] == null) ? null : listsProvider.colorList[item['colorIndex']],
-                              .2,
-                              Colors.grey,
-                            ),
-                          ),
-                        ),
-                        if (item['title'] != '')
+              child: Center(
+                child: Column(
+                  // crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
                           Text(
-                            item['title'],
-                            style: const TextStyle(
+                            DateFormat.jm().format(DateTime.fromMillisecondsSinceEpoch(item['time'])).toString(),
+                            style: TextStyle(
+                              fontWeight: FontWeight.w500,
                               fontSize: 20,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        SizedBox(
-                          width: 50,
-                          child: FittedBox(
-                            fit: BoxFit.contain,
-                            // child: themeModeSwitch(context, themeProvider),
-                            child: Switch(
-                              //
-                              inactiveTrackColor: themeProvider.colorOfThemeBrightness(
+                              color: themeProvider.colorOfAntiThemeBrightness(
                                 (item['colorIndex'] == null) ? null : listsProvider.colorList[item['colorIndex']],
                                 .2,
                                 Colors.grey,
                               ),
-                              activeTrackColor: themeProvider.colorOfAntiThemeBrightness(
-                                  (item['colorIndex'] == null) ? null : listsProvider.colorList[item['colorIndex']],
-                                  .2,
-                                  Colors.grey.shade600),
-                              activeColor: themeProvider.colorOfThemeBrightness(
-                                  (item['colorIndex'] == null) ? null : listsProvider.colorList[item['colorIndex']],
-                                  .2,
-                                  Colors.grey.shade600),
-                              //
-                              value: item['enabled'] ?? false,
-                              onChanged: (value) => {listsProvider.setEnable(item, value)},
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    mainAxisSize: MainAxisSize.max,
-                    children: List.generate(
-                      item['days'].keys.length,
-                      (index) => Flexible(
-                        child: GlassContainer.frostedGlass(
-                          borderWidth: 0,
-                          shape: BoxShape.circle,
-                          // padding: const EdgeInsets.all(3),
-                          padding: const EdgeInsets.all(2),
-                          margin: const EdgeInsets.all(1),
-                          width: 30,
-                          height: 30,
-                          // decoration: BoxDecoration(
-                          //   shape: BoxShape.circle,
-                          //   color: item['days'][item['days'].keys.elementAt(index)]
-                          //       ? themeProvider.colorOfAntiThemeBrightness(
-                          //           (item['colorIndex'] == null) ? null : listsProvider.colorList[item['colorIndex']],
-                          //           .2,
-                          //           Colors.grey,
-                          //         )
-                          //       : null,
-                          // ),
-                          color: item['days'][item['days'].keys.elementAt(index)]
-                              ? themeProvider.colorOfAntiThemeBrightness(
-                                  (item['colorIndex'] == null) ? null : listsProvider.colorList[item['colorIndex']].withOpacity(0.6),
+                          if (item['title'] != '')
+                            Text(
+                              item['title'],
+                              style: const TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          SizedBox(
+                            width: 50,
+                            child: FittedBox(
+                              fit: BoxFit.contain,
+                              // child: themeModeSwitch(context, themeProvider),
+                              child: Switch(
+                                //
+                                inactiveTrackColor: themeProvider.colorOfThemeBrightness(
+                                  (item['colorIndex'] == null) ? null : listsProvider.colorList[item['colorIndex']],
                                   .2,
                                   Colors.grey,
-                                )
-                              : themeProvider
-                                  .colorOfThemeBrightness(
-                                    (item['colorIndex'] == null) ? null : listsProvider.colorList[item['colorIndex']],
-                                    .3,
-                                    Colors.grey,
-                                  )!
-                                  .withOpacity(0),
-                            blur: 2,
-                          frostedOpacity: item['days'][item['days'].keys.elementAt(index)]? 0.6 : 0,
-                          child: FittedBox(
-                            fit: BoxFit.scaleDown,
-                            child: Text(
-                              '${item['days'].keys.elementAt(index)}',
-                              style: TextStyle(
-                                color: themeProvider.colorOfThemeBrightnessIfTrueAndViceVersa(
-                                  item['days'][item['days'].keys.elementAt(index)],
-                                  (item['colorIndex'] == null) ? null : listsProvider.colorList[item['colorIndex']],
-                                  .4,
-                                  Colors.grey,
                                 ),
-                                // overflow: TextOverflow
-                                //     .ellipsis, // Handle potential overflow
-                                // fontSize: 10,
-                                fontWeight: FontWeight.w600,
-                                // fontWeight: FontWeight.bold,
-                                // backgroundColor: Colors.blue,
+                                activeTrackColor: themeProvider.colorOfAntiThemeBrightness(
+                                    (item['colorIndex'] == null) ? null : listsProvider.colorList[item['colorIndex']],
+                                    .2,
+                                    Colors.grey.shade600),
+                                activeColor: themeProvider.colorOfThemeBrightness(
+                                    (item['colorIndex'] == null) ? null : listsProvider.colorList[item['colorIndex']],
+                                    .2,
+                                    Colors.grey.shade600),
+                                //
+                                value: item['enabled'] ?? false,
+                                onChanged: (value) => {listsProvider.setEnable(item, value)},
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      mainAxisSize: MainAxisSize.max,
+                      children: List.generate(
+                        item['days'].keys.length,
+                        (index) => Flexible(
+                          child: GlassContainer.frostedGlass(
+                            borderWidth: 0,
+                            shape: BoxShape.circle,
+                            // padding: const EdgeInsets.all(3),
+                            padding: const EdgeInsets.all(4),
+                            // margin: const EdgeInsets.all(0.5),
+                            width: 30,
+                            height: 30,
+                            // decoration: BoxDecoration(
+                            //   shape: BoxShape.circle,
+                            //   color: item['days'][item['days'].keys.elementAt(index)]
+                            //       ? themeProvider.colorOfAntiThemeBrightness(
+                            //           (item['colorIndex'] == null) ? null : listsProvider.colorList[item['colorIndex']],
+                            //           .2,
+                            //           Colors.grey,
+                            //         )
+                            //       : null,
+                            // ),
+                            color: item['days'][item['days'].keys.elementAt(index)]
+                                ? themeProvider.colorOfAntiThemeBrightness(
+                                    (item['colorIndex'] == null) ? null : listsProvider.colorList[item['colorIndex']].withOpacity(0.6),
+                                    .2,
+                                    Colors.grey,
+                                  )
+                                : themeProvider
+                                    .colorOfThemeBrightness(
+                                      (item['colorIndex'] == null) ? null : listsProvider.colorList[item['colorIndex']],
+                                      .3,
+                                      Colors.grey,
+                                    )!
+                                    .withOpacity(0),
+                            blur: 2,
+                            frostedOpacity: item['days'][item['days'].keys.elementAt(index)] ? 0.6 : 0,
+                            child: FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: Text(
+                                '${item['days'].keys.elementAt(index)}',
+                                style: TextStyle(
+                                  color: themeProvider.colorOfThemeBrightnessIfTrueAndViceVersa(
+                                    item['days'][item['days'].keys.elementAt(index)],
+                                    (item['colorIndex'] == null) ? null : listsProvider.colorList[item['colorIndex']],
+                                    .4,
+                                    Colors.grey,
+                                  ),
+                                  // overflow: TextOverflow
+                                  //     .ellipsis, // Handle potential overflow
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w600,
+                                  // fontWeight: FontWeight.bold,
+                                  // backgroundColor: Colors.blue,
+                                ),
                               ),
                             ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
-          IconButton(
+        ),
+        Positioned(
+          bottom: 0,
+          right: 0,
+          child: IconButton(
             onPressed: () {
               listsProvider.removeFromList(item);
             },
@@ -399,8 +406,8 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             iconSize: 20,
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
