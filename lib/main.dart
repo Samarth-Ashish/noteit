@@ -61,6 +61,10 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  bool isBouncingPhysics = false;
+  double appBarOpacity = 0;
+  bool isAppBarFrosted = false;
+
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
@@ -70,19 +74,21 @@ class _MyHomePageState extends State<MyHomePage> {
       child: Scaffold(
         extendBodyBehindAppBar: true,
         appBar: AppBar(
-          backgroundColor: Colors.grey.withOpacity(0),
+          backgroundColor: Colors.grey.withOpacity(appBarOpacity),
           elevation: 0,
-          flexibleSpace: ClipRect(
-            child: BackdropFilter(
-              filter: ImageFilter.blur(
-                sigmaX: 3,
-                sigmaY: 3,
-              ),
-              child: Container(
-                color: Colors.transparent,
-              ),
-            ),
-          ),
+          flexibleSpace: isAppBarFrosted
+              ? ClipRect(
+                  child: BackdropFilter(
+                    filter: ImageFilter.blur(
+                      sigmaX: 3,
+                      sigmaY: 3,
+                    ),
+                    child: Container(
+                      color: Colors.transparent,
+                    ),
+                  ),
+                )
+              : null,
           // backgroundColor: Theme.of(context).colorScheme.inversePrimary,
           title: Text(widget.title),
           // actionsIconTheme: IconThemeData(opticalSize: 15),
@@ -111,7 +117,7 @@ class _MyHomePageState extends State<MyHomePage> {
           padding: const EdgeInsets.only(top: 0),
           child: Center(
             child: ListView.builder(
-              physics: const BouncingScrollPhysics(),
+              physics: (isBouncingPhysics) ? const BouncingScrollPhysics() : null,
               itemCount: listsProvider.lists.length,
               itemBuilder: (context, index) {
                 final item = listsProvider.lists[index];
@@ -190,6 +196,47 @@ class _MyHomePageState extends State<MyHomePage> {
                   Navigator.pop(context);
                 },
               ),
+              Row(
+                children: [
+                  const Text("Bouncing physics:"),
+                  Switch(
+                    value: isBouncingPhysics,
+                    onChanged: (value) => {
+                      setState(() {
+                        isBouncingPhysics = value;
+                      })
+                    },
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  const Text("Appbar opacity:"),
+                  Slider(
+                    min: 0,
+                    max: 1,
+                    value: appBarOpacity,
+                    onChanged: (value) {
+                      setState(() {
+                        appBarOpacity = value;
+                      });
+                    },
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  const Text("AppBar Frosted:"),
+                  Switch(
+                    value: isAppBarFrosted,
+                    onChanged: (value) => {
+                      setState(() {
+                        isAppBarFrosted = value;
+                      })
+                    },
+                  ),
+                ],
+              )
             ],
           ),
         ),
@@ -222,18 +269,19 @@ class _MyHomePageState extends State<MyHomePage> {
                 themeProvider
                     .colorOfThemeBrightness(
                       (item['colorIndex'] == null) ? null : listsProvider.colorList[item['colorIndex']],
-                      .3,
+                      .2,
                       Colors.grey,
                     )!
                     .withOpacity(0.4),
                 themeProvider
-                .colorOfThemeBrightness(
-                  (item['colorIndex'] == null) ? null : listsProvider.colorList[item['colorIndex']],
-                  .3,
-                  Colors.grey,
-                )!
-                .withOpacity(0.7),
+                    .colorOfThemeBrightness(
+                      (item['colorIndex'] == null) ? null : listsProvider.colorList[item['colorIndex']],
+                      .2,
+                      Colors.grey,
+                    )!
+                    .withOpacity(0.9),
               ],
+              //
             ),
             //
             // color: themeProvider
@@ -269,7 +317,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   // crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(top:5,bottom: 10, left: 15, right: 15),
+                      padding: const EdgeInsets.only(top: 5, bottom: 10, left: 15, right: 15),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
