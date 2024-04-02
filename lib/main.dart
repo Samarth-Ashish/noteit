@@ -345,7 +345,6 @@ class _MyHomePageState extends State<MyHomePage> {
                                           (index) => GestureDetector(
                                             onTap: () {
                                               setState(() {
-                                                // print(colorList[index]);
                                                 currentColor =
                                                     listsProvider.colorList[index] == Colors.transparent ? null : listsProvider.colorList[index];
                                                 isColorPickerActive = false;
