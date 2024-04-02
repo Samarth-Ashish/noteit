@@ -349,7 +349,6 @@ class _MyHomePageState extends State<MyHomePage> {
                                                     listsProvider.colorList[index] == Colors.transparent ? null : listsProvider.colorList[index];
                                                 isColorPickerActive = false;
                                                 Navigator.pop(context);
-                                                //
                                               });
                                             },
                                             // icon: listsProvider.colorList[index] != Colors.transparent
