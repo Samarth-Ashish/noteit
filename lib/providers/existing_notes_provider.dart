@@ -38,7 +38,7 @@ class ListsProvider extends ChangeNotifier {
     await prefs.setString('lists', jsonLists);
   }
 
-  void addToList({Color? colorIndexFromColor, String title = '', Map? days, DateTime? selectedTime, bool? enabled}) async {
+  Future<void> addToList({Color? colorIndexFromColor, String title = '', Map? days, DateTime? selectedTime, bool? enabled}) async {
     lists.add({
       'colorIndex': (colorIndexFromColor == null) ? null : colorList.indexOf(colorIndexFromColor),
       'title': title,
@@ -50,19 +50,19 @@ class ListsProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void removeFromList(item) async {
+  Future<void> removeFromList(item) async {
     lists.remove(item);
     saveLists();
     notifyListeners();
   }
 
-  void resetNotes() async {
+  Future<void> resetNotes() async {
     lists = [];
     saveLists();
     notifyListeners();
   }
 
-  void setEnable(item, value) async {
+  Future<void> setEnable(item, value) async {
     lists[lists.indexOf(item)]['enabled'] = value;
     saveLists();
     notifyListeners();

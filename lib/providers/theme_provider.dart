@@ -31,37 +31,37 @@ class ThemeProvider extends ChangeNotifier {
     // scaffoldBackgroundColor: Colors.green,
   );
 
-  ThemeProvider() {
-    isDark = true;
-    currentTheme = darkTheme;
+  ThemeProvider({bool? isDark}) {
+    this.isDark = isDark ?? true;
+    currentTheme = this.isDark ? darkTheme : lightTheme;
     loadThemePreference();
   }
 
   Future<void> loadThemePreference() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final prefs = await SharedPreferences.getInstance();
     isDark = prefs.getBool('isDark') ?? true;
     currentTheme = isDark ? darkTheme : lightTheme;
     notifyListeners();
   }
 
   Future<void> saveThemePreference() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final prefs = await SharedPreferences.getInstance();
     prefs.setBool('isDark', isDark);
     notifyListeners();
   }
 
-  void toggleMode() async {
+  Future<void> toggleMode() async {
     isDark = !isDark;
     isDark ? setDarkmode() : setLightMode();
     saveThemePreference();
   }
 
-  void setLightMode() async {
+  Future<void> setLightMode() async {
     currentTheme = lightTheme;
     notifyListeners();
   }
 
-  void setDarkmode() async {
+  Future<void> setDarkmode() async {
     currentTheme = darkTheme;
     notifyListeners();
   }
@@ -82,18 +82,12 @@ class ThemeProvider extends ChangeNotifier {
 
   //
 
-  Color? colorOfThemeBrightnessIfTrueAndViceVersa(bool condition, Color? color,
-      [double amount = .1, Color? defaultColor]) {
-    return condition
-        ? colorOfThemeBrightness(color, amount, defaultColor)
-        : colorOfAntiThemeBrightness(color, amount, defaultColor);
+  Color? colorOfThemeBrightnessIfTrueAndViceVersa(bool condition, Color? color, [double amount = .1, Color? defaultColor]) {
+    return condition ? colorOfThemeBrightness(color, amount, defaultColor) : colorOfAntiThemeBrightness(color, amount, defaultColor);
   }
 
-  Color? colorOfAntiThemeBrightnessIfTrueAndViceVersa(bool condition, Color? color,
-      [double amount = .1, Color? defaultColor]) {
-    return condition
-        ? colorOfAntiThemeBrightness(color, amount, defaultColor)
-        : colorOfThemeBrightness(color, amount, defaultColor);
+  Color? colorOfAntiThemeBrightnessIfTrueAndViceVersa(bool condition, Color? color, [double amount = .1, Color? defaultColor]) {
+    return condition ? colorOfAntiThemeBrightness(color, amount, defaultColor) : colorOfThemeBrightness(color, amount, defaultColor);
   }
 
   //
