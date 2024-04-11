@@ -67,8 +67,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final themeProvider = Provider.of<ThemeProvider>(context);
-    final listsProvider = Provider.of<ListsProvider>(context);
+    final themeProvider = Provider.of<ThemeProvider>(context,listen: false);
+    final listsProvider = Provider.of<ListsProvider>(context,listen: false);
 
     return SafeArea(
       child: Scaffold(
@@ -261,13 +261,13 @@ class _MyHomePageState extends State<MyHomePage> {
             FocusNode titleFocusNode = FocusNode();
             bool isColorPickerActive = false;
             bool enabled = true;
-            
+
             DateTime now = DateTime.now();
-            
+
             Color? currentColor;
             String title = '';
             DateTime selectedTime = now;
-            
+
             Map days = {
               'Mo': false,
               'Tu': false,
@@ -277,7 +277,7 @@ class _MyHomePageState extends State<MyHomePage> {
               'Sa': false,
               'Su': false,
             };
-            
+
             showDialog(
               context: context,
               builder: (context) {
@@ -345,8 +345,9 @@ class _MyHomePageState extends State<MyHomePage> {
                                           (index) => GestureDetector(
                                             onTap: () {
                                               setState(() {
-                                                currentColor =
-                                                    listsProvider.colorList[index] == Colors.transparent ? null : listsProvider.colorList[index];
+                                                currentColor = listsProvider.colorList[index] == Colors.transparent
+                                                    ? null
+                                                    : listsProvider.colorList[index];
                                                 isColorPickerActive = false;
                                                 Navigator.pop(context);
                                               });
@@ -627,7 +628,11 @@ class _MyHomePageState extends State<MyHomePage> {
                           onPressed: () {
                             setState(() {
                               listsProvider.addToList(
-                                  colorIndexFromColor: currentColor, title: title, days: days, selectedTime: selectedTime, enabled: enabled);
+                                  colorIndexFromColor: currentColor,
+                                  title: title,
+                                  days: days,
+                                  selectedTime: selectedTime,
+                                  enabled: enabled);
                               // print(Provider.of<ListsProvider>(context, listen: false)
                               // .lists);
                               Navigator.pop(context);
