@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 import 'dart:ui';
 
 import '../packages_/time_picker_edited.dart';
-import '../providers/existing_notes_provider.dart';
+import '../providers/list_provider.dart';
 import '../providers/theme_provider.dart';
 
 class HomePage extends StatefulWidget {
@@ -35,7 +35,7 @@ class _HomePageState extends State<HomePage> {
       child: Scaffold(
         extendBodyBehindAppBar: true,
         appBar: AppBar(
-          // backgroundColor: (themeProvider.isDark ? Colors.black : Colors.white).withOpacity(appBarOpacity),
+          // backgroundColor: (themeProvider.isThemeDark ? Colors.black : Colors.white).withOpacity(appBarOpacity),
           backgroundColor: Colors.transparent,
           elevation: 0,
           flexibleSpace: isAppBarFrosted
@@ -66,8 +66,8 @@ class _HomePageState extends State<HomePage> {
           actions: [
             Icon(
               Icons.dark_mode,
-              // color: context.watch<ThemeProvider>().isDark ? Colors.blueAccent : null,
-              color: themeProvider.isDark ? Colors.blueAccent : null,
+              // color: context.watch<ThemeProvider>().isThemeDark ? Colors.blueAccent : null,
+              color: themeProvider.isThemeDark ? Colors.blueAccent : null,
               size: 20,
             ),
             SizedBox(
@@ -79,7 +79,7 @@ class _HomePageState extends State<HomePage> {
             ),
             Icon(
               Icons.light_mode,
-              color: themeProvider.isDark ? null : Colors.orangeAccent,
+              color: themeProvider.isThemeDark ? null : Colors.orangeAccent,
               size: 20,
             ),
           ],
@@ -550,7 +550,7 @@ class _HomePageState extends State<HomePage> {
                                           currentColor,
                                           0.3,
                                         ) ??
-                                        (themeProvider.isDark ? Colors.grey.shade700 : Colors.grey.shade400),
+                                        (themeProvider.isThemeDark ? Colors.grey.shade700 : Colors.grey.shade400),
                                   ),
                                   highlightedTextStyle: TextStyle(
                                     fontSize: 25,
@@ -603,7 +603,7 @@ class _HomePageState extends State<HomePage> {
                           child: Text(
                             'Create',
                             style: TextStyle(
-                              color: themeProvider.isDark ? Colors.white : Colors.black,
+                              color: themeProvider.isThemeDark ? Colors.white : Colors.black,
                             ),
                           ),
                         ),
@@ -1156,7 +1156,7 @@ class _HomePageState extends State<HomePage> {
                                   currentColor,
                                   0.3,
                                 ) ??
-                                (themeProvider.isDark ? Colors.grey.shade700 : Colors.grey.shade400),
+                                (themeProvider.isThemeDark ? Colors.grey.shade700 : Colors.grey.shade400),
                           ),
                           highlightedTextStyle: TextStyle(
                             fontSize: 25,
@@ -1210,7 +1210,7 @@ class _HomePageState extends State<HomePage> {
                   child: Text(
                     'Create',
                     style: TextStyle(
-                      color: themeProvider.isDark ? Colors.white : Colors.black,
+                      color: themeProvider.isThemeDark ? Colors.white : Colors.black,
                     ),
                   ),
                 ),

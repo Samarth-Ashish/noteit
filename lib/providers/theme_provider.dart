@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ThemeProvider extends ChangeNotifier {
-  late bool isDark;
+  late bool isThemeDark;
   late ThemeData currentTheme;
 
-  ThemeData lightTheme = ThemeData(
+  final ThemeData lightTheme = ThemeData(
     // scaffoldBackgroundColor: Colors.white70,
     colorScheme: ColorScheme.fromSeed(
       seedColor: Colors.orangeAccent,
@@ -18,7 +19,7 @@ class ThemeProvider extends ChangeNotifier {
     // ),
     // scaffoldBackgroundColor: Colors.red,
   );
-  ThemeData darkTheme = ThemeData(
+  final ThemeData darkTheme = ThemeData(
     colorScheme: ColorScheme.fromSeed(
       seedColor: Colors.blue,
       brightness: Brightness.dark,
@@ -31,37 +32,38 @@ class ThemeProvider extends ChangeNotifier {
     // scaffoldBackgroundColor: Colors.green,
   );
 
-  ThemeProvider({bool? isDark}) {
-    this.isDark = isDark ?? true;
-    currentTheme = this.isDark ? darkTheme : lightTheme;
-    loadThemePreference();
+  ThemeProvider({bool? isThemeDark = true}) {
+    this.isThemeDark = isThemeDark ?? true;
+    currentTheme = this.isThemeDark ? darkTheme : lightTheme;
+    loadThemePreferencesFromStorage();
   }
 
-  Future<void> loadThemePreference() async {
+  Future<void> loadThemePreferencesFromStorage() async {
     final prefs = await SharedPreferences.getInstance();
-    isDark = prefs.getBool('isDark') ?? true;
-    currentTheme = isDark ? darkTheme : lightTheme;
+    isThemeDark = prefs.getBool('isThemeDark') ?? true;
+    currentTheme = isThemeDark ? darkTheme : lightTheme;
     notifyListeners();
   }
 
-  Future<void> saveThemePreference() async {
+  Future<void> saveThemePreferences() async {
     final prefs = await SharedPreferences.getInstance();
-    prefs.setBool('isDark', isDark);
+    await prefs.setBool('isThemeDark', isThemeDark);
     notifyListeners();
   }
 
-  Future<void> toggleMode() async {
-    isDark = !isDark;
-    isDark ? setDarkmode() : setLightMode();
-    saveThemePreference();
+  Future<void> toggleTheme() async {
+    isThemeDark = !isThemeDark;
+    isThemeDark ? setDarkTheme() : setLightTheme();
+    saveThemePreferences();
+    notifyListeners();
   }
 
-  Future<void> setLightMode() async {
+  Future<void> setLightTheme() async {
     currentTheme = lightTheme;
     notifyListeners();
   }
 
-  Future<void> setDarkmode() async {
+  Future<void> setDarkTheme() async {
     currentTheme = darkTheme;
     notifyListeners();
   }
@@ -73,11 +75,11 @@ class ThemeProvider extends ChangeNotifier {
     double amount = .1,
     Color? defaultColor,
   ]) {
-    return isDark ? darken(color ?? defaultColor, amount) : lighten(color ?? defaultColor, amount);
+    return isThemeDark ? darken(color ?? defaultColor, amount) : lighten(color ?? defaultColor, amount);
   }
 
   Color? colorOfAntiThemeBrightness(Color? color, [double amount = .1, Color? defaultColor]) {
-    return isDark ? lighten(color ?? defaultColor, amount) : darken(color ?? defaultColor, amount);
+    return isThemeDark ? lighten(color ?? defaultColor, amount) : darken(color ?? defaultColor, amount);
   }
 
   //
@@ -162,7 +164,9 @@ Widget themeModeSwitch(BuildContext context, ThemeProvider themeProvider) {
     // inactiveThumbColor: Colors.grey,
     activeTrackColor: Colors.orangeAccent,
     //
-    value: !themeProvider.isDark,
-    onChanged: (value) => themeProvider.toggleMode(),
+    // value: !themeProvider.isThemeDark,
+    value: !context.watch<ThemeProvider>().isThemeDark,
+    // onChanged: (value) => themeProvider.toggleTheme(),
+    onChanged: (value) => context.read<ThemeProvider>().toggleTheme(),
   );
 }

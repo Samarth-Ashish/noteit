@@ -2,16 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'providers/theme_provider.dart';
-import 'providers/existing_notes_provider.dart';
+import 'providers/list_provider.dart';
 
 import 'pages/homepage.dart';
 
-Future<void> main() async {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider<ThemeProvider>(create: (_) => ThemeProvider()),
-        ChangeNotifierProvider<ListsProvider>(create: (_) => ListsProvider())
+        ChangeNotifierProvider<ThemeProvider>(create: (context) => ThemeProvider()),
+        ChangeNotifierProvider<ListsProvider>(create: (context) => ListsProvider())
       ],
       child: const MyApp(),
     ),
@@ -41,7 +42,6 @@ class _MyAppState extends State<MyApp> {
     // NEW way ig
     return MaterialApp(
       title: 'Noter',
-      // theme: Provider.of<ThemeProvider>(context, listen: false).currentTheme,
       theme: context.watch<ThemeProvider>().currentTheme,
       debugShowCheckedModeBanner: false,
       home: const HomePage(

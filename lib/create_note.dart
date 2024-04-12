@@ -88,28 +88,28 @@
 //               // primarySwatch: MaterialColor(1, ),
 //               colorScheme: ColorScheme.fromSeed(
 //                 seedColor: currentColor!,
-//                 background: Provider.of<ThemeProvider>(context).isDark
+//                 background: Provider.of<ThemeProvider>(context).isThemeDark
 //                     ? darken(currentColor!)
 //                     : lighten(currentColor!),
 //                 // background: currentColor!,
 //                 // inversePrimary: currentColor,
-//                 brightness: Provider.of<ThemeProvider>(context).isDark
+//                 brightness: Provider.of<ThemeProvider>(context).isThemeDark
 //                     ? Brightness.dark
 //                     : Brightness.light,
 //               ),
 //               appBarTheme: AppBarTheme(
 //                 // backgroundColor: currentColor!,
 //                 // backgroundColor: Theme.of(context).colorScheme.background,
-//                 backgroundColor: Provider.of<ThemeProvider>(context).isDark
+//                 backgroundColor: Provider.of<ThemeProvider>(context).isThemeDark
 //                     ? darken(currentColor!, .15)
 //                     : lighten(currentColor!, .15),
 //                 actionsIconTheme: IconThemeData(
-//                   color: Provider.of<ThemeProvider>(context).isDark
+//                   color: Provider.of<ThemeProvider>(context).isThemeDark
 //                       ? lighten(currentColor!, .3)
 //                       : darken(currentColor!, .3),
 //                 ),
 //                 iconTheme: IconThemeData(
-//                   color: Provider.of<ThemeProvider>(context).isDark
+//                   color: Provider.of<ThemeProvider>(context).isThemeDark
 //                       ? lighten(currentColor!, .3)
 //                       : darken(currentColor!, .3),
 //                 ),
@@ -317,10 +317,10 @@
 //         Switch(
 //           inactiveTrackColor: Theme.of(context).colorScheme.onPrimary,
 //           activeColor: Theme.of(context).colorScheme.onPrimary,
-//           value: !Provider.of<ThemeProvider>(context, listen: false).isDark,
+//           value: !Provider.of<ThemeProvider>(context, listen: false).isThemeDark,
 //           onChanged: (value) => setState(() {
-//             Provider.of<ThemeProvider>(context, listen: false).toggleMode();
-//             // print(Provider.of<ThemeProvider>(context, listen: false).isDark);
+//             Provider.of<ThemeProvider>(context, listen: false).toggleTheme();
+//             // print(Provider.of<ThemeProvider>(context, listen: false).isThemeDark);
 //           }),
 //         )
 //       ],
