@@ -151,7 +151,7 @@ Color? returnColorFromBrightnessOf({Color? fromColor, Color colorToConvert = Col
 }
 
 //!themeModeSwitch
-Widget themeModeSwitch(BuildContext context, ThemeProvider themeProvider) {
+Widget themeModeSwitch(BuildContext context) {
   return Switch(
     // inactiveTrackColor: Theme.of(context).colorScheme.onPrimary,
     // activeColor: Theme.of(context).colorScheme.onPrimary,

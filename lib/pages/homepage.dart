@@ -26,16 +26,16 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final themeProvider = Provider.of<ThemeProvider>(context);
-    final listsProvider = Provider.of<ListsProvider>(context);
+    // final themeProvider = Provider.of<ThemeProvider>(context);
+    // final listsProvider = Provider.of<ListsProvider>(context);
 
-    print('HomePage built');
+    // print('HomePage built');
 
     return SafeArea(
       child: Scaffold(
         extendBodyBehindAppBar: true,
         appBar: AppBar(
-          // backgroundColor: (themeProvider.isThemeDark ? Colors.black : Colors.white).withOpacity(appBarOpacity),
+          // backgroundColor: (context.watch<ThemeProvider>().isThemeDark ? Colors.black : Colors.white).withOpacity(appBarOpacity),
           backgroundColor: Colors.transparent,
           elevation: 0,
           flexibleSpace: isAppBarFrosted
@@ -67,19 +67,19 @@ class _HomePageState extends State<HomePage> {
             Icon(
               Icons.dark_mode,
               // color: context.watch<ThemeProvider>().isThemeDark ? Colors.blueAccent : null,
-              color: themeProvider.isThemeDark ? Colors.blueAccent : null,
+              color: context.watch<ThemeProvider>().isThemeDark ? Colors.blueAccent : null,
               size: 20,
             ),
             SizedBox(
               width: 50,
               child: FittedBox(
                 fit: BoxFit.fill,
-                child: themeModeSwitch(context, themeProvider),
+                child: themeModeSwitch(context),
               ),
             ),
             Icon(
               Icons.light_mode,
-              color: themeProvider.isThemeDark ? null : Colors.orangeAccent,
+              color: context.watch<ThemeProvider>().isThemeDark ? null : Colors.orangeAccent,
               size: 20,
             ),
           ],
@@ -90,10 +90,10 @@ class _HomePageState extends State<HomePage> {
           child: Center(
             child: ListView.builder(
               physics: (isBouncingPhysics) ? const BouncingScrollPhysics() : null,
-              itemCount: listsProvider.lists.length,
+              itemCount: context.watch<ListsProvider>().lists.length,
               itemBuilder: (context, index) {
-                final item = listsProvider.lists[index];
-                return reminderContainerFromItem(themeProvider, item, listsProvider);
+                final item = context.watch<ListsProvider>().lists[index];
+                return reminderContainerFromItem(item);
               },
             ),
           ),
@@ -104,11 +104,11 @@ class _HomePageState extends State<HomePage> {
             children: [
               DrawerHeader(
                 decoration: BoxDecoration(
-                  color: themeProvider.currentTheme.primaryColor,
+                  color: context.watch<ThemeProvider>().currentTheme.primaryColor,
                 ), //BoxDecoration
                 child: UserAccountsDrawerHeader(
                   decoration: BoxDecoration(
-                    color: themeProvider.currentTheme.primaryColor,
+                    color: context.watch<ThemeProvider>().currentTheme.primaryColor,
                   ),
                   accountName: const Text(
                     "Name",
@@ -164,7 +164,7 @@ class _HomePageState extends State<HomePage> {
                 leading: const Icon(Icons.logout),
                 title: const Text('LogOut'),
                 onTap: () {
-                  listsProvider.resetNotes();
+                  context.read<ListsProvider>().resetNotes();
                   Navigator.pop(context);
                 },
               ),
@@ -247,7 +247,7 @@ class _HomePageState extends State<HomePage> {
                   builder: (context, setState) {
                     return AlertDialog(
                       insetPadding: EdgeInsets.zero,
-                      backgroundColor: themeProvider.colorOfThemeBrightness(currentColor, .3),
+                      backgroundColor: context.watch<ThemeProvider>().colorOfThemeBrightness(currentColor, .3),
                       title: SizedBox(
                         width: MediaQuery.of(context).size.width * 0.8,
                         height: 50,
@@ -283,7 +283,7 @@ class _HomePageState extends State<HomePage> {
                               },
                               icon: Icon(
                                 isColorPickerActive ? Icons.palette_outlined : Icons.palette,
-                                color: themeProvider.colorOfAntiThemeBrightness(
+                                color: context.watch<ThemeProvider>().colorOfAntiThemeBrightness(
                                   currentColor,
                                   .2,
                                 ),
@@ -303,21 +303,21 @@ class _HomePageState extends State<HomePage> {
                                         mainAxisSize: MainAxisSize.max,
                                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                         children: List.generate(
-                                          listsProvider.colorList.length,
+                                          context.read<ListsProvider>().colorList.length,
                                           (index) => GestureDetector(
                                             onTap: () {
                                               setState(() {
-                                                currentColor = listsProvider.colorList[index] == Colors.transparent
+                                                currentColor = context.read<ListsProvider>().colorList[index] == Colors.transparent
                                                     ? null
-                                                    : listsProvider.colorList[index];
+                                                    : context.read<ListsProvider>().colorList[index];
                                                 isColorPickerActive = false;
                                                 Navigator.pop(context);
                                               });
                                             },
-                                            // icon: listsProvider.colorList[index] != Colors.transparent
+                                            // icon: context.read<ListsProvider>().colorList[index] != Colors.transparent
                                             //     ? Icon(
                                             //         Icons.circle,
-                                            //         color: listsProvider.colorList[index],
+                                            //         color: context.read<ListsProvider>().colorList[index],
                                             //       )
                                             //     : Icon(
                                             //         Icons.water_drop_rounded,
@@ -325,10 +325,10 @@ class _HomePageState extends State<HomePage> {
                                             //       ),
                                             child: Padding(
                                               padding: const EdgeInsets.all(5),
-                                              child: listsProvider.colorList[index] != Colors.transparent
+                                              child: context.read<ListsProvider>().colorList[index] != Colors.transparent
                                                   ? Icon(
                                                       Icons.circle,
-                                                      color: listsProvider.colorList[index],
+                                                      color: context.read<ListsProvider>().colorList[index],
                                                       size: 25,
                                                     )
                                                   : Icon(
@@ -410,20 +410,20 @@ class _HomePageState extends State<HomePage> {
                               width: 50,
                               child: FittedBox(
                                 fit: BoxFit.contain,
-                                // child: themeModeSwitch(context, themeProvider),
+                                // child: themeModeSwitch(context),
                                 child: Switch(
                                   //
-                                  inactiveTrackColor: themeProvider.colorOfThemeBrightness(
+                                  inactiveTrackColor: context.watch<ThemeProvider>().colorOfThemeBrightness(
                                     currentColor,
                                     .2,
                                     // Colors.grey,
                                   ),
-                                  activeTrackColor: themeProvider.colorOfAntiThemeBrightness(
+                                  activeTrackColor: context.watch<ThemeProvider>().colorOfAntiThemeBrightness(
                                     currentColor,
                                     .2,
                                     Colors.grey.shade600,
                                   ),
-                                  activeColor: themeProvider.colorOfThemeBrightness(
+                                  activeColor: context.watch<ThemeProvider>().colorOfThemeBrightness(
                                     currentColor,
                                     .2,
                                     Colors.grey.shade600,
@@ -449,7 +449,7 @@ class _HomePageState extends State<HomePage> {
                           //   width: 50,
                           //   child: FittedBox(
                           //     fit: BoxFit.contain,
-                          //     child: themeModeSwitch(context, themeProvider),
+                          //     child: themeModeSwitch(context),
                           //   ),
                           // ),
                           SizedBox(
@@ -479,7 +479,7 @@ class _HomePageState extends State<HomePage> {
                                           decoration: BoxDecoration(
                                             shape: BoxShape.circle,
                                             color: days[entry.key]
-                                                ? themeProvider.colorOfAntiThemeBrightness(
+                                                ? context.watch<ThemeProvider>().colorOfAntiThemeBrightness(
                                                     currentColor,
                                                     .2,
                                                     Colors.grey,
@@ -491,7 +491,7 @@ class _HomePageState extends State<HomePage> {
                                             child: Text(
                                               '${entry.key}',
                                               style: TextStyle(
-                                                color: themeProvider.colorOfThemeBrightnessIfTrueAndViceVersa(
+                                                color: context.watch<ThemeProvider>().colorOfThemeBrightnessIfTrueAndViceVersa(
                                                   days[entry.key],
                                                   currentColor,
                                                   .2,
@@ -512,7 +512,7 @@ class _HomePageState extends State<HomePage> {
                           FittedBox(
                             child: Container(
                               // decoration: ShapeDecoration(
-                              //   color: themeProvider.colorOfThemeBrightness(
+                              //   color: context.watch<ThemeProvider>().colorOfThemeBrightness(
                               //     currentColor,
                               //     0.25,
                               //   ),
@@ -521,7 +521,7 @@ class _HomePageState extends State<HomePage> {
                               decoration: BoxDecoration(
                                 border: Border.all(
                                   width: 2,
-                                  color: themeProvider.colorOfAntiThemeBrightness(
+                                  color: context.watch<ThemeProvider>().colorOfAntiThemeBrightness(
                                     currentColor,
                                     0.2,
                                     Colors.blueGrey,
@@ -546,16 +546,16 @@ class _HomePageState extends State<HomePage> {
                                   normalTextStyle: TextStyle(
                                     fontSize: 17,
                                     fontWeight: FontWeight.w600,
-                                    color: themeProvider.colorOfThemeBrightness(
+                                    color: context.watch<ThemeProvider>().colorOfThemeBrightness(
                                           currentColor,
                                           0.3,
                                         ) ??
-                                        (themeProvider.isThemeDark ? Colors.grey.shade700 : Colors.grey.shade400),
+                                        (context.watch<ThemeProvider>().isThemeDark ? Colors.grey.shade700 : Colors.grey.shade400),
                                   ),
                                   highlightedTextStyle: TextStyle(
                                     fontSize: 25,
                                     fontWeight: FontWeight.w600,
-                                    color: themeProvider.colorOfAntiThemeBrightness(
+                                    color: context.watch<ThemeProvider>().colorOfAntiThemeBrightness(
                                       currentColor,
                                       0.2,
                                       Colors.blueGrey,
@@ -589,7 +589,7 @@ class _HomePageState extends State<HomePage> {
                         TextButton(
                           onPressed: () {
                             setState(() {
-                              listsProvider.addToList(
+                              context.read<ListsProvider>().addToList(
                                   colorIndexFromColor: currentColor,
                                   title: title,
                                   days: days,
@@ -603,7 +603,7 @@ class _HomePageState extends State<HomePage> {
                           child: Text(
                             'Create',
                             style: TextStyle(
-                              color: themeProvider.isThemeDark ? Colors.white : Colors.black,
+                              color: context.watch<ThemeProvider>().isThemeDark ? Colors.white : Colors.black,
                             ),
                           ),
                         ),
@@ -621,7 +621,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget reminderContainerFromItem(ThemeProvider themeProvider, Map<dynamic, dynamic> item, ListsProvider listsProvider) {
+  Widget reminderContainerFromItem(Map<dynamic, dynamic> item) {
     return Stack(
       // alignment: Alignment.bottomRight,
       children: [
@@ -632,16 +632,14 @@ class _HomePageState extends State<HomePage> {
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
               colors: [
-                themeProvider
-                    .colorOfThemeBrightness(
-                      (item['colorIndex'] == null) ? null : listsProvider.colorList[item['colorIndex']],
+                context.watch<ThemeProvider>().colorOfThemeBrightness(
+                      (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
                       .3,
                       Colors.grey,
                     )!
                     .withOpacity(0.6),
-                themeProvider
-                    .colorOfThemeBrightness(
-                      (item['colorIndex'] == null) ? null : listsProvider.colorList[item['colorIndex']],
+                context.watch<ThemeProvider>().colorOfThemeBrightness(
+                      (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
                       .2,
                       Colors.grey,
                     )!
@@ -652,7 +650,7 @@ class _HomePageState extends State<HomePage> {
             //
             // color: themeProvider
             //     .colorOfThemeBrightness(
-            //       (item['colorIndex'] == null) ? null : listsProvider.colorList[item['colorIndex']],
+            //       (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
             //       .3,
             //       Colors.grey,
             //     )!
@@ -672,8 +670,8 @@ class _HomePageState extends State<HomePage> {
                 // margin: const EdgeInsets.only(left: 10,right: 10),
                 padding: const EdgeInsets.all(5),
                 // decoration: BoxDecoration(
-                //   // color: themeProvider.colorOfThemeBrightness(
-                //   //   (item['colorIndex'] == null) ? null : listsProvider.colorList[item['colorIndex']],
+                //   // color: context.watch<ThemeProvider>().colorOfThemeBrightness(
+                //   //   (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
                 //   //   .2,
                 //   //   Colors.grey,
                 //   // ),
@@ -694,8 +692,8 @@ class _HomePageState extends State<HomePage> {
                               style: TextStyle(
                                 fontWeight: FontWeight.w500,
                                 fontSize: 20,
-                                color: themeProvider.colorOfAntiThemeBrightness(
-                                  (item['colorIndex'] == null) ? null : listsProvider.colorList[item['colorIndex']],
+                                color: context.watch<ThemeProvider>().colorOfAntiThemeBrightness(
+                                  (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
                                   .2,
                                   Colors.grey,
                                 ),
@@ -713,25 +711,25 @@ class _HomePageState extends State<HomePage> {
                               width: 50,
                               child: FittedBox(
                                 fit: BoxFit.contain,
-                                // child: themeModeSwitch(context, themeProvider),
+                                // child: themeModeSwitch(context),
                                 child: Switch(
                                   //
-                                  inactiveTrackColor: themeProvider.colorOfThemeBrightness(
-                                    (item['colorIndex'] == null) ? null : listsProvider.colorList[item['colorIndex']],
+                                  inactiveTrackColor: context.watch<ThemeProvider>().colorOfThemeBrightness(
+                                    (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
                                     .2,
                                     Colors.grey,
                                   ),
-                                  activeTrackColor: themeProvider.colorOfAntiThemeBrightness(
-                                      (item['colorIndex'] == null) ? null : listsProvider.colorList[item['colorIndex']],
+                                  activeTrackColor: context.watch<ThemeProvider>().colorOfAntiThemeBrightness(
+                                      (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
                                       .2,
                                       Colors.grey.shade600),
-                                  activeColor: themeProvider.colorOfThemeBrightness(
-                                      (item['colorIndex'] == null) ? null : listsProvider.colorList[item['colorIndex']],
+                                  activeColor: context.watch<ThemeProvider>().colorOfThemeBrightness(
+                                      (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
                                       .2,
                                       Colors.grey.shade600),
                                   //
                                   value: item['enabled'] ?? false,
-                                  onChanged: (value) => {listsProvider.setEnable(item, value)},
+                                  onChanged: (value) => {context.read<ListsProvider>().setEnable(item, value)},
                                 ),
                               ),
                             ),
@@ -755,22 +753,21 @@ class _HomePageState extends State<HomePage> {
                               // decoration: BoxDecoration(
                               //   shape: BoxShape.circle,
                               //   color: item['days'][item['days'].keys.elementAt(index)]
-                              //       ? themeProvider.colorOfAntiThemeBrightness(
-                              //           (item['colorIndex'] == null) ? null : listsProvider.colorList[item['colorIndex']],
+                              //       ? context.watch<ThemeProvider>().colorOfAntiThemeBrightness(
+                              //           (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
                               //           .2,
                               //           Colors.grey,
                               //         )
                               //       : null,
                               // ),
                               color: item['days'][item['days'].keys.elementAt(index)]
-                                  ? themeProvider.colorOfAntiThemeBrightness(
-                                      (item['colorIndex'] == null) ? null : listsProvider.colorList[item['colorIndex']].withOpacity(0.6),
+                                  ? context.watch<ThemeProvider>().colorOfAntiThemeBrightness(
+                                      (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']].withOpacity(0.6),
                                       .3,
                                       Colors.grey,
                                     )
-                                  : themeProvider
-                                      .colorOfThemeBrightness(
-                                        (item['colorIndex'] == null) ? null : listsProvider.colorList[item['colorIndex']],
+                                  : context.watch<ThemeProvider>().colorOfThemeBrightness(
+                                        (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
                                         .3,
                                         Colors.grey,
                                       )!
@@ -782,9 +779,9 @@ class _HomePageState extends State<HomePage> {
                                 child: Text(
                                   '${item['days'].keys.elementAt(index)}',
                                   style: TextStyle(
-                                    color: themeProvider.colorOfThemeBrightnessIfTrueAndViceVersa(
+                                    color: context.watch<ThemeProvider>().colorOfThemeBrightnessIfTrueAndViceVersa(
                                       item['days'][item['days'].keys.elementAt(index)],
-                                      (item['colorIndex'] == null) ? null : listsProvider.colorList[item['colorIndex']],
+                                      (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
                                       .3,
                                       Colors.grey,
                                     ),
@@ -813,12 +810,12 @@ class _HomePageState extends State<HomePage> {
           right: 0,
           child: IconButton(
             onPressed: () {
-              listsProvider.removeFromList(item);
+              context.read<ListsProvider>().removeFromList(item);
             },
             icon: const FaIcon(FontAwesomeIcons.solidTrashCan),
             // color: Colors.redAccent,
-            color: themeProvider.colorOfAntiThemeBrightness(
-              (item['colorIndex'] == null) ? null : listsProvider.colorList[item['colorIndex']],
+            color: context.watch<ThemeProvider>().colorOfAntiThemeBrightness(
+              (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
               .2,
               Colors.grey,
             ),
@@ -829,7 +826,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  void showAlertDialogFromItem(BuildContext context, ThemeProvider themeProvider, ListsProvider listsProvider, Map item) {
+  void showAlertDialogFromItem(BuildContext context, Map item) {
     // others
     TextEditingController titleController = TextEditingController();
     FocusNode titleFocusNode = FocusNode();
@@ -859,7 +856,7 @@ class _HomePageState extends State<HomePage> {
           builder: (context, setState) {
             return AlertDialog(
               insetPadding: EdgeInsets.zero,
-              backgroundColor: themeProvider.colorOfThemeBrightness(currentColor, .3),
+              backgroundColor: context.watch<ThemeProvider>().colorOfThemeBrightness(currentColor, .3),
               title: SizedBox(
                 width: MediaQuery.of(context).size.width * 0.8,
                 height: 50,
@@ -892,7 +889,7 @@ class _HomePageState extends State<HomePage> {
                       // },
                       icon: Icon(
                         isColorPickerActive ? Icons.palette_outlined : Icons.palette,
-                        color: themeProvider.colorOfAntiThemeBrightness(
+                        color: context.watch<ThemeProvider>().colorOfAntiThemeBrightness(
                           currentColor,
                           .2,
                         ),
@@ -911,22 +908,22 @@ class _HomePageState extends State<HomePage> {
                               mainAxisSize: MainAxisSize.max,
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: List.generate(
-                                listsProvider.colorList.length,
+                                context.read<ListsProvider>().colorList.length,
                                 (index) => GestureDetector(
                                   onTap: () {
                                     setState(() {
-                                      // print(listsProvider.colorList[index]);
+                                      // print(context.read<ListsProvider>().colorList[index]);
                                       currentColor =
-                                          listsProvider.colorList[index] == Colors.transparent ? null : listsProvider.colorList[index];
+                                          context.read<ListsProvider>().colorList[index] == Colors.transparent ? null : context.read<ListsProvider>().colorList[index];
                                       isColorPickerActive = false;
                                       Navigator.pop(context);
                                       // print('gfcd');
                                     });
                                   },
-                                  // icon: listsProvider.colorList[index] != Colors.transparent
+                                  // icon: context.read<ListsProvider>().colorList[index] != Colors.transparent
                                   //     ? Icon(
                                   //         Icons.circle,
-                                  //         color: listsProvider.colorList[index],
+                                  //         color: context.read<ListsProvider>().colorList[index],
                                   //       )
                                   //     : Icon(
                                   //         Icons.water_drop_rounded,
@@ -934,10 +931,10 @@ class _HomePageState extends State<HomePage> {
                                   //       ),
                                   child: Padding(
                                     padding: const EdgeInsets.all(5),
-                                    child: listsProvider.colorList[index] != Colors.transparent
+                                    child: context.read<ListsProvider>().colorList[index] != Colors.transparent
                                         ? Icon(
                                             Icons.circle,
-                                            color: listsProvider.colorList[index],
+                                            color: context.read<ListsProvider>().colorList[index],
                                           )
                                         : Icon(
                                             Icons.water_drop_rounded,
@@ -1016,20 +1013,20 @@ class _HomePageState extends State<HomePage> {
                       width: 50,
                       child: FittedBox(
                         fit: BoxFit.contain,
-                        // child: themeModeSwitch(context, themeProvider),
+                        // child: themeModeSwitch(context),
                         child: Switch(
                           //
-                          inactiveTrackColor: themeProvider.colorOfThemeBrightness(
+                          inactiveTrackColor: context.watch<ThemeProvider>().colorOfThemeBrightness(
                             currentColor,
                             .2,
                             // Colors.grey,
                           ),
-                          activeTrackColor: themeProvider.colorOfAntiThemeBrightness(
+                          activeTrackColor: context.watch<ThemeProvider>().colorOfAntiThemeBrightness(
                             currentColor,
                             .2,
                             Colors.grey.shade600,
                           ),
-                          activeColor: themeProvider.colorOfThemeBrightness(
+                          activeColor: context.watch<ThemeProvider>().colorOfThemeBrightness(
                             currentColor,
                             .2,
                             Colors.grey.shade600,
@@ -1055,7 +1052,7 @@ class _HomePageState extends State<HomePage> {
                   //   width: 50,
                   //   child: FittedBox(
                   //     fit: BoxFit.contain,
-                  //     child: themeModeSwitch(context, themeProvider),
+                  //     child: themeModeSwitch(context),
                   //   ),
                   // ),
                   SizedBox(
@@ -1085,7 +1082,7 @@ class _HomePageState extends State<HomePage> {
                                   decoration: BoxDecoration(
                                     shape: BoxShape.circle,
                                     color: days[entry.key]
-                                        ? themeProvider.colorOfAntiThemeBrightness(
+                                        ? context.watch<ThemeProvider>().colorOfAntiThemeBrightness(
                                             currentColor,
                                             .2,
                                             Colors.grey,
@@ -1097,7 +1094,7 @@ class _HomePageState extends State<HomePage> {
                                     child: Text(
                                       '${entry.key}',
                                       style: TextStyle(
-                                        color: themeProvider.colorOfThemeBrightnessIfTrueAndViceVersa(
+                                        color: context.watch<ThemeProvider>().colorOfThemeBrightnessIfTrueAndViceVersa(
                                           days[entry.key],
                                           currentColor,
                                           .2,
@@ -1118,7 +1115,7 @@ class _HomePageState extends State<HomePage> {
                   FittedBox(
                     child: Container(
                       // decoration: ShapeDecoration(
-                      //   color: themeProvider.colorOfThemeBrightness(
+                      //   color: context.watch<ThemeProvider>().colorOfThemeBrightness(
                       //     currentColor,
                       //     0.25,
                       //   ),
@@ -1127,7 +1124,7 @@ class _HomePageState extends State<HomePage> {
                       decoration: BoxDecoration(
                         border: Border.all(
                           width: 2,
-                          color: themeProvider.colorOfAntiThemeBrightness(
+                          color: context.watch<ThemeProvider>().colorOfAntiThemeBrightness(
                             currentColor,
                             0.2,
                             Colors.blueGrey,
@@ -1152,16 +1149,16 @@ class _HomePageState extends State<HomePage> {
                           normalTextStyle: TextStyle(
                             fontSize: 17,
                             fontWeight: FontWeight.w600,
-                            color: themeProvider.colorOfThemeBrightness(
+                            color: context.watch<ThemeProvider>().colorOfThemeBrightness(
                                   currentColor,
                                   0.3,
                                 ) ??
-                                (themeProvider.isThemeDark ? Colors.grey.shade700 : Colors.grey.shade400),
+                                (context.watch<ThemeProvider>().isThemeDark ? Colors.grey.shade700 : Colors.grey.shade400),
                           ),
                           highlightedTextStyle: TextStyle(
                             fontSize: 25,
                             fontWeight: FontWeight.w600,
-                            color: themeProvider.colorOfAntiThemeBrightness(
+                            color: context.watch<ThemeProvider>().colorOfAntiThemeBrightness(
                               currentColor,
                               0.2,
                               Colors.blueGrey,
@@ -1195,7 +1192,7 @@ class _HomePageState extends State<HomePage> {
                 TextButton(
                   onPressed: () {
                     setState(() {
-                      listsProvider.addToList(
+                      context.read<ListsProvider>().addToList(
                         colorIndexFromColor: currentColor,
                         title: title,
                         days: days,
@@ -1210,7 +1207,7 @@ class _HomePageState extends State<HomePage> {
                   child: Text(
                     'Create',
                     style: TextStyle(
-                      color: themeProvider.isThemeDark ? Colors.white : Colors.black,
+                      color: context.watch<ThemeProvider>().isThemeDark ? Colors.white : Colors.black,
                     ),
                   ),
                 ),
