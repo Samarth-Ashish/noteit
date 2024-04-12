@@ -6,7 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'dart:ui';
 
-import '../packages_/time_picker_edited.dart';
+import '../packages_/time_picker_.dart';
 import '../providers/list_provider.dart';
 import '../providers/theme_provider.dart';
 
@@ -224,13 +224,13 @@ class _HomePageState extends State<HomePage> {
             bool isColorPickerActive = false;
             bool enabled = true;
 
-            DateTime now = DateTime.now();
+            final DateTime now = DateTime.now();
 
             Color? currentColor;
             String title = '';
             DateTime selectedTime = now;
 
-            Map days = {
+            final Map days = {
               'Mo': false,
               'Tu': false,
               'We': false,
