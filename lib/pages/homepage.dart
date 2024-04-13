@@ -72,7 +72,6 @@ class _HomePageState extends State<HomePage> {
                 Flexible(
                   child: ListView.builder(
                     // physics: (isBouncingPhysics) ? const BouncingScrollPhysics() : null,
-                    // physics: ,
                     addAutomaticKeepAlives: true,
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
@@ -237,7 +236,7 @@ class _HomePageState extends State<HomePage> {
     String title = title_ ?? '';
     bool enabled = enabled_ ?? true;
     DateTime reminderTime = reminderTime_ ?? DateTime.now();
-    Map days = days_ ??
+    Map<String, bool> days = days_ ??
         {
           'Mo': false,
           'Tu': false,
@@ -473,7 +472,7 @@ class _HomePageState extends State<HomePage> {
                               child: GestureDetector(
                                 onTap: () {
                                   setState(() {
-                                    days[entry.key] = !days[entry.key];
+                                    days[entry.key] = !days[entry.key]!;
                                   });
                                 },
                                 child: AnimatedContainer(
@@ -486,7 +485,7 @@ class _HomePageState extends State<HomePage> {
                                   // height: MediaQuery.of(context).size.width * 0.1,
                                   decoration: BoxDecoration(
                                     shape: BoxShape.circle,
-                                    color: days[entry.key]
+                                    color: days[entry.key]!
                                         ? context.watch<ThemeProvider>().colorOfAntiThemeBrightness(
                                               reminderColor,
                                               .2,
@@ -500,7 +499,7 @@ class _HomePageState extends State<HomePage> {
                                       '${entry.key}',
                                       style: TextStyle(
                                         color: context.watch<ThemeProvider>().colorOfThemeBrightnessIfTrueAndViceVersa(
-                                              days[entry.key],
+                                              days[entry.key]!,
                                               reminderColor,
                                               .2,
                                               Colors.grey,
@@ -623,6 +622,8 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget reminderContainerFromItem(Map<dynamic, dynamic> item) {
+    print('item built');
+    
     return Stack(
       // alignment: Alignment.bottomRight,
       children: [

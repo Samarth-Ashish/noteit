@@ -39,7 +39,13 @@ class ListsProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> addToList({Color? colorIndexFromColor, String title = '', Map? days, DateTime? selectedTime, bool? enabled}) async {
+  Future<void> addToList({
+    Color? colorIndexFromColor,
+    String title = '',
+    Map<String, bool>? days,
+    DateTime? selectedTime,
+    bool? enabled,
+  }) async {
     lists.add({
       'colorIndex': (colorIndexFromColor == null) ? null : colorList.indexOf(colorIndexFromColor),
       'title': title,
