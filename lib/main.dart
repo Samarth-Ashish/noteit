@@ -39,7 +39,7 @@ class _MyAppState extends State<MyApp> {
     //     ),
     //   ),
     // );
-    // NEW way ig
+    // NEW way
     return MaterialApp(
       title: 'Noter',
       theme: context.watch<ThemeProvider>().currentTheme,

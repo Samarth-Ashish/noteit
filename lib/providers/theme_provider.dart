@@ -102,7 +102,7 @@ class ThemeProvider extends ChangeNotifier {
   }
 }
 
-// ! darken/
+//  darken
 Color? darken(Color? color, [double amount = .1]) {
   if (color == null) {
     return null;
@@ -116,7 +116,7 @@ Color? darken(Color? color, [double amount = .1]) {
   return hslDark.toColor();
 }
 
-// ! lighten
+// lighten
 Color? lighten(Color? color, [double amount = .1]) {
   if (color == null) {
     return null;
@@ -130,7 +130,7 @@ Color? lighten(Color? color, [double amount = .1]) {
   return hslLight.toColor();
 }
 
-// ! returnColorFromBrightnessOf
+//  returnColorFromBrightnessOf
 Color? returnColorFromBrightnessOf({Color? fromColor, Color colorToConvert = Colors.grey}) {
   if (fromColor == null) {
     return null;
@@ -150,8 +150,8 @@ Color? returnColorFromBrightnessOf({Color? fromColor, Color colorToConvert = Col
   return hslBlended.toColor();
 }
 
-//!themeModeSwitch
-Widget themeModeSwitch(BuildContext context) {
+//themeSwitch
+Widget themeSwitch(BuildContext context) {
   return Switch(
     // inactiveTrackColor: Theme.of(context).colorScheme.onPrimary,
     // activeColor: Theme.of(context).colorScheme.onPrimary,
@@ -169,4 +169,26 @@ Widget themeModeSwitch(BuildContext context) {
     // onChanged: (value) => themeProvider.toggleTheme(),
     onChanged: (value) => context.read<ThemeProvider>().toggleTheme(),
   );
+}
+
+List<Widget> themeSwitchWithIcons(BuildContext context) {
+  return [
+    Icon(
+      Icons.dark_mode,
+      color: context.watch<ThemeProvider>().isThemeDark ? Colors.blueAccent : null,
+      size: 20,
+    ),
+    SizedBox(
+      width: 50,
+      child: FittedBox(
+        fit: BoxFit.fill,
+        child: themeSwitch(context),
+      ),
+    ),
+    Icon(
+      Icons.light_mode,
+      color: context.watch<ThemeProvider>().isThemeDark ? null : Colors.orangeAccent,
+      size: 20,
+    ),
+  ];
 }
