@@ -10,23 +10,17 @@ import '../packages_/time_picker_.dart';
 import '../providers/list_provider.dart';
 import '../providers/theme_provider.dart';
 
-class HomePage extends StatefulWidget {
+class HomePage extends StatelessWidget {
   const HomePage({super.key, required this.title});
 
   final String title;
 
-  @override
-  State<HomePage> createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
   // bool isBouncingPhysics = false;
-  // double appBarOpacity = 0;
-  bool isAppBarBlurred = true;
+  // bool isAppBarBlurred = true;
 
   @override
   Widget build(BuildContext context) {
-    print('====homepage built====');
+    // print('====homepage built====');
 
     return SafeArea(
       child: Scaffold(
@@ -35,55 +29,52 @@ class _HomePageState extends State<HomePage> {
           // backgroundColor: (context.watch<ThemeProvider>().isThemeDark ? Colors.black : Colors.white).withOpacity(appBarOpacity),
           backgroundColor: Colors.transparent,
           elevation: 0,
-          flexibleSpace: isAppBarBlurred
-              ? ClipRect(
-                  child: BackdropFilter(
-                    filter: ImageFilter.blur(
-                      sigmaX: 10,
-                      sigmaY: 10,
-                    ),
-                    child: Container(
-                      color: Colors.transparent,
-                    ),
-                  ),
-                  // child: GlassContainer.frostedGlass(
-                  //   height: 55,
-                  //   width: MediaQuery.of(context).size.width,
-                  //   // color: Colors.green.withOpacity(0),
-                  //   color: Colors.transparent,
-                  //   frostedOpacity: 0.1,
-                  //   blur: 100,
-                  //   borderWidth: 0,
-                  // ),
-                )
-              : null,
+          flexibleSpace: ClipRect(
+            child: BackdropFilter(
+              filter: ImageFilter.blur(
+                sigmaX: 10,
+                sigmaY: 10,
+              ),
+              child: Container(
+                color: Colors.transparent,
+              ),
+            ),
+            // child: GlassContainer.frostedGlass(
+            //   height: 55,
+            //   width: MediaQuery.of(context).size.width,
+            //   // color: Colors.green.withOpacity(0),
+            //   color: Colors.transparent,
+            //   frostedOpacity: 0.1,
+            //   blur: 100,
+            //   borderWidth: 0,
+            // ),
+          ),
+          // : null,
           // backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-          title: Text(widget.title),
-          // actionsIconTheme: IconThemeData(opticalSize: 15),
+          title: Text(title),
+          // actionsIconTheme: const IconThemeData(opticalSize: 15),
           actions: themeSwitchWithIcons(context),
           centerTitle: true,
         ),
-        body: Padding(
-          padding: const EdgeInsets.only(top: 0),
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Flexible(
-                  child: ListView.builder(
-                    // physics: (isBouncingPhysics) ? const BouncingScrollPhysics() : null,
-                    addAutomaticKeepAlives: true,
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: context.watch<ListsProvider>().lists.length,
-                    itemBuilder: (BuildContext context, index) {
-                      final item = context.watch<ListsProvider>().lists[index];
-                      return reminderContainerFromItem(item);
-                    },
-                  ),
+        body: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Flexible(
+                child: ListView.builder(
+                  // physics: (isBouncingPhysics) ? const BouncingScrollPhysics() : null,
+                  addAutomaticKeepAlives: true,
+                  shrinkWrap: true,
+                  // physics: const NeverScrollableScrollPhysics(),
+                  primary: false,
+                  itemCount: context.watch<ListsProvider>().lists.length,
+                  itemBuilder: (BuildContext context, index) {
+                    final item = context.watch<ListsProvider>().lists[index];
+                    return reminderContainerFromItem(context, item);
+                  },
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
         drawer: Drawer(
@@ -225,7 +216,6 @@ class _HomePageState extends State<HomePage> {
     bool? enabled_,
     DateTime? reminderTime_,
     Map<String, bool>? days_,
-    //
   }) {
     //
     bool isColorPickerActive = false;
@@ -404,7 +394,6 @@ class _HomePageState extends State<HomePage> {
                           onChanged: (text) => {
                             setState(() {
                               title = titleController.text;
-                              debugPrint(text);
                             })
                           },
                         ),
@@ -496,7 +485,7 @@ class _HomePageState extends State<HomePage> {
                                   child: FittedBox(
                                     fit: BoxFit.scaleDown,
                                     child: Text(
-                                      '${entry.key}',
+                                      entry.key,
                                       style: TextStyle(
                                         color: context.watch<ThemeProvider>().colorOfThemeBrightnessIfTrueAndViceVersa(
                                               days[entry.key]!,
@@ -601,8 +590,6 @@ class _HomePageState extends State<HomePage> {
                             selectedTime: reminderTime,
                             enabled: enabled,
                           );
-                      // print(Provider.of<ListsProvider>(context, listen: false)
-                      // .lists);
                       Navigator.pop(context);
                     });
                   },
@@ -621,14 +608,15 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget reminderContainerFromItem(Map<dynamic, dynamic> item) {
-    print('item built');
-    
+  Widget reminderContainerFromItem(BuildContext context, final Map<String, dynamic> item) {
+    // print('----reminder ${item['colorIndex']} built----');
+
     return Stack(
       // alignment: Alignment.bottomRight,
       children: [
         Padding(
           padding: const EdgeInsets.only(bottom: 15),
+          // margin: const EdgeInsets.only(bottom: 15),
           child: GlassContainer.frostedGlass(
             gradient: LinearGradient(
               begin: Alignment.topCenter,
