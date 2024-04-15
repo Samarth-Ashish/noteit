@@ -20,35 +20,35 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // print('====homepage built====');
+    print('====homepage built====');
 
     return SafeArea(
       child: Scaffold(
-        extendBodyBehindAppBar: true,
+        // extendBodyBehindAppBar: true,
         appBar: AppBar(
           // backgroundColor: (context.watch<ThemeProvider>().isThemeDark ? Colors.black : Colors.white).withOpacity(appBarOpacity),
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          flexibleSpace: ClipRect(
-            child: BackdropFilter(
-              filter: ImageFilter.blur(
-                sigmaX: 10,
-                sigmaY: 10,
-              ),
-              child: Container(
-                color: Colors.transparent,
-              ),
-            ),
-            // child: GlassContainer.frostedGlass(
-            //   height: 55,
-            //   width: MediaQuery.of(context).size.width,
-            //   // color: Colors.green.withOpacity(0),
-            //   color: Colors.transparent,
-            //   frostedOpacity: 0.1,
-            //   blur: 100,
-            //   borderWidth: 0,
-            // ),
-          ),
+          // backgroundColor: Colors.transparent,
+          // elevation: 0,
+          // flexibleSpace: ClipRect(
+          //   child: BackdropFilter(
+          //     filter: ImageFilter.blur(
+          //       sigmaX: 10,
+          //       sigmaY: 10,
+          //     ),
+          //     child: Container(
+          //       color: Colors.transparent,
+          //     ),
+          //   ),
+          //     // child: GlassContainer.frostedGlass(
+          //     //   height: 55,
+          //     //   width: MediaQuery.of(context).size.width,
+          //     //   // color: Colors.green.withOpacity(0),
+          //     //   color: Colors.transparent,
+          //     //   frostedOpacity: 0.1,
+          //     //   blur: 100,
+          //     //   borderWidth: 0,
+          //     // ),
+          // ),
           // : null,
           // backgroundColor: Theme.of(context).colorScheme.inversePrimary,
           title: Text(title),
@@ -56,26 +56,48 @@ class HomePage extends StatelessWidget {
           actions: themeSwitchWithIcons(context),
           centerTitle: true,
         ),
-        body: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Flexible(
-                child: ListView.builder(
-                  // physics: (isBouncingPhysics) ? const BouncingScrollPhysics() : null,
-                  addAutomaticKeepAlives: true,
-                  shrinkWrap: true,
-                  // physics: const NeverScrollableScrollPhysics(),
-                  primary: false,
-                  itemCount: context.watch<ListsProvider>().lists.length,
-                  itemBuilder: (BuildContext context, index) {
-                    final item = context.watch<ListsProvider>().lists[index];
-                    return reminderContainerFromItem(context, item);
-                  },
-                ),
-              ),
-            ],
-          ),
+        // body: SingleChildScrollView(
+        //   child: Column(
+        //     mainAxisSize: MainAxisSize.min,
+        //     children: [
+        //       Flexible(
+        //         child: ListView.builder(
+        //           // physics: (isBouncingPhysics) ? const BouncingScrollPhysics() : null,
+        //           // addAutomaticKeepAlives: true,
+        //           shrinkWrap: true,
+        //           physics: const NeverScrollableScrollPhysics(),
+        //           primary: false,
+        //           //
+        //           itemCount: context.watch<ListsProvider>().lists.length,
+        //           itemBuilder: (BuildContext context, index) {
+        //             final item = context.watch<ListsProvider>().lists[index];
+        //             return reminderContainerFromItem(
+        //               context,
+        //               item,
+        //               UniqueKey(),
+        //             );
+        //           },
+        //         ),
+        //       ),
+        //     ],
+        //   ),
+        // ),
+        body: ListView.builder(
+          // physics: (isBouncingPhysics) ? const BouncingScrollPhysics() : null,
+          // addAutomaticKeepAlives: true,
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          primary: false,
+          //
+          itemCount: context.watch<ListsProvider>().lists.length,
+          itemBuilder: (BuildContext context, index) {
+            final item = context.watch<ListsProvider>().lists[index];
+            return reminderContainerFromItem(
+              context,
+              item,
+              UniqueKey(),
+            );
+          },
         ),
         drawer: Drawer(
           child: ListView(
@@ -608,8 +630,8 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Widget reminderContainerFromItem(BuildContext context, final Map<String, dynamic> item) {
-    // print('----reminder ${item['colorIndex']} built----');
+  Widget reminderContainerFromItem(BuildContext context, final Map<String, dynamic> item, Key key, {isFrosted = false}) {
+    print('----reminder ${item['colorIndex']} built----');
 
     return Stack(
       // alignment: Alignment.bottomRight,
@@ -617,191 +639,50 @@ class HomePage extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.only(bottom: 15),
           // margin: const EdgeInsets.only(bottom: 15),
-          child: GlassContainer.frostedGlass(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [
-                context
-                    .watch<ThemeProvider>()
-                    .colorOfThemeBrightness(
-                      (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
-                      .3,
-                      Colors.grey,
-                    )!
-                    .withOpacity(0.6),
-                context
-                    .watch<ThemeProvider>()
-                    .colorOfThemeBrightness(
-                      (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
-                      .2,
-                      Colors.grey,
-                    )!
-                    .withOpacity(1),
-              ],
-              //
-            ),
-            //
-            // color: themeProvider
-            //     .colorOfThemeBrightness(
-            //       (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
-            //       .3,
-            //       Colors.grey,
-            //     )!
-            //     .withOpacity(0.5),
-            //
-            // blur: 15.0,
-            frostedOpacity: 0.4, //0.2
-            margin: const EdgeInsets.all(5),
-            borderRadius: BorderRadius.circular(25),
-            borderWidth: 0,
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height / 7,
-            // duration: const Duration(milliseconds: 1000),
-            child: Center(
-              child: Container(
-                // margin: const EdgeInsets.only(top: 5, bottom: 17, left: 8, right: 8),
-                // margin: const EdgeInsets.only(left: 10,right: 10),
-                padding: const EdgeInsets.all(5),
-                // decoration: BoxDecoration(
-                //   // color: context.watch<ThemeProvider>().colorOfThemeBrightness(
-                //   //   (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
-                //   //   .2,
-                //   //   Colors.grey,
-                //   // ),
-                //   borderRadius: BorderRadius.circular(25),
-                // ),
-                child: Center(
-                  child: Column(
-                    // crossAxisAlignment: CrossAxisAlignment.stretch,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 10, left: 15, right: 15),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              DateFormat.jm().format(DateTime.fromMillisecondsSinceEpoch(item['time'])).toString(),
-                              style: TextStyle(
-                                fontWeight: FontWeight.w500,
-                                fontSize: 20,
-                                color: context.watch<ThemeProvider>().colorOfAntiThemeBrightness(
-                                      (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
-                                      .2,
-                                      Colors.grey,
-                                    ),
-                              ),
-                            ),
-                            if (item['title'] != '')
-                              Text(
-                                item['title'],
-                                style: const TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            SizedBox(
-                              width: 50,
-                              child: FittedBox(
-                                fit: BoxFit.contain,
-                                // child: themeSwitch(context),
-                                child: Switch(
-                                  //
-                                  inactiveTrackColor: context.watch<ThemeProvider>().colorOfThemeBrightness(
-                                        (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
-                                        .2,
-                                        Colors.grey,
-                                      ),
-                                  activeTrackColor: context.watch<ThemeProvider>().colorOfAntiThemeBrightness(
-                                      (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
-                                      .2,
-                                      Colors.grey.shade600),
-                                  activeColor: context.watch<ThemeProvider>().colorOfThemeBrightness(
-                                      (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
-                                      .2,
-                                      Colors.grey.shade600),
-                                  //
-                                  value: item['enabled'] ?? false,
-                                  onChanged: (value) => {context.read<ListsProvider>().setEnable(item, value)},
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        mainAxisSize: MainAxisSize.max,
-                        children: List.generate(
-                          item['days'].keys.length,
-                          (index) => Flexible(
-                            child: GlassContainer.frostedGlass(
-                              borderWidth: 0,
-                              shape: BoxShape.circle,
-                              // padding: const EdgeInsets.all(3),
-                              padding: const EdgeInsets.all(4),
-                              // margin: const EdgeInsets.all(0.5),
-                              width: 30,
-                              height: 30,
-                              // decoration: BoxDecoration(
-                              //   shape: BoxShape.circle,
-                              //   color: item['days'][item['days'].keys.elementAt(index)]
-                              //       ? context.watch<ThemeProvider>().colorOfAntiThemeBrightness(
-                              //           (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
-                              //           .2,
-                              //           Colors.grey,
-                              //         )
-                              //       : null,
-                              // ),
-                              color: item['days'][item['days'].keys.elementAt(index)]
-                                  ? context.watch<ThemeProvider>().colorOfAntiThemeBrightness(
-                                        (item['colorIndex'] == null)
-                                            ? null
-                                            : context.read<ListsProvider>().colorList[item['colorIndex']].withOpacity(0.6),
-                                        .3,
-                                        Colors.grey,
-                                      )
-                                  : context
-                                      .watch<ThemeProvider>()
-                                      .colorOfThemeBrightness(
-                                        (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
-                                        .3,
-                                        Colors.grey,
-                                      )!
-                                      .withOpacity(0),
-                              blur: 2,
-                              frostedOpacity: item['days'][item['days'].keys.elementAt(index)] ? 0.6 : 0,
-                              child: FittedBox(
-                                fit: BoxFit.scaleDown,
-                                child: Text(
-                                  '${item['days'].keys.elementAt(index)}',
-                                  style: TextStyle(
-                                    color: context.watch<ThemeProvider>().colorOfThemeBrightnessIfTrueAndViceVersa(
-                                          item['days'][item['days'].keys.elementAt(index)],
-                                          (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
-                                          .3,
-                                          Colors.grey,
-                                        ),
-                                    // overflow: TextOverflow
-                                    //     .ellipsis, // Handle potential overflow
-                                    fontSize: 18,
-                                    // fontWeight: FontWeight.w600,
-                                    fontWeight: FontWeight.bold,
-                                    // backgroundColor: Colors.blue,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ),
+          // child: GlassContainer.frostedGlass(
+          //   gradient: LinearGradient(
+          //     begin: Alignment.topCenter,
+          //     end: Alignment.bottomCenter,
+          //     colors: [
+          //       context
+          //           .watch<ThemeProvider>()
+          //           .colorOfThemeBrightness(
+          //             (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
+          //             .2,
+          //             Colors.grey,
+          //           )!
+          //           .withOpacity(0.6),
+          //       context
+          //           .watch<ThemeProvider>()
+          //           .colorOfThemeBrightness(
+          //             (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
+          //             .2,
+          //             Colors.grey,
+          //           )!
+          //           .withOpacity(1),
+          //     ],
+          //     //
+          //   ),
+          //   //
+          //   // color: themeProvider
+          //   //     .colorOfThemeBrightness(
+          //   //       (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
+          //   //       .3,
+          //   //       Colors.grey,
+          //   //     )!
+          //   //     .withOpacity(0.5),
+          //   //
+          //   // blur: 15.0,
+          //   frostedOpacity: 0.4, //0.2
+          //   margin: const EdgeInsets.all(5),
+          //   borderRadius: BorderRadius.circular(25),
+          //   borderWidth: 0,
+          //   width: MediaQuery.of(context).size.width,
+          //   height: MediaQuery.of(context).size.height / 7,
+          //   // duration: const Duration(milliseconds: 1000),
+          //   child: reminderContainerMainContents(item, context),
+          // ),
+          child: reminderContainerMainContents(item, context),
         ),
         Positioned(
           bottom: 0,
@@ -821,6 +702,155 @@ class HomePage extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+
+  Center reminderContainerMainContents(Map<String, dynamic> item, BuildContext context) {
+    return Center(
+      child: Container(
+        // margin: const EdgeInsets.only(top: 5, bottom: 17, left: 8, right: 8),
+        // margin: const EdgeInsets.only(left: 10,right: 10),
+        padding: const EdgeInsets.all(5),
+        // decoration: BoxDecoration(
+        //   // color: context.watch<ThemeProvider>().colorOfThemeBrightness(
+        //   //   (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
+        //   //   .2,
+        //   //   Colors.grey,
+        //   // ),
+        //   borderRadius: BorderRadius.circular(25),
+        // ),
+        child: Center(
+          child: Column(
+            // crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(bottom: 10, left: 15, right: 15),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      DateFormat.jm().format(DateTime.fromMillisecondsSinceEpoch(item['time'])).toString(),
+                      style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20,
+                        color: context.watch<ThemeProvider>().colorOfAntiThemeBrightness(
+                              (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
+                              .2,
+                              Colors.grey,
+                            ),
+                      ),
+                    ),
+                    if (item['title'] != '')
+                      Text(
+                        item['title'],
+                        style: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    SizedBox(
+                      width: 50,
+                      child: FittedBox(
+                        fit: BoxFit.contain,
+                        // child: themeSwitch(context),
+                        child: Switch(
+                          //
+                          inactiveTrackColor: context.watch<ThemeProvider>().colorOfThemeBrightness(
+                                (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
+                                .2,
+                                Colors.grey,
+                              ),
+                          activeTrackColor: context.watch<ThemeProvider>().colorOfAntiThemeBrightness(
+                              (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
+                              .2,
+                              Colors.grey.shade600),
+                          activeColor: context.watch<ThemeProvider>().colorOfThemeBrightness(
+                              (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
+                              .2,
+                              Colors.grey.shade600),
+                          //
+                          value: item['enabled'] ?? false,
+                          onChanged: (value) => {
+                            context.read<ListsProvider>().setEnable(item, value),
+                            print('TOGGLED'),
+                          },
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                mainAxisSize: MainAxisSize.max,
+                children: List.generate(
+                  item['days'].keys.length,
+                  (index) => Flexible(
+                    child: GlassContainer.frostedGlass(
+                      borderWidth: 0,
+                      shape: BoxShape.circle,
+                      // padding: const EdgeInsets.all(3),
+                      padding: const EdgeInsets.all(4),
+                      // margin: const EdgeInsets.all(0.5),
+                      width: 30,
+                      height: 30,
+                      // decoration: BoxDecoration(
+                      //   shape: BoxShape.circle,
+                      //   color: item['days'][item['days'].keys.elementAt(index)]
+                      //       ? context.watch<ThemeProvider>().colorOfAntiThemeBrightness(
+                      //           (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
+                      //           .2,
+                      //           Colors.grey,
+                      //         )
+                      //       : null,
+                      // ),
+                      color: item['days'][item['days'].keys.elementAt(index)]
+                          ? context.watch<ThemeProvider>().colorOfAntiThemeBrightness(
+                                (item['colorIndex'] == null)
+                                    ? null
+                                    : context.read<ListsProvider>().colorList[item['colorIndex']].withOpacity(0.6),
+                                .3,
+                                Colors.grey,
+                              )
+                          : context
+                              .watch<ThemeProvider>()
+                              .colorOfThemeBrightness(
+                                (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
+                                .3,
+                                Colors.grey,
+                              )!
+                              .withOpacity(0),
+                      blur: 2,
+                      frostedOpacity: item['days'][item['days'].keys.elementAt(index)] ? 0.6 : 0,
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(
+                          '${item['days'].keys.elementAt(index)}',
+                          style: TextStyle(
+                            color: context.watch<ThemeProvider>().colorOfThemeBrightnessIfTrueAndViceVersa(
+                                  item['days'][item['days'].keys.elementAt(index)],
+                                  (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
+                                  .3,
+                                  Colors.grey,
+                                ),
+                            // overflow: TextOverflow
+                            //     .ellipsis, // Handle potential overflow
+                            fontSize: 18,
+                            // fontWeight: FontWeight.w600,
+                            fontWeight: FontWeight.bold,
+                            // backgroundColor: Colors.blue,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 
