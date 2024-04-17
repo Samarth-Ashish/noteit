@@ -19,10 +19,10 @@ class ListsProvider extends ChangeNotifier {
 
   ListsProvider() {
     lists = [];
-    getListsFromStorage();
+    getListsFromCache();
   }
 
-  Future<void> getListsFromStorage() async {
+  Future<void> getListsFromCache() async {
     final prefs = await SharedPreferences.getInstance();
     final jsonLists = prefs.getString('lists');
     if (jsonLists != null) {

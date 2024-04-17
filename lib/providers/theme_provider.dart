@@ -35,10 +35,10 @@ class ThemeProvider extends ChangeNotifier {
   ThemeProvider({bool? isThemeDark = true}) {
     this.isThemeDark = isThemeDark ?? true;
     currentTheme = this.isThemeDark ? darkTheme : lightTheme;
-    loadThemePreferencesFromStorage();
+    loadThemePreferencesFromCache();
   }
 
-  Future<void> loadThemePreferencesFromStorage() async {
+  Future<void> loadThemePreferencesFromCache() async {
     final prefs = await SharedPreferences.getInstance();
     isThemeDark = prefs.getBool('isThemeDark') ?? true;
     currentTheme = isThemeDark ? darkTheme : lightTheme;

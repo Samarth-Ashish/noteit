@@ -24,21 +24,24 @@ class HomePage extends StatelessWidget {
 
     return SafeArea(
       child: Scaffold(
-        // extendBodyBehindAppBar: true,
+        extendBodyBehindAppBar: true,
         appBar: AppBar(
           // backgroundColor: (context.watch<ThemeProvider>().isThemeDark ? Colors.black : Colors.white).withOpacity(appBarOpacity),
-          // backgroundColor: Colors.transparent,
-          // elevation: 0,
-          // flexibleSpace: ClipRect(
-          //   child: BackdropFilter(
-          //     filter: ImageFilter.blur(
-          //       sigmaX: 10,
-          //       sigmaY: 10,
-          //     ),
-          //     child: Container(
-          //       color: Colors.transparent,
-          //     ),
-          //   ),
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          //
+          //
+          flexibleSpace: ClipRect(
+            child: BackdropFilter(
+              filter: ImageFilter.blur(
+                sigmaX: 10,
+                sigmaY: 10,
+              ),
+              child: Container(
+                color: Colors.transparent,
+              ),
+            ),
+          ),
           //     // child: GlassContainer.frostedGlass(
           //     //   height: 55,
           //     //   width: MediaQuery.of(context).size.width,
@@ -48,8 +51,9 @@ class HomePage extends StatelessWidget {
           //     //   blur: 100,
           //     //   borderWidth: 0,
           //     // ),
-          // ),
           // : null,
+          //
+          //
           // backgroundColor: Theme.of(context).colorScheme.inversePrimary,
           title: Text(title),
           // actionsIconTheme: const IconThemeData(opticalSize: 15),
@@ -71,7 +75,7 @@ class HomePage extends StatelessWidget {
         //           itemCount: context.watch<ListsProvider>().lists.length,
         //           itemBuilder: (BuildContext context, index) {
         //             final item = context.watch<ListsProvider>().lists[index];
-        //             return reminderContainerFromItem(
+        //             return reminderFrostedContainerFromItem(
         //               context,
         //               item,
         //               UniqueKey(),
@@ -86,13 +90,13 @@ class HomePage extends StatelessWidget {
           // physics: (isBouncingPhysics) ? const BouncingScrollPhysics() : null,
           // addAutomaticKeepAlives: true,
           shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          primary: false,
+          // physics: const NeverScrollableScrollPhysics(),
+          // primary: true,
           //
           itemCount: context.watch<ListsProvider>().lists.length,
           itemBuilder: (BuildContext context, index) {
-            final item = context.watch<ListsProvider>().lists[index];
-            return reminderContainerFromItem(
+            final item = context.read<ListsProvider>().lists[index];
+            return reminderFrostedContainerFromItem(
               context,
               item,
               UniqueKey(),
@@ -630,7 +634,7 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Widget reminderContainerFromItem(BuildContext context, final Map<String, dynamic> item, Key key, {isFrosted = false}) {
+  Widget reminderFrostedContainerFromItem(BuildContext context, final Map<String, dynamic> item, Key key, {isFrosted = false}) {
     print('----reminder ${item['colorIndex']} built----');
 
     return Stack(
@@ -638,51 +642,50 @@ class HomePage extends StatelessWidget {
       children: [
         Padding(
           padding: const EdgeInsets.only(bottom: 15),
-          // margin: const EdgeInsets.only(bottom: 15),
-          // child: GlassContainer.frostedGlass(
-          //   gradient: LinearGradient(
-          //     begin: Alignment.topCenter,
-          //     end: Alignment.bottomCenter,
-          //     colors: [
-          //       context
-          //           .watch<ThemeProvider>()
-          //           .colorOfThemeBrightness(
-          //             (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
-          //             .2,
-          //             Colors.grey,
-          //           )!
-          //           .withOpacity(0.6),
-          //       context
-          //           .watch<ThemeProvider>()
-          //           .colorOfThemeBrightness(
-          //             (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
-          //             .2,
-          //             Colors.grey,
-          //           )!
-          //           .withOpacity(1),
-          //     ],
-          //     //
-          //   ),
-          //   //
-          //   // color: themeProvider
-          //   //     .colorOfThemeBrightness(
-          //   //       (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
-          //   //       .3,
-          //   //       Colors.grey,
-          //   //     )!
-          //   //     .withOpacity(0.5),
-          //   //
-          //   // blur: 15.0,
-          //   frostedOpacity: 0.4, //0.2
-          //   margin: const EdgeInsets.all(5),
-          //   borderRadius: BorderRadius.circular(25),
-          //   borderWidth: 0,
-          //   width: MediaQuery.of(context).size.width,
-          //   height: MediaQuery.of(context).size.height / 7,
-          //   // duration: const Duration(milliseconds: 1000),
-          //   child: reminderContainerMainContents(item, context),
-          // ),
-          child: reminderContainerMainContents(item, context),
+          child: GlassContainer.frostedGlass(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                context
+                    .watch<ThemeProvider>()
+                    .colorOfThemeBrightness(
+                      (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
+                      .2,
+                      Colors.grey,
+                    )!
+                    .withOpacity(0.6),
+                context
+                    .watch<ThemeProvider>()
+                    .colorOfThemeBrightness(
+                      (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
+                      .2,
+                      Colors.grey,
+                    )!
+                    .withOpacity(1),
+              ],
+              //
+            ),
+            //
+            // color: themeProvider
+            //     .colorOfThemeBrightness(
+            //       (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
+            //       .3,
+            //       Colors.grey,
+            //     )!
+            //     .withOpacity(0.5),
+            //
+            // blur: 15.0,
+            frostedOpacity: 0.4, //0.2
+            margin: const EdgeInsets.all(5),
+            borderRadius: BorderRadius.circular(25),
+            borderWidth: 0,
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height / 7,
+            // duration: const Duration(milliseconds: 1000),
+            child: reminderFrostedContainerMainContents(item, context),
+          ),
+          // child: reminderFrostedContainerMainContents(item, context),
         ),
         Positioned(
           bottom: 0,
@@ -705,7 +708,7 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Center reminderContainerMainContents(Map<String, dynamic> item, BuildContext context) {
+  Center reminderFrostedContainerMainContents(Map<String, dynamic> item, BuildContext context) {
     return Center(
       child: Container(
         // margin: const EdgeInsets.only(top: 5, bottom: 17, left: 8, right: 8),
@@ -771,10 +774,7 @@ class HomePage extends StatelessWidget {
                               Colors.grey.shade600),
                           //
                           value: item['enabled'] ?? false,
-                          onChanged: (value) => {
-                            context.read<ListsProvider>().setEnable(item, value),
-                            print('TOGGLED'),
-                          },
+                          onChanged: (value) => context.read<ListsProvider>().setEnable(item, value),
                         ),
                       ),
                     ),
