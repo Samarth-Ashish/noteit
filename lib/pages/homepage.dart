@@ -20,10 +20,9 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  // bool isBouncingPhysics = false;
   @override
   Widget build(BuildContext context) {
-    debugPrint('======homepage');
+    // debugPrint('======homepage');
 
     return SafeArea(
       child: Scaffold(
@@ -32,8 +31,6 @@ class _HomePageState extends State<HomePage> {
           // backgroundColor: (context.watch<ThemeProvider>().isThemeDark ? Colors.black : Colors.white).withOpacity(appBarOpacity),
           backgroundColor: Colors.transparent,
           elevation: 0,
-          //
-          //
           flexibleSpace: ClipRect(
             child: BackdropFilter(
               filter: ImageFilter.blur(
@@ -45,50 +42,11 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
           ),
-          //     // child: GlassContainer.frostedGlass(
-          //     //   height: 55,
-          //     //   width: MediaQuery.of(context).size.width,
-          //     //   // color: Colors.green.withOpacity(0),
-          //     //   color: Colors.transparent,
-          //     //   frostedOpacity: 0.1,
-          //     //   blur: 100,
-          //     //   borderWidth: 0,
-          //     // ),
-          // : null,
-          //
-          //
-          // backgroundColor: Theme.of(context).colorScheme.inversePrimary,
           title: Text(widget.title),
           // actionsIconTheme: const IconThemeData(opticalSize: 15),
           actions: themeSwitchWithIcons(context),
           centerTitle: true,
         ),
-        // body: SingleChildScrollView(
-        //   child: Column(
-        //     mainAxisSize: MainAxisSize.min,
-        //     children: [
-        //       Flexible(
-        //         child: ListView.builder(
-        //           // physics: (isBouncingPhysics) ? const BouncingScrollPhysics() : null,
-        //           // addAutomaticKeepAlives: true,
-        //           shrinkWrap: true,
-        //           physics: const NeverScrollableScrollPhysics(),
-        //           primary: false,
-        //           //
-        //           itemCount: context.watch<ListsProvider>().lists.length,
-        //           itemBuilder: (BuildContext context, index) {
-        //             final item = context.watch<ListsProvider>().lists[index];
-        //             return reminderFrostedContainerFromItem(
-        //               context,
-        //               item,
-        //               UniqueKey(),
-        //             );
-        //           },
-        //         ),
-        //       ),
-        //     ],
-        //   ),
-        // ),
         body: reminderListViewBuilder(context),
         drawer: Drawer(
           child: ListView(
@@ -208,7 +166,7 @@ class _HomePageState extends State<HomePage> {
         ),
         floatingActionButton: FloatingActionButton(
           elevation: 10,
-          // shape: const CircleBorder(10),
+          shape: const CircleBorder(),
           onPressed: () {
             // showModal(context);
             showNewReminderCreationDialog(context);
@@ -220,28 +178,24 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  ListView reminderListViewBuilder(BuildContext context) {
-    debugPrint('----\nBody built\n----');
-
-    return ListView.builder(
-      cacheExtent: 9999,
-      // physics: (isBouncingPhysics) ? const BouncingScrollPhysics() : null,
-      // addAutomaticKeepAlives: true,
-      // shrinkWrap: true,
-      // physics: const NeverScrollableScrollPhysics(),
-      // physics: ClampingScrollPhysics(), ///
-      // primary: true,
-      //
-      itemCount: context.watch<ListsProvider>().lists.length,
-      itemBuilder: (BuildContext context, index) {
-        final item = context.read<ListsProvider>().lists[index];
-        return reminderFrostedContainerFromItem(
-          context,
-          item,
-          // UniqueKey(),
-        );
-      },
-    );
+  Widget reminderListViewBuilder(BuildContext context) {
+    // debugPrint('----\nBody built\n----');
+    return Consumer<ListsProvider>(builder: (context, list, _) {
+      return ListView.builder(
+        cacheExtent: 9999,
+        // physics: (isBouncingPhysics) ? const BouncingScrollPhysics() : null,
+        // addAutomaticKeepAlives: true,
+        // shrinkWrap: true,
+        // physics: const NeverScrollableScrollPhysics(),
+        physics: const BouncingScrollPhysics(),
+        itemCount: list.lists.length,
+        itemBuilder: (context, index) {
+          // final item = context.read<ListsProvider>().lists[index];
+          final item = list.lists[index];
+          return reminderFrostedContainerFromItem(item);
+        },
+      );
+    });
   }
 
   void showNewReminderCreationDialog(
@@ -645,8 +599,8 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget reminderFrostedContainerFromItem(BuildContext context, final Map<String, dynamic> item, {isFrosted = false}) {
-    debugPrint('${item['colorIndex']} Container....');
+  Widget reminderFrostedContainerFromItem(Map<String, dynamic> item, {isFrosted = false}) {
+    // debugPrint('${item['colorIndex']} Container....');
 
     return Stack(
       // alignment: Alignment.bottomRight,
@@ -722,7 +676,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Center reminderFrostedContainerMainContents(Map<String, dynamic> item, BuildContext context) {
-    // debugPrint('');
+    debugPrint('');
 
     return Center(
       child: Container(
@@ -786,75 +740,97 @@ class _HomePageState extends State<HomePage> {
   }
 
   Row weekdaysRow(Map<String, dynamic> item, BuildContext context) {
+    // debugPrint('weekdays========');
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       mainAxisSize: MainAxisSize.max,
       children: List.generate(
         item['days'].keys.length,
         (index) => Flexible(
-          child: GlassContainer.frostedGlass(
-            borderWidth: 0,
-            shape: BoxShape.circle,
-            // padding: const EdgeInsets.all(3),
-            padding: const EdgeInsets.all(4),
-            // margin: const EdgeInsets.all(0.5),
-            width: 30,
-            height: 30,
-            // decoration: BoxDecoration(
-            //   shape: BoxShape.circle,
-            //   color: item['days'][item['days'].keys.elementAt(index)]
-            //       ? context.watch<ThemeProvider>().colorOfAntiThemeBrightness(
-            //           (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
-            //           .2,
-            //           Colors.grey,
-            //         )
-            //       : null,
-            // ),
-            //
-            //
-            // color: item['days'][item['days'].keys.elementAt(index)]
-            //     ? context.read<ThemeProvider>().colorOfAntiThemeBrightness(
-            //           (item['colorIndex'] == null)
-            //               ? null
-            //               : context.read<ListsProvider>().colorList[item['colorIndex']].withOpacity(0.6),
-            //           .3,
-            //           Colors.grey,
-            //         )
-            //     : context
-            //         .read<ThemeProvider>()
-            //         .colorOfThemeBrightness(
-            //           (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
-            //           .3,
-            //           Colors.grey,
-            //         )!
-            //         .withOpacity(0),
-            color: item['days'][item['days'].keys.elementAt(index)]
-                ? (item['colorIndex'] == null)
-                    ? null
-                    : context.read<ListsProvider>().colorList[item['colorIndex']]
-                : Colors.grey,
-            //
-            //
-            // blur: 2,
-            // frostedOpacity: item['days'][item['days'].keys.elementAt(index)] ? 0.6 : 0, //*
-            child: FittedBox(
-              fit: BoxFit.scaleDown,
-              child: Text(
-                '${item['days'].keys.elementAt(index)}',
-                style: const TextStyle(
-                  // color: context.watch<ThemeProvider>().colorOfThemeBrightnessIfTrueAndViceVersa(
-                  //       item['days'][item['days'].keys.elementAt(index)],
-                  //       (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
-                  //       .3,
-                  //       Colors.grey,
-                  //     ),
-                  // overflow: TextOverflow
-                  //     .ellipsis, // Handle potential overflow
-                  fontSize: 18,
-                  // fontWeight: FontWeight.w600,
-                  fontWeight: FontWeight.bold,
-                  // backgroundColor: Colors.blue,
-                ),
+          // child: GlassContainer.frostedGlass(
+          //   borderWidth: 0,
+          //   shape: BoxShape.circle,
+          //   // padding: const EdgeInsets.all(3),
+          //   padding: const EdgeInsets.all(4),
+          //   // margin: const EdgeInsets.all(0.5),
+          //   width: 30,
+          //   height: 30,
+          //   // decoration: BoxDecoration(
+          //   //   shape: BoxShape.circle,
+          //   //   color: item['days'][item['days'].keys.elementAt(index)]
+          //   //       ? context.watch<ThemeProvider>().colorOfAntiThemeBrightness(
+          //   //           (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
+          //   //           .2,
+          //   //           Colors.grey,
+          //   //         )
+          //   //       : null,
+          //   // ),
+          //   //
+          //   //
+          //   // color: item['days'][item['days'].keys.elementAt(index)]
+          //   //     ? context.read<ThemeProvider>().colorOfAntiThemeBrightness(
+          //   //           (item['colorIndex'] == null)
+          //   //               ? null
+          //   //               : context.read<ListsProvider>().colorList[item['colorIndex']].withOpacity(0.6),
+          //   //           .3,
+          //   //           Colors.grey,
+          //   //         )
+          //   //     : context
+          //   //         .read<ThemeProvider>()
+          //   //         .colorOfThemeBrightness(
+          //   //           (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
+          //   //           .3,
+          //   //           Colors.grey,
+          //   //         )!
+          //   //         .withOpacity(0),
+          //   // color: item['days'][item['days'].keys.elementAt(index)]
+          //   //     ? (item['colorIndex'] == null)
+          //   //         ? null
+          //   //         : context.read<ListsProvider>().colorList[item['colorIndex']]
+          //   //     : Colors.grey,
+          //   //
+          //   //
+          //   // blur: 2,
+          //   // frostedOpacity: item['days'][item['days'].keys.elementAt(index)] ? 0.6 : 0, //*
+          //   child: FittedBox(
+          //     fit: BoxFit.scaleDown,
+          //     child: Text(
+          //       '${item['days'].keys.elementAt(index)}',
+          //       style: const TextStyle(
+          //         // color: context.watch<ThemeProvider>().colorOfThemeBrightnessIfTrueAndViceVersa(
+          //         //       item['days'][item['days'].keys.elementAt(index)],
+          //         //       (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
+          //         //       .3,
+          //         //       Colors.grey,
+          //         //     ),
+          //         // overflow: TextOverflow
+          //         //     .ellipsis, // Handle potential overflow
+          //         fontSize: 18,
+          //         // fontWeight: FontWeight.w600,
+          //         fontWeight: FontWeight.bold,
+          //         // backgroundColor: Colors.blue,
+          //       ),
+          //     ),
+          //   ),
+          // ),
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              '${item['days'].keys.elementAt(index)}',
+              style: const TextStyle(
+                // color: context.watch<ThemeProvider>().colorOfThemeBrightnessIfTrueAndViceVersa(
+                //       item['days'][item['days'].keys.elementAt(index)],
+                //       (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
+                //       .3,
+                //       Colors.grey,
+                //     ),
+                // overflow: TextOverflow
+                //     .ellipsis, // Handle potential overflow
+                fontSize: 18,
+                // fontWeight: FontWeight.w600,
+                fontWeight: FontWeight.bold,
+                // backgroundColor: Colors.blue,
               ),
             ),
           ),
@@ -863,26 +839,31 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Switch toggleReminderSwitch(BuildContext context, Map<String, dynamic> item) {
+  Widget toggleReminderSwitch(BuildContext context, Map<String, dynamic> item) {
     debugPrint('Switch---');
-    return Switch(
-      //
-      // inactiveTrackColor: context.watch<ThemeProvider>().colorOfThemeBrightness(
-      //       (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
-      //       .2,
-      //       Colors.grey,
-      //     ),
-      // activeTrackColor: context.watch<ThemeProvider>().colorOfAntiThemeBrightness(
-      //     (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']], .2, Colors.grey.shade600),
-      // activeColor: context.watch<ThemeProvider>().colorOfThemeBrightness(
-      //     (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']], .2, Colors.grey.shade600),
-      //
-      inactiveTrackColor: (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
-      // activeTrackColor: (itm['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
-      activeColor: (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
-      //
-      value: item['enabled'] ?? false,
-      onChanged: (value) => context.read<ListsProvider>().setEnable(item, value),
+
+    return Consumer<ListsProvider>(
+      builder: (context, lists, _) {
+        return Switch(
+          //
+          // inactiveTrackColor: context.watch<ThemeProvider>().colorOfThemeBrightness(
+          //       (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
+          //       .2,
+          //       Colors.grey,
+          //     ),
+          // activeTrackColor: context.watch<ThemeProvider>().colorOfAntiThemeBrightness(
+          //     (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']], .2, Colors.grey.shade600),
+          // activeColor: context.watch<ThemeProvider>().colorOfThemeBrightness(
+          //     (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']], .2, Colors.grey.shade600),
+          //
+          inactiveTrackColor: (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
+          // activeTrackColor: (itm['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
+          activeColor: (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
+          //
+          value: item['enabled'] ?? false,
+          onChanged: (value) => context.read<ListsProvider>().setEnable(item, value),
+        );
+      },
     );
   }
 

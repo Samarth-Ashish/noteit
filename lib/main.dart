@@ -29,24 +29,24 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
-    // return Consumer<ThemeProvider>(
-    //   builder: (context, theme, _) => MaterialApp(
-    //     title: 'Remindus',
-    //     theme: Provider.of<ThemeProvider>(context, listen: false).currentTheme,
-    //     debugShowCheckedModeBanner: false,
-    //     home: const HomePage(
-    //       title: 'Noter',
-    //     ),
-    //   ),
-    // );
-    // NEW way
-    return MaterialApp(
-      title: 'Noter',
-      theme: context.watch<ThemeProvider>().currentTheme,
-      debugShowCheckedModeBanner: false,
-      home: const HomePage(
+    return Consumer<ThemeProvider>(
+      builder: (context, theme, _) => MaterialApp(
         title: 'Noter',
+        theme: theme.currentTheme,
+        debugShowCheckedModeBanner: false,
+        home: const HomePage(
+          title: 'Noter',
+        ),
       ),
     );
+    // NEW way
+    // return MaterialApp(
+    //   title: 'Noter',
+    //   theme: context.watch<ThemeProvider>().currentTheme,
+    //   debugShowCheckedModeBanner: false,
+    //   home: const HomePage(
+    //     title: 'Noter',
+    //   ),
+    // );
   }
 }
