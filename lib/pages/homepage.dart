@@ -9,6 +9,7 @@ import 'dart:ui';
 import '../packages_/time_picker_.dart';
 import '../providers/list_provider.dart';
 import '../providers/theme_provider.dart';
+import 'package:bordered_text/bordered_text.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key, required this.title});
@@ -22,7 +23,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
-    debugPrint('=====\n HOMEPAGE BUILT \n=====\n');
+    debugPrint('\n\n\n\n=====\n HOMEPAGE BUILT \n=====\n');
 
     return SafeArea(
       child: Scaffold(
@@ -732,7 +733,8 @@ class _HomePageState extends State<HomePage> {
                   ],
                 ),
               ),
-              weekdaysRow(item, context),
+              // weekdaysRow(item, context),
+              WeekdayRow(item: item),
             ],
           ),
         ),
@@ -740,8 +742,64 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Row weekdaysRow(Map<String, dynamic> item, BuildContext context) {
-    // debugPrint('weekdays========');
+  // Row weekdaysRow(Map<String, dynamic> item, BuildContext context) {
+  //   return;
+  // }
+
+  void showModal(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return const SizedBox(
+          height: 200.0,
+          child: Center(
+            child: Text(
+              'This is a modal!',
+              style: TextStyle(fontSize: 20.0),
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
+
+class ToggleReminderSwitch extends StatelessWidget {
+  final Map<String, dynamic> item;
+
+  const ToggleReminderSwitch({Key? key, required this.item}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    debugPrint('Switch ${item['colorIndex']} built \n ----------- \n');
+
+    return Switch(
+      activeTrackColor: context.read<ThemeProvider>().colorOfAntiThemeBrightness(
+            (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
+            .2,
+            Colors.grey.shade600,
+          ),
+      activeColor: context.read<ThemeProvider>().colorOfThemeBrightness(
+            (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
+            .2,
+            Colors.grey.shade600,
+          ),
+      // inactiveThumbColor: (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
+      inactiveTrackColor: Colors.transparent,
+      value: context.select((ListsProvider L) => item['enabled']),
+      onChanged: (value) => context.read<ListsProvider>().setEnable(item, value),
+    );
+  }
+}
+
+class WeekdayRow extends StatelessWidget {
+  final Map<String, dynamic> item;
+
+  const WeekdayRow({Key? key, required this.item}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    debugPrint('weekdays row ${item['colorIndex']}');
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -817,74 +875,41 @@ class _HomePageState extends State<HomePage> {
           // ),
           child: FittedBox(
             fit: BoxFit.scaleDown,
-            child: Text(
-              '${item['days'].keys.elementAt(index)}',
-              style: const TextStyle(
-                // color: context.watch<ThemeProvider>().colorOfThemeBrightnessIfTrueAndViceVersa(
-                //       item['days'][item['days'].keys.elementAt(index)],
-                //       (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
-                //       .3,
-                //       Colors.grey,
-                //     ),
-                // overflow: TextOverflow
-                //     .ellipsis, // Handle potential overflow
-                fontSize: 18,
-                // fontWeight: FontWeight.w600,
-                fontWeight: FontWeight.bold,
-                // backgroundColor: Colors.blue,
-              ),
-            ),
+            child: item['days'][item['days'].keys.elementAt(index)]
+                ? BorderedText(
+                    strokeWidth: item['days'][item['days'].keys.elementAt(index)] ? 5 : 0,
+                    strokeColor: context.select((ListsProvider L) => item['enabled'])
+                        ? context.read<ThemeProvider>().colorOfAntiThemeBrightnessIfTrueAndViceVersa(
+                              item['days'][item['days'].keys.elementAt(index)],
+                              (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
+                              .3, // 0.3
+                              Colors.grey,
+                            )!
+                        : Colors.grey,
+                    child: decoratedWeekdayText(item, index, context),
+                  )
+                : decoratedWeekdayText(item, index, context),
           ),
         ),
       ),
     );
   }
 
-  void showModal(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      builder: (BuildContext context) {
-        return const SizedBox(
-          height: 200.0,
-          child: Center(
-            child: Text(
-              'This is a modal!',
-              style: TextStyle(fontSize: 20.0),
+  Text decoratedWeekdayText(Map<String, dynamic> item, int index, BuildContext context) {
+    return Text(
+      '${item['days'].keys.elementAt(index)}',
+      style: TextStyle(
+        decorationThickness: 6,
+        color: context.read<ThemeProvider>().colorOfThemeBrightnessIfTrueAndViceVersa(
+              item['days'][item['days'].keys.elementAt(index)],
+              (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
+              0.1, // 0.3
+              Colors.grey,
             ),
-          ),
-        );
-      },
-    );
-  }
-}
-
-class ToggleReminderSwitch extends StatelessWidget {
-  final Map<String, dynamic> item;
-
-  const ToggleReminderSwitch({Key? key, required this.item}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    debugPrint('Switch ${item['colorIndex']} built \n ----------- \n');
-    return Switch(
-      //
-      // inactiveTrackColor: context.watch<ThemeProvider>().colorOfThemeBrightness(
-      //       (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
-      //       .2,
-      //       Colors.grey,
-      //     ),
-      // activeTrackColor: context.watch<ThemeProvider>().colorOfAntiThemeBrightness(
-      //     (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']], .2, Colors.grey.shade600),
-      // activeColor: context.watch<ThemeProvider>().colorOfThemeBrightness(
-      //     (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']], .2, Colors.grey.shade600),
-      //
-      inactiveTrackColor: (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
-      // activeTrackColor: (itm['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
-      activeColor: (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
-      //
-      value: context.select((ListsProvider L) => item['enabled']),
-      onChanged: (value) => context.read<ListsProvider>().setEnable(item, value),
-      
+        fontSize: 18,
+        fontWeight: FontWeight.bold,
+        // fontWeight: FontWeight.w600,
+      ),
     );
   }
 }

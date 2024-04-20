@@ -1,16 +1,11 @@
 import 'dart:convert';
-// import 'dart:js';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-// import 'package:provider/provider.dart';
 
 class ListsProvider extends ChangeNotifier {
   late List<Map<String, dynamic>> lists;
   late int listLength;
-  late List<bool> enabledBoolsList;
 
   final List<Color> colorList = [
     Colors.transparent,
@@ -37,8 +32,6 @@ class ListsProvider extends ChangeNotifier {
       lists = decodedLists.cast<Map<String, dynamic>>();
     }
     listLength = lists.length;
-    enabledBoolsList = lists.map((element) => element['enabled'] as bool).toList();
-    // debugPrint('${lists.length}');
     notifyListeners();
   }
 
@@ -85,16 +78,6 @@ class ListsProvider extends ChangeNotifier {
     lists[lists.indexOf(item)]['enabled'] = value;
     saveLists();
     notifyListeners();
-  }
-}
-
-class SwitchesStateProvider extends ChangeNotifier {
-  late List<bool> switchesStateList;
-  // Provider.of<ListsProvider>
-
-  SwitchesStateProvider(BuildContext context) {
-    switchesStateList = context.watch<ListsProvider>().lists.map((element) => element['enabled'] ?? false).toList() as List<bool>;
-    debugPrint(switchesStateList.toString());
   }
 }
 

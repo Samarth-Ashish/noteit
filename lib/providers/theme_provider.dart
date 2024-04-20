@@ -68,7 +68,6 @@ class ThemeProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  //
 
   Color? colorOfThemeBrightness(
     Color? color, [

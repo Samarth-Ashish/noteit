@@ -39,14 +39,5 @@ class _MyAppState extends State<MyApp> {
         ),
       ),
     );
-    // NEW way
-    // return MaterialApp(
-    //   title: 'Noter',
-    //   theme: context.watch<ThemeProvider>().currentTheme,
-    //   debugShowCheckedModeBanner: false,
-    //   home: const HomePage(
-    //     title: 'Noter',
-    //   ),
-    // );
   }
 }
