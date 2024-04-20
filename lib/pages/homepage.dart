@@ -189,7 +189,7 @@ class _HomePageState extends State<HomePage> {
       // physics: const NeverScrollableScrollPhysics(),
       physics: const BouncingScrollPhysics(),
       // itemCount: list.lists.length,
-      itemCount: context.select((ListsProvider L) => L.listLength),
+      itemCount: context.select((ListsProvider L) => L.lists.length),
       itemBuilder: (context, index) {
         debugPrint('item $index built--');
         final item = context.read<ListsProvider>().lists[index];
@@ -877,7 +877,9 @@ class WeekdayRow extends StatelessWidget {
             fit: BoxFit.scaleDown,
             child: item['days'][item['days'].keys.elementAt(index)]
                 ? BorderedText(
-                    strokeWidth: item['days'][item['days'].keys.elementAt(index)] ? 5 : 0,
+                    strokeWidth: context.select((ListsProvider L) => item['enabled'])
+                        ? (item['days'][item['days'].keys.elementAt(index)] ? 5 : 0)
+                        : (item['days'][item['days'].keys.elementAt(index)] ? 4 : 0),
                     strokeColor: context.select((ListsProvider L) => item['enabled'])
                         ? context.read<ThemeProvider>().colorOfAntiThemeBrightnessIfTrueAndViceVersa(
                               item['days'][item['days'].keys.elementAt(index)],
@@ -885,7 +887,13 @@ class WeekdayRow extends StatelessWidget {
                               .3, // 0.3
                               Colors.grey,
                             )!
-                        : Colors.grey,
+                        :
+                        context.read<ThemeProvider>().colorOfAntiThemeBrightnessIfTrueAndViceVersa(
+                              item['days'][item['days'].keys.elementAt(index)],
+                              (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
+                              0.1, // 0.3
+                              Colors.grey,
+                            )!,
                     child: decoratedWeekdayText(item, index, context),
                   )
                 : decoratedWeekdayText(item, index, context),
@@ -907,8 +915,7 @@ class WeekdayRow extends StatelessWidget {
               Colors.grey,
             ),
         fontSize: 18,
-        fontWeight: FontWeight.bold,
-        // fontWeight: FontWeight.w600,
+        fontWeight: item['days'][item['days'].keys.elementAt(index)] ? FontWeight.bold : FontWeight.w500,
       ),
     );
   }

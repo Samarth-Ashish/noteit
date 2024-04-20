@@ -5,7 +5,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class ListsProvider extends ChangeNotifier {
   late List<Map<String, dynamic>> lists;
-  late int listLength;
 
   final List<Color> colorList = [
     Colors.transparent,
@@ -21,7 +20,6 @@ class ListsProvider extends ChangeNotifier {
   ListsProvider() {
     lists = [];
     getListsFromCache();
-    // listLength = lists.length;
   }
 
   Future<void> getListsFromCache() async {
@@ -31,7 +29,6 @@ class ListsProvider extends ChangeNotifier {
       final decodedLists = jsonDecode(jsonLists) as List<dynamic>;
       lists = decodedLists.cast<Map<String, dynamic>>();
     }
-    listLength = lists.length;
     notifyListeners();
   }
 
@@ -39,7 +36,6 @@ class ListsProvider extends ChangeNotifier {
     final prefs = await SharedPreferences.getInstance();
     final jsonLists = jsonEncode(lists);
     await prefs.setString('lists', jsonLists);
-    listLength = lists.length;
     notifyListeners();
   }
 
@@ -57,7 +53,6 @@ class ListsProvider extends ChangeNotifier {
       'time': selectedTime!.millisecondsSinceEpoch,
       'enabled': enabled,
     });
-    // listLength = lists.length;
     saveLists();
     notifyListeners();
   }
