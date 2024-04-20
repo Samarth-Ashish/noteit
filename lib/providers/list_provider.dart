@@ -1,10 +1,16 @@
 import 'dart:convert';
+// import 'dart:js';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+// import 'package:provider/provider.dart';
 
 class ListsProvider extends ChangeNotifier {
   late List<Map<String, dynamic>> lists;
+  late int listLength;
+  late List<bool> enabledBoolsList;
 
   final List<Color> colorList = [
     Colors.transparent,
@@ -20,6 +26,7 @@ class ListsProvider extends ChangeNotifier {
   ListsProvider() {
     lists = [];
     getListsFromCache();
+    // listLength = lists.length;
   }
 
   Future<void> getListsFromCache() async {
@@ -29,6 +36,9 @@ class ListsProvider extends ChangeNotifier {
       final decodedLists = jsonDecode(jsonLists) as List<dynamic>;
       lists = decodedLists.cast<Map<String, dynamic>>();
     }
+    listLength = lists.length;
+    enabledBoolsList = lists.map((element) => element['enabled'] as bool).toList();
+    // debugPrint('${lists.length}');
     notifyListeners();
   }
 
@@ -36,6 +46,7 @@ class ListsProvider extends ChangeNotifier {
     final prefs = await SharedPreferences.getInstance();
     final jsonLists = jsonEncode(lists);
     await prefs.setString('lists', jsonLists);
+    listLength = lists.length;
     notifyListeners();
   }
 
@@ -53,6 +64,7 @@ class ListsProvider extends ChangeNotifier {
       'time': selectedTime!.millisecondsSinceEpoch,
       'enabled': enabled,
     });
+    // listLength = lists.length;
     saveLists();
     notifyListeners();
   }
@@ -73,6 +85,16 @@ class ListsProvider extends ChangeNotifier {
     lists[lists.indexOf(item)]['enabled'] = value;
     saveLists();
     notifyListeners();
+  }
+}
+
+class SwitchesStateProvider extends ChangeNotifier {
+  late List<bool> switchesStateList;
+  // Provider.of<ListsProvider>
+
+  SwitchesStateProvider(BuildContext context) {
+    switchesStateList = context.watch<ListsProvider>().lists.map((element) => element['enabled'] ?? false).toList() as List<bool>;
+    debugPrint(switchesStateList.toString());
   }
 }
 

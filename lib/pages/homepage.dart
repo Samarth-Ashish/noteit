@@ -22,7 +22,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
-    // debugPrint('======homepage');
+    debugPrint('======homepage');
 
     return SafeArea(
       child: Scaffold(
@@ -179,23 +179,23 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget reminderListViewBuilder(BuildContext context) {
-    // debugPrint('----\nBody built\n----');
-    return Consumer<ListsProvider>(builder: (context, list, _) {
-      return ListView.builder(
-        cacheExtent: 9999,
-        // physics: (isBouncingPhysics) ? const BouncingScrollPhysics() : null,
-        // addAutomaticKeepAlives: true,
-        // shrinkWrap: true,
-        // physics: const NeverScrollableScrollPhysics(),
-        physics: const BouncingScrollPhysics(),
-        itemCount: list.lists.length,
-        itemBuilder: (context, index) {
-          // final item = context.read<ListsProvider>().lists[index];
-          final item = list.lists[index];
-          return reminderFrostedContainerFromItem(item);
-        },
-      );
-    });
+    return ListView.builder(
+      cacheExtent: 9999,
+      // physics: (isBouncingPhysics) ? const BouncingScrollPhysics() : null,
+      // addAutomaticKeepAlives: true,
+      // shrinkWrap: true,
+      // physics: const NeverScrollableScrollPhysics(),
+      physics: const BouncingScrollPhysics(),
+      // itemCount: list.lists.length,
+      itemCount: context.select((ListsProvider L) => L.listLength),
+      itemBuilder: (context, index) {
+        debugPrint('item $index built----');
+        final item = context.read<ListsProvider>().lists[index];
+        // final item = list.lists[index];
+        // final item =
+        return reminderFrostedContainerFromItem(item);
+      },
+    );
   }
 
   void showNewReminderCreationDialog(
@@ -600,7 +600,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget reminderFrostedContainerFromItem(Map<String, dynamic> item, {isFrosted = false}) {
-    // debugPrint('${item['colorIndex']} Container....');
+    debugPrint('${item['colorIndex']} Container built....');
 
     return Stack(
       // alignment: Alignment.bottomRight,
@@ -676,7 +676,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Center reminderFrostedContainerMainContents(Map<String, dynamic> item, BuildContext context) {
-    debugPrint('');
+    debugPrint('content built');
 
     return Center(
       child: Container(
@@ -840,30 +840,35 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget toggleReminderSwitch(BuildContext context, Map<String, dynamic> item) {
-    debugPrint('Switch---');
+    debugPrint('Switch ${item['colorIndex']} built');
 
-    return Consumer<ListsProvider>(
-      builder: (context, lists, _) {
-        return Switch(
-          //
-          // inactiveTrackColor: context.watch<ThemeProvider>().colorOfThemeBrightness(
-          //       (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
-          //       .2,
-          //       Colors.grey,
-          //     ),
-          // activeTrackColor: context.watch<ThemeProvider>().colorOfAntiThemeBrightness(
-          //     (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']], .2, Colors.grey.shade600),
-          // activeColor: context.watch<ThemeProvider>().colorOfThemeBrightness(
-          //     (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']], .2, Colors.grey.shade600),
-          //
-          inactiveTrackColor: (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
-          // activeTrackColor: (itm['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
-          activeColor: (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
-          //
-          value: item['enabled'] ?? false,
-          onChanged: (value) => context.read<ListsProvider>().setEnable(item, value),
-        );
-      },
+    Map selectSpecificElement<Map>() {
+      // Access the list and retrieve the desired element based on index or any other criteria
+      final list = context.read<ListsProvider>().lists;
+      int elementIndex = context.read<ListsProvider>().lists.indexOf(item); // Replace with your logic to determine the element index
+      return list[elementIndex] as Map; // Cast the element to the desired type
+    }
+
+    return Switch(
+      //
+      // inactiveTrackColor: context.watch<ThemeProvider>().colorOfThemeBrightness(
+      //       (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
+      //       .2,
+      //       Colors.grey,
+      //     ),
+      // activeTrackColor: context.watch<ThemeProvider>().colorOfAntiThemeBrightness(
+      //     (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']], .2, Colors.grey.shade600),
+      // activeColor: context.watch<ThemeProvider>().colorOfThemeBrightness(
+      //     (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']], .2, Colors.grey.shade600),
+      //
+      inactiveTrackColor: (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
+      // activeTrackColor: (itm['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
+      activeColor: (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
+      //
+      // value: item['enabled'] ?? false,
+      // value: context.select((ListsProvider L) => context.read<ListsProvider>().enabledBoolsList[context.read<ListsProvider>().lists.indexOf(item)]),
+      value: context.select((ListsProvider L) => selectSpecificElement<Map>()['enabled']),
+      onChanged: (value) => context.read<ListsProvider>().setEnable(item, value),
     );
   }
 
