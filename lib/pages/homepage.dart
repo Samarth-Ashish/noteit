@@ -22,7 +22,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
-    debugPrint('======homepage');
+    debugPrint('=====\n HOMEPAGE BUILT \n=====\n');
 
     return SafeArea(
       child: Scaffold(
@@ -179,6 +179,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget reminderListViewBuilder(BuildContext context) {
+    debugPrint('=====\n LISTVIEW BUILT \n=====\n');
     return ListView.builder(
       cacheExtent: 9999,
       // physics: (isBouncingPhysics) ? const BouncingScrollPhysics() : null,
@@ -189,7 +190,7 @@ class _HomePageState extends State<HomePage> {
       // itemCount: list.lists.length,
       itemCount: context.select((ListsProvider L) => L.listLength),
       itemBuilder: (context, index) {
-        debugPrint('item $index built----');
+        debugPrint('item $index built--');
         final item = context.read<ListsProvider>().lists[index];
         // final item = list.lists[index];
         // final item =
@@ -600,7 +601,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget reminderFrostedContainerFromItem(Map<String, dynamic> item, {isFrosted = false}) {
-    debugPrint('${item['colorIndex']} Container built....');
+    debugPrint('Container ${item['colorIndex']} built');
 
     return Stack(
       // alignment: Alignment.bottomRight,
@@ -676,7 +677,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Center reminderFrostedContainerMainContents(Map<String, dynamic> item, BuildContext context) {
-    debugPrint('content built');
+    // debugPrint('content built');
 
     return Center(
       child: Container(
@@ -725,7 +726,7 @@ class _HomePageState extends State<HomePage> {
                       width: 50,
                       child: FittedBox(
                         fit: BoxFit.contain,
-                        child: toggleReminderSwitch(context, item),
+                        child: ToggleReminderSwitch(item: item),
                       ),
                     ),
                   ],
@@ -839,16 +840,32 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget toggleReminderSwitch(BuildContext context, Map<String, dynamic> item) {
-    debugPrint('Switch ${item['colorIndex']} built');
+  void showModal(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return const SizedBox(
+          height: 200.0,
+          child: Center(
+            child: Text(
+              'This is a modal!',
+              style: TextStyle(fontSize: 20.0),
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
 
-    Map selectSpecificElement<Map>() {
-      // Access the list and retrieve the desired element based on index or any other criteria
-      final list = context.read<ListsProvider>().lists;
-      int elementIndex = context.read<ListsProvider>().lists.indexOf(item); // Replace with your logic to determine the element index
-      return list[elementIndex] as Map; // Cast the element to the desired type
-    }
+class ToggleReminderSwitch extends StatelessWidget {
+  final Map<String, dynamic> item;
 
+  const ToggleReminderSwitch({Key? key, required this.item}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    debugPrint('Switch ${item['colorIndex']} built \n ----------- \n');
     return Switch(
       //
       // inactiveTrackColor: context.watch<ThemeProvider>().colorOfThemeBrightness(
@@ -865,27 +882,9 @@ class _HomePageState extends State<HomePage> {
       // activeTrackColor: (itm['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
       activeColor: (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
       //
-      // value: item['enabled'] ?? false,
-      // value: context.select((ListsProvider L) => context.read<ListsProvider>().enabledBoolsList[context.read<ListsProvider>().lists.indexOf(item)]),
-      value: context.select((ListsProvider L) => selectSpecificElement<Map>()['enabled']),
+      value: context.select((ListsProvider L) => item['enabled']),
       onChanged: (value) => context.read<ListsProvider>().setEnable(item, value),
-    );
-  }
-
-  void showModal(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      builder: (BuildContext context) {
-        return const SizedBox(
-          height: 200.0,
-          child: Center(
-            child: Text(
-              'This is a modal!',
-              style: TextStyle(fontSize: 20.0),
-            ),
-          ),
-        );
-      },
+      
     );
   }
 }
