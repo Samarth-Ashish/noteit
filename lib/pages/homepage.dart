@@ -9,9 +9,8 @@ import 'dart:ui';
 import '../packages_/time_picker_.dart';
 import '../providers/list_provider.dart';
 import '../providers/theme_provider.dart';
-import 'package:bordered_text/bordered_text.dart';
 
-import 'homepage_widgets.dart';
+import 'reminder_widgets.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key, required this.title});
@@ -744,10 +743,6 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  // Row weekdaysRow(Map<String, dynamic> item, BuildContext context) {
-  //   return;
-  // }
-
   void showModal(BuildContext context) {
     showModalBottomSheet(
       context: context,
@@ -765,6 +760,3 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
-
-
-

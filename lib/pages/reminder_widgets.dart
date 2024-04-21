@@ -5,7 +5,6 @@ import 'package:provider/provider.dart';
 import '../providers/list_provider.dart';
 import '../providers/theme_provider.dart';
 
-
 class ToggleReminderSwitch extends StatelessWidget {
   final Map<String, dynamic> item;
 
