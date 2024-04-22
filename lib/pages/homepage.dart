@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'dart:ui';
 
+import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 // import 'package:curved_navigation_bar/curved_navigation_bar.dart';
-import '../packages_/curved_navigation_bar_modified/curved_navigation_bar_modified.dart';
+import '../modified_packages/curved_navigation_bar_modified/curved_navigation_bar_modified.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:glass_kit/glass_kit.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/list_provider.dart';
 import '../providers/theme_provider.dart';
-import '../packages_/time_picker_.dart';
+import '../modified_packages/time_picker_.dart';
 import 'reminder_widgets.dart';
 
 class HomePage extends StatefulWidget {
@@ -50,12 +51,13 @@ class _HomePageState extends State<HomePage> {
           centerTitle: true,
         ),
         body: reminderListViewBuilder(context),
+        //
         extendBody: true,
         bottomNavigationBar: CurvedNavigationBar(
-          buttonBackgroundColor: Colors.blue,
+          buttonBackgroundColor: Colors.blue.shade900,
           backgroundColor: Colors.transparent,
           color: Colors.blue.withOpacity(0.25),
-          animationDuration: Durations.long1,
+          animationDuration: const Duration(milliseconds: 350),
           height: 50,
           items: const [
             Icon(Icons.add, size: 30),
@@ -66,6 +68,7 @@ class _HomePageState extends State<HomePage> {
             //Handle button tap
           },
         ),
+        //
         drawer: Drawer(
           child: ListView(
             padding: const EdgeInsets.all(0),
@@ -695,7 +698,6 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-
   void showModal(BuildContext context) {
     showModalBottomSheet(
       context: context,
@@ -712,6 +714,4 @@ class _HomePageState extends State<HomePage> {
       },
     );
   }
-
-
 }
