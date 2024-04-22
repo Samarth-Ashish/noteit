@@ -44,6 +44,7 @@ dependencies:
   intl: ^0.18.1
   glass_kit: ^3.0.0
   bordered_text: ^2.0.0
+  curved_navigation_bar: ^1.0.3
 
 
 dev_dependencies:

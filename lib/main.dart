@@ -31,7 +31,8 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return Consumer<ThemeProvider>(
       builder: (context, theme, _) => MaterialApp(
-        title: 'Noter',
+        // title: 'Noter',
+        title: context.select((ThemeProvider T) => 'Noter') ,
         theme: theme.currentTheme,
         debugShowCheckedModeBanner: false,
         home: const HomePage(

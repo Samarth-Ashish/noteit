@@ -1,9 +1,83 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+
 import 'package:bordered_text/bordered_text.dart';
 
 import 'package:provider/provider.dart';
 import '../providers/list_provider.dart';
 import '../providers/theme_provider.dart';
+
+class ReminderContainer extends StatelessWidget {
+  final Map<String, dynamic> item;
+
+  const ReminderContainer({Key? key, required this.item}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    
+    return Center(
+      child: Column(
+        // crossAxisAlignment: CrossAxisAlignment.stretch,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(bottom: 10, left: 15, right: 15),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                BorderedText(
+                  strokeWidth: context.select((ListsProvider L) => item['enabled']) ? 2 : 0,
+                  strokeColor: context.select((ListsProvider L) => item['enabled'])
+                      ? context.read<ThemeProvider>().colorOfAntiThemeBrightness(
+                            (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
+                            .3, // 0.3
+                            Colors.grey,
+                          )!
+                      : context.read<ThemeProvider>().colorOfAntiThemeBrightness(
+                            (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
+                            0.1, // 0.3
+                            Colors.grey,
+                          )!,
+                  child: Text(
+                    DateFormat.jm().format(DateTime.fromMillisecondsSinceEpoch(item['time'])).toString(),
+                    style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 20,
+                      color: context.read<ThemeProvider>().colorOfAntiThemeBrightness(
+                            (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
+                            .2,
+                            Colors.grey,
+                          ),
+                    ),
+                  ),
+                ),
+                if (item['title'] != '')
+                  Text(
+                    item['title'],
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                SizedBox(
+                  width: 50,
+                  child: FittedBox(
+                    fit: BoxFit.contain,
+                    child: ToggleReminderSwitch(item: item),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          // weekdaysRow(item, context),
+          WeekdayRow(item: item),
+        ],
+      ),
+    );
+  }
+}
+
+
 
 class ToggleReminderSwitch extends StatelessWidget {
   final Map<String, dynamic> item;
@@ -33,6 +107,8 @@ class ToggleReminderSwitch extends StatelessWidget {
   }
 }
 
+
+
 class WeekdayRow extends StatelessWidget {
   final Map<String, dynamic> item;
 
@@ -40,7 +116,7 @@ class WeekdayRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint('weekdays row ${item['colorIndex']}');
+    debugPrint('weekdays row ${item['colorIndex']}\n----');
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -59,7 +135,7 @@ class WeekdayRow extends StatelessWidget {
           //   // decoration: BoxDecoration(
           //   //   shape: BoxShape.circle,
           //   //   color: item['days'][item['days'].keys.elementAt(index)]
-          //   //       ? context.watch<ThemeProvider>().colorOfAntiThemeBrightness(
+          //   //       ? context.read<ThemeProvider>().colorOfAntiThemeBrightness(
           //   //           (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
           //   //           .2,
           //   //           Colors.grey,
@@ -98,7 +174,7 @@ class WeekdayRow extends StatelessWidget {
           //     child: Text(
           //       '${item['days'].keys.elementAt(index)}',
           //       style: const TextStyle(
-          //         // color: context.watch<ThemeProvider>().colorOfThemeBrightnessIfTrueAndViceVersa(
+          //         // color: context.read<ThemeProvider>().colorOfThemeBrightnessIfTrueAndViceVersa(
           //         //       item['days'][item['days'].keys.elementAt(index)],
           //         //       (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
           //         //       .3,
@@ -128,8 +204,7 @@ class WeekdayRow extends StatelessWidget {
                               .3, // 0.3
                               Colors.grey,
                             )!
-                        :
-                        context.read<ThemeProvider>().colorOfAntiThemeBrightnessIfTrueAndViceVersa(
+                        : context.read<ThemeProvider>().colorOfAntiThemeBrightnessIfTrueAndViceVersa(
                               item['days'][item['days'].keys.elementAt(index)],
                               (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
                               0.1, // 0.3

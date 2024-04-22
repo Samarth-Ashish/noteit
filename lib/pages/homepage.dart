@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:glass_kit/glass_kit.dart';
-import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
 import 'dart:ui';
 
-import '../packages_/time_picker_.dart';
+// import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import '../packages_/curved_navigation_bar_modified/curved_navigation_bar_modified.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:glass_kit/glass_kit.dart';
+import 'package:provider/provider.dart';
+
 import '../providers/list_provider.dart';
 import '../providers/theme_provider.dart';
-
+import '../packages_/time_picker_.dart';
 import 'reminder_widgets.dart';
 
 class HomePage extends StatefulWidget {
@@ -30,7 +30,7 @@ class _HomePageState extends State<HomePage> {
       child: Scaffold(
         extendBodyBehindAppBar: true,
         appBar: AppBar(
-          // backgroundColor: (context.watch<ThemeProvider>().isThemeDark ? Colors.black : Colors.white).withOpacity(appBarOpacity),
+          // backgroundColor: (context.read<ThemeProvider>().isThemeDark ? Colors.black : Colors.white).withOpacity(appBarOpacity),
           backgroundColor: Colors.transparent,
           elevation: 0,
           flexibleSpace: ClipRect(
@@ -50,17 +50,33 @@ class _HomePageState extends State<HomePage> {
           centerTitle: true,
         ),
         body: reminderListViewBuilder(context),
+        extendBody: true,
+        bottomNavigationBar: CurvedNavigationBar(
+          buttonBackgroundColor: Colors.blue,
+          backgroundColor: Colors.transparent,
+          color: Colors.blue.withOpacity(0.25),
+          animationDuration: Durations.long1,
+          height: 50,
+          items: const [
+            Icon(Icons.add, size: 30),
+            Icon(Icons.list, size: 30),
+            Icon(Icons.compare_arrows, size: 30),
+          ],
+          onTap: (index) {
+            //Handle button tap
+          },
+        ),
         drawer: Drawer(
           child: ListView(
             padding: const EdgeInsets.all(0),
             children: [
               DrawerHeader(
                 decoration: BoxDecoration(
-                  color: context.watch<ThemeProvider>().currentTheme.primaryColor,
+                  color: context.read<ThemeProvider>().currentTheme.primaryColor,
                 ), //BoxDecoration
                 child: UserAccountsDrawerHeader(
                   decoration: BoxDecoration(
-                    color: context.watch<ThemeProvider>().currentTheme.primaryColor,
+                    color: context.read<ThemeProvider>().currentTheme.primaryColor,
                   ),
                   accountName: const Text(
                     "Name",
@@ -238,7 +254,7 @@ class _HomePageState extends State<HomePage> {
           builder: (context, setState) {
             return AlertDialog(
               insetPadding: EdgeInsets.zero,
-              backgroundColor: context.watch<ThemeProvider>().colorOfThemeBrightness(reminderColor, .3),
+              backgroundColor: context.read<ThemeProvider>().colorOfThemeBrightness(reminderColor, .3),
               title: SizedBox(
                 width: MediaQuery.of(context).size.width * 0.8,
                 height: 50,
@@ -273,7 +289,7 @@ class _HomePageState extends State<HomePage> {
                       },
                       icon: Icon(
                         isColorPickerActive ? Icons.palette_outlined : Icons.palette,
-                        color: context.watch<ThemeProvider>().colorOfAntiThemeBrightness(
+                        color: context.read<ThemeProvider>().colorOfAntiThemeBrightness(
                               reminderColor,
                               .2,
                             ),
@@ -403,17 +419,17 @@ class _HomePageState extends State<HomePage> {
                         // child: themeSwitch(context),
                         child: Switch(
                           //
-                          inactiveTrackColor: context.watch<ThemeProvider>().colorOfThemeBrightness(
+                          inactiveTrackColor: context.read<ThemeProvider>().colorOfThemeBrightness(
                                 reminderColor,
                                 .2,
                                 // Colors.grey,
                               ),
-                          activeTrackColor: context.watch<ThemeProvider>().colorOfAntiThemeBrightness(
+                          activeTrackColor: context.read<ThemeProvider>().colorOfAntiThemeBrightness(
                                 reminderColor,
                                 .2,
                                 Colors.grey.shade600,
                               ),
-                          activeColor: context.watch<ThemeProvider>().colorOfThemeBrightness(
+                          activeColor: context.read<ThemeProvider>().colorOfThemeBrightness(
                                 reminderColor,
                                 .2,
                                 Colors.grey.shade600,
@@ -469,7 +485,7 @@ class _HomePageState extends State<HomePage> {
                                   decoration: BoxDecoration(
                                     shape: BoxShape.circle,
                                     color: days[entry.key]!
-                                        ? context.watch<ThemeProvider>().colorOfAntiThemeBrightness(
+                                        ? context.read<ThemeProvider>().colorOfAntiThemeBrightness(
                                               reminderColor,
                                               .2,
                                               Colors.grey,
@@ -481,7 +497,7 @@ class _HomePageState extends State<HomePage> {
                                     child: Text(
                                       entry.key,
                                       style: TextStyle(
-                                        color: context.watch<ThemeProvider>().colorOfThemeBrightnessIfTrueAndViceVersa(
+                                        color: context.read<ThemeProvider>().colorOfThemeBrightnessIfTrueAndViceVersa(
                                               days[entry.key]!,
                                               reminderColor,
                                               .2,
@@ -502,7 +518,7 @@ class _HomePageState extends State<HomePage> {
                   FittedBox(
                     child: Container(
                       // decoration: ShapeDecoration(
-                      //   color: context.watch<ThemeProvider>().colorOfThemeBrightness(
+                      //   color: context.read<ThemeProvider>().colorOfThemeBrightness(
                       //     reminderColor,
                       //     0.25,
                       //   ),
@@ -511,7 +527,7 @@ class _HomePageState extends State<HomePage> {
                       decoration: BoxDecoration(
                         border: Border.all(
                           width: 2,
-                          color: context.watch<ThemeProvider>().colorOfAntiThemeBrightness(
+                          color: context.read<ThemeProvider>().colorOfAntiThemeBrightness(
                                 reminderColor,
                                 0.2,
                                 Colors.blueGrey,
@@ -536,16 +552,16 @@ class _HomePageState extends State<HomePage> {
                           normalTextStyle: TextStyle(
                             fontSize: 17,
                             fontWeight: FontWeight.w600,
-                            color: context.watch<ThemeProvider>().colorOfThemeBrightness(
+                            color: context.read<ThemeProvider>().colorOfThemeBrightness(
                                       reminderColor,
                                       0.3,
                                     ) ??
-                                (context.watch<ThemeProvider>().isThemeDark ? Colors.grey.shade700 : Colors.grey.shade400),
+                                (context.read<ThemeProvider>().isThemeDark ? Colors.grey.shade700 : Colors.grey.shade400),
                           ),
                           highlightedTextStyle: TextStyle(
                             fontSize: 25,
                             fontWeight: FontWeight.w600,
-                            color: context.watch<ThemeProvider>().colorOfAntiThemeBrightness(
+                            color: context.read<ThemeProvider>().colorOfAntiThemeBrightness(
                                   reminderColor,
                                   0.2,
                                   Colors.blueGrey,
@@ -590,7 +606,7 @@ class _HomePageState extends State<HomePage> {
                   child: Text(
                     'Create',
                     style: TextStyle(
-                      color: context.watch<ThemeProvider>().isThemeDark ? Colors.white : Colors.black,
+                      color: context.read<ThemeProvider>().isThemeDark ? Colors.white : Colors.black,
                     ),
                   ),
                 ),
@@ -603,7 +619,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget reminderFrostedContainerFromItem(Map<String, dynamic> item, {isFrosted = false}) {
-    debugPrint('Container ${item['colorIndex']} built');
+    debugPrint('Reminder ${item['colorIndex']} built');
 
     return Stack(
       // alignment: Alignment.bottomRight,
@@ -616,7 +632,7 @@ class _HomePageState extends State<HomePage> {
             //   end: Alignment.bottomCenter,
             //   colors: [
             //     context
-            //         .watch<ThemeProvider>()
+            //         .read<ThemeProvider>()
             //         .colorOfThemeBrightness(
             //           (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
             //           .2,
@@ -624,7 +640,7 @@ class _HomePageState extends State<HomePage> {
             //         )!
             //         .withOpacity(0.6),
             //     context
-            //         .watch<ThemeProvider>()
+            //         .read<ThemeProvider>()
             //         .colorOfThemeBrightness(
             //           (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
             //           .2,
@@ -653,7 +669,8 @@ class _HomePageState extends State<HomePage> {
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height / 7,
             // duration: const Duration(milliseconds: 1000),
-            child: reminderFrostedContainerMainContents(item, context),
+            // child: reminderFrostedContainerMainContents(item, context),
+            child: ReminderContainer(item: item),
           ),
           // child: reminderFrostedContainerMainContents(item, context), //* UNFROSTED
         ),
@@ -666,7 +683,7 @@ class _HomePageState extends State<HomePage> {
             },
             icon: const FaIcon(FontAwesomeIcons.solidTrashCan),
             // color: Colors.redAccent,
-            color: context.watch<ThemeProvider>().colorOfAntiThemeBrightness(
+            color: context.read<ThemeProvider>().colorOfAntiThemeBrightness(
                   (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
                   .2,
                   Colors.grey,
@@ -678,70 +695,6 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Center reminderFrostedContainerMainContents(Map<String, dynamic> item, BuildContext context) {
-    // debugPrint('content built');
-
-    return Center(
-      child: Container(
-        // margin: const EdgeInsets.only(top: 5, bottom: 17, left: 8, right: 8),
-        // margin: const EdgeInsets.only(left: 10,right: 10),
-        padding: const EdgeInsets.all(5),
-        // decoration: BoxDecoration(
-        //   // color: context.watch<ThemeProvider>().colorOfThemeBrightness(
-        //   //   (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
-        //   //   .2,
-        //   //   Colors.grey,
-        //   // ),
-        //   borderRadius: BorderRadius.circular(25),
-        // ),
-        child: Center(
-          child: Column(
-            // crossAxisAlignment: CrossAxisAlignment.stretch,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(bottom: 10, left: 15, right: 15),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      DateFormat.jm().format(DateTime.fromMillisecondsSinceEpoch(item['time'])).toString(),
-                      style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 20,
-                        color: context.watch<ThemeProvider>().colorOfAntiThemeBrightness(
-                              (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
-                              .2,
-                              Colors.grey,
-                            ),
-                      ),
-                    ),
-                    if (item['title'] != '')
-                      Text(
-                        item['title'],
-                        style: const TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    SizedBox(
-                      width: 50,
-                      child: FittedBox(
-                        fit: BoxFit.contain,
-                        child: ToggleReminderSwitch(item: item),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              // weekdaysRow(item, context),
-              WeekdayRow(item: item),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
 
   void showModal(BuildContext context) {
     showModalBottomSheet(
@@ -759,4 +712,6 @@ class _HomePageState extends State<HomePage> {
       },
     );
   }
+
+
 }

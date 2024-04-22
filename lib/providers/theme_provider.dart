@@ -158,12 +158,11 @@ Widget themeSwitch(BuildContext context) {
     // inactiveTrackColor: Colors.black,
     // activeTrackColor: Colors.grey,
     //
-    inactiveTrackColor: Colors.blue[900],
+    inactiveTrackColor: const Color.fromARGB(255, 0, 36, 90),
     // hoverColor: Colors.redAccent,
     // inactiveThumbColor: Colors.grey,
     activeTrackColor: Colors.orangeAccent,
     //
-    // value: !themeProvider.isThemeDark,
     value: !context.watch<ThemeProvider>().isThemeDark,
     // onChanged: (value) => themeProvider.toggleTheme(),
     onChanged: (value) => context.read<ThemeProvider>().toggleTheme(),
