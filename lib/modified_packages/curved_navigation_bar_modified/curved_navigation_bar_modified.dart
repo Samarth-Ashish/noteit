@@ -29,8 +29,7 @@ class CurvedNavigationBar extends StatefulWidget {
     this.animationDuration = const Duration(milliseconds: 600),
     this.height = 75.0,
   })  : letIndexChange = letIndexChange ?? ((_) => true),
-        assert(items != null),
-        assert(items.length >= 1),
+        assert(items.isNotEmpty),
         assert(0 <= index && index < items.length),
         assert(0 <= height && height <= 75.0),
         super(key: key);
@@ -107,12 +106,33 @@ class CurvedNavigationBarState extends State<CurvedNavigationBar> with SingleTic
                   0,
                   -(1 - _buttonHide) * 80,
                 ),
-                child: Material(
-                  color: widget.buttonBackgroundColor ?? widget.color,
-                  type: MaterialType.circle,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: _icon,
+                // child: Material(
+                //   color: widget.buttonBackgroundColor ?? widget.color,
+                //   type: MaterialType.circle,
+                //   child: Padding(
+                //     padding: const EdgeInsets.all(8.0),
+                //     child: _icon,
+                //   ),
+                // ),
+                child: DecoratedBox(
+                  decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [Colors.blue.shade900, Colors.blue],
+                      ),
+                      // gradient: SweepGradient(colors: [Colors.blue,Colors.blue.shade900,Colors.blue,])
+                      //
+                      // borderRadius: BorderRadius.circular(5.0), // Adjust as needed
+                      ),
+                  child: Material(
+                    // type: MaterialType.circle,
+                    type: MaterialType.transparency,
+                    child: Padding(
+                      padding: const EdgeInsets.all(12.0), // default : 8
+                      child: _icon,
+                    ),
                   ),
                 ),
               ),

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:ui';
 
-import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 // import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import '../modified_packages/curved_navigation_bar_modified/curved_navigation_bar_modified.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -29,6 +28,7 @@ class _HomePageState extends State<HomePage> {
 
     return SafeArea(
       child: Scaffold(
+        drawer: appDrawer(context),
         extendBodyBehindAppBar: true,
         appBar: AppBar(
           // backgroundColor: (context.read<ThemeProvider>().isThemeDark ? Colors.black : Colors.white).withOpacity(appBarOpacity),
@@ -50,141 +50,8 @@ class _HomePageState extends State<HomePage> {
           actions: themeSwitchWithIcons(context),
           centerTitle: true,
         ),
+        //
         body: reminderListViewBuilder(context),
-        //
-        extendBody: true,
-        bottomNavigationBar: CurvedNavigationBar(
-          buttonBackgroundColor: Colors.blue.shade900,
-          backgroundColor: Colors.transparent,
-          color: Colors.blue.withOpacity(0.25),
-          animationDuration: const Duration(milliseconds: 350),
-          height: 50,
-          items: const [
-            Icon(Icons.add, size: 30),
-            Icon(Icons.list, size: 30),
-            Icon(Icons.compare_arrows, size: 30),
-          ],
-          onTap: (index) {
-            //Handle button tap
-          },
-        ),
-        //
-        drawer: Drawer(
-          child: ListView(
-            padding: const EdgeInsets.all(0),
-            children: [
-              DrawerHeader(
-                decoration: BoxDecoration(
-                  color: context.read<ThemeProvider>().currentTheme.primaryColor,
-                ), //BoxDecoration
-                child: UserAccountsDrawerHeader(
-                  decoration: BoxDecoration(
-                    color: context.read<ThemeProvider>().currentTheme.primaryColor,
-                  ),
-                  accountName: const Text(
-                    "Name",
-                    // style: TextStyle(fontSize: 18),
-                  ),
-                  accountEmail: const Text("name@gmail.com"),
-                  currentAccountPictureSize: const Size.square(50),
-                  currentAccountPicture: const CircleAvatar(
-                    backgroundColor: Color.fromARGB(255, 165, 255, 137),
-                    child: Text(
-                      "",
-                      style: TextStyle(fontSize: 30.0, color: Colors.blue),
-                    ), //Text
-                  ), //circleAvatar
-                ), //UserAccountDrawerHeader
-              ), //DrawerHeader
-              ListTile(
-                leading: const Icon(Icons.person),
-                title: const Text(' My Profile '),
-                onTap: () {
-                  Navigator.pop(context);
-                },
-              ),
-              ListTile(
-                leading: const Icon(Icons.book),
-                title: const Text(' My Course '),
-                onTap: () {
-                  Navigator.pop(context);
-                },
-              ),
-              ListTile(
-                leading: const Icon(Icons.workspace_premium),
-                title: const Text(' Go Premium '),
-                onTap: () {
-                  Navigator.pop(context);
-                },
-              ),
-              ListTile(
-                leading: const Icon(Icons.video_label),
-                title: const Text(' Saved Videos '),
-                onTap: () {
-                  Navigator.pop(context);
-                },
-              ),
-              ListTile(
-                leading: const Icon(Icons.edit),
-                title: const Text(' Edit Profile '),
-                onTap: () {
-                  Navigator.pop(context);
-                },
-              ),
-              ListTile(
-                leading: const Icon(Icons.logout),
-                title: const Text('LogOut'),
-                onTap: () {
-                  context.read<ListsProvider>().resetNotes();
-                  Navigator.pop(context);
-                },
-              ),
-              //
-              // Row(
-              //   children: [
-              //     const Text("Bouncing physics:"),
-              //     Switch(
-              //       value: isBouncingPhysics,
-              //       onChanged: (value) => {
-              //         setState(() {
-              //           isBouncingPhysics = value;
-              //         })
-              //       },
-              //     ),
-              //   ],
-              // ),
-              // Row(
-              //   children: [
-              //     const Text("Appbar opacity:"),
-              //     Slider(
-              //       divisions: 5,
-              //       min: 0,
-              //       max: 1,
-              //       value: appBarOpacity,
-              //       onChanged: (value) {
-              //         setState(() {
-              //           appBarOpacity = value;
-              //         });
-              //       },
-              //     ),
-              //   ],
-              // ),
-              // Row(
-              //   children: [
-              //     const Text("AppBar Blurred:"),
-              //     Switch(
-              //       value: isAppBarBlurred,
-              //       onChanged: (value) => {
-              //         setState(() {
-              //           isAppBarBlurred = value;
-              //         })
-              //       },
-              //     ),
-              //   ],
-              // )
-            ],
-          ),
-        ),
         floatingActionButton: FloatingActionButton(
           elevation: 10,
           shape: const CircleBorder(),
@@ -192,9 +59,144 @@ class _HomePageState extends State<HomePage> {
             // showModal(context);
             showNewReminderCreationDialog(context);
           },
-          // tooltip: 'Add new note',
           child: const Icon(Icons.add),
         ),
+        //
+        extendBody: true,
+        bottomNavigationBar: CurvedNavigationBar(
+          buttonBackgroundColor: Colors.blue.shade900,
+          backgroundColor: Colors.transparent,
+          color: Colors.blue.withOpacity(0.25),
+          animationDuration: const Duration(milliseconds: 350),
+          height: 55,
+          items: const [
+            FaIcon(FontAwesomeIcons.solidClock),
+            // Icon(Icons.home),
+            Icon(Icons.alarm),
+            Icon(Icons.compare_arrows),
+          ],
+          onTap: (index) {},
+        ),
+        //
+      ),
+    );
+  }
+
+  Drawer appDrawer(BuildContext context) {
+    return Drawer(
+      child: ListView(
+        padding: const EdgeInsets.all(0),
+        children: [
+          DrawerHeader(
+            decoration: BoxDecoration(
+              color: context.read<ThemeProvider>().currentTheme.primaryColor,
+            ), //BoxDecoration
+            child: UserAccountsDrawerHeader(
+              decoration: BoxDecoration(
+                color: context.read<ThemeProvider>().currentTheme.primaryColor,
+              ),
+              accountName: const Text(
+                "Name",
+                // style: TextStyle(fontSize: 18),
+              ),
+              accountEmail: const Text("name@gmail.com"),
+              currentAccountPictureSize: const Size.square(50),
+              currentAccountPicture: const CircleAvatar(
+                backgroundColor: Color.fromARGB(255, 165, 255, 137),
+                child: Text(
+                  "",
+                  style: TextStyle(fontSize: 30.0, color: Colors.blue),
+                ), //Text
+              ), //circleAvatar
+            ), //UserAccountDrawerHeader
+          ), //DrawerHeader
+          ListTile(
+            leading: const Icon(Icons.person),
+            title: const Text(' My Profile '),
+            onTap: () {
+              Navigator.pop(context);
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.book),
+            title: const Text(' My Course '),
+            onTap: () {
+              Navigator.pop(context);
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.workspace_premium),
+            title: const Text(' Go Premium '),
+            onTap: () {
+              Navigator.pop(context);
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.video_label),
+            title: const Text(' Saved Videos '),
+            onTap: () {
+              Navigator.pop(context);
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.edit),
+            title: const Text(' Edit Profile '),
+            onTap: () {
+              Navigator.pop(context);
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.logout),
+            title: const Text('LogOut'),
+            onTap: () {
+              context.read<ListsProvider>().resetNotes();
+              Navigator.pop(context);
+            },
+          ),
+          //
+          // Row(
+          //   children: [
+          //     const Text("Bouncing physics:"),
+          //     Switch(
+          //       value: isBouncingPhysics,
+          //       onChanged: (value) => {
+          //         setState(() {
+          //           isBouncingPhysics = value;
+          //         })
+          //       },
+          //     ),
+          //   ],
+          // ),
+          // Row(
+          //   children: [
+          //     const Text("Appbar opacity:"),
+          //     Slider(
+          //       divisions: 5,
+          //       min: 0,
+          //       max: 1,
+          //       value: appBarOpacity,
+          //       onChanged: (value) {
+          //         setState(() {
+          //           appBarOpacity = value;
+          //         });
+          //       },
+          //     ),
+          //   ],
+          // ),
+          // Row(
+          //   children: [
+          //     const Text("AppBar Blurred:"),
+          //     Switch(
+          //       value: isAppBarBlurred,
+          //       onChanged: (value) => {
+          //         setState(() {
+          //           isAppBarBlurred = value;
+          //         })
+          //       },
+          //     ),
+          //   ],
+          // )
+        ],
       ),
     );
   }
@@ -203,18 +205,11 @@ class _HomePageState extends State<HomePage> {
     debugPrint('=====\n LISTVIEW BUILT \n=====\n');
     return ListView.builder(
       cacheExtent: 9999,
-      // physics: (isBouncingPhysics) ? const BouncingScrollPhysics() : null,
-      // addAutomaticKeepAlives: true,
-      // shrinkWrap: true,
-      // physics: const NeverScrollableScrollPhysics(),
       physics: const BouncingScrollPhysics(),
-      // itemCount: list.lists.length,
       itemCount: context.select((ListsProvider L) => L.lists.length),
       itemBuilder: (context, index) {
         debugPrint('item $index built--');
         final item = context.read<ListsProvider>().lists[index];
-        // final item = list.lists[index];
-        // final item =
         return reminderFrostedContainerFromItem(item);
       },
     );
@@ -624,35 +619,37 @@ class _HomePageState extends State<HomePage> {
   Widget reminderFrostedContainerFromItem(Map<String, dynamic> item, {isFrosted = false}) {
     debugPrint('Reminder ${item['colorIndex']} built');
 
+    const double brightness = .1;
     return Stack(
       // alignment: Alignment.bottomRight,
       children: [
         Padding(
           padding: const EdgeInsets.only(bottom: 15),
           child: GlassContainer.frostedGlass(
-            // gradient: LinearGradient(
-            //   begin: Alignment.topCenter,
-            //   end: Alignment.bottomCenter,
-            //   colors: [
-            //     context
-            //         .read<ThemeProvider>()
-            //         .colorOfThemeBrightness(
-            //           (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
-            //           .2,
-            //           Colors.grey,
-            //         )!
-            //         .withOpacity(0.6),
-            //     context
-            //         .read<ThemeProvider>()
-            //         .colorOfThemeBrightness(
-            //           (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
-            //           .2,
-            //           Colors.grey,
-            //         )!
-            //         .withOpacity(1),
-            //   ],
-            //   //
-            // ),
+            //*
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                context
+                    .read<ThemeProvider>()
+                    .colorOfThemeBrightness(
+                      (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
+                      brightness,
+                      Colors.grey,
+                    )!
+                    .withOpacity(0.5),
+                context
+                    .read<ThemeProvider>()
+                    .colorOfThemeBrightness(
+                      (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
+                      brightness,
+                      Colors.grey,
+                    )!
+                    .withOpacity(0.8),
+              ],
+              //
+            ),
             //
             // color: context
             //     .read<ThemeProvider>()
@@ -663,9 +660,10 @@ class _HomePageState extends State<HomePage> {
             //     )!
             //     .withOpacity(0.5),
             //
-            color: (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']].withOpacity(0.5),
+            // color: (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']].withOpacity(0.5),
             // blur: 15.0,
             frostedOpacity: 0.4, //0.2
+            //*
             margin: const EdgeInsets.all(5),
             borderRadius: BorderRadius.circular(25),
             borderWidth: 0,

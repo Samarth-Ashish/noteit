@@ -26,18 +26,14 @@ class ReminderContainer extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 BorderedText(
-                  strokeWidth: context.select((ListsProvider L) => item['enabled']) ? 2 : 0,
+                  strokeWidth: context.select((ListsProvider L) => item['enabled']) ? 4 : 0,
                   strokeColor: context.select((ListsProvider L) => item['enabled'])
-                      ? context.read<ThemeProvider>().colorOfAntiThemeBrightness(
+                      ? context.read<ThemeProvider>().colorOfThemeBrightness(
                             (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
                             .3, // 0.3
                             Colors.grey,
                           )!
-                      : context.read<ThemeProvider>().colorOfAntiThemeBrightness(
-                            (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
-                            0.1, // 0.3
-                            Colors.grey,
-                          )!,
+                      : Colors.transparent,
                   child: Text(
                     DateFormat.jm().format(DateTime.fromMillisecondsSinceEpoch(item['time'])).toString(),
                     style: TextStyle(
@@ -79,6 +75,7 @@ class ReminderContainer extends StatelessWidget {
 
 
 
+
 class ToggleReminderSwitch extends StatelessWidget {
   final Map<String, dynamic> item;
 
@@ -106,6 +103,7 @@ class ToggleReminderSwitch extends StatelessWidget {
     );
   }
 }
+
 
 
 
@@ -195,37 +193,55 @@ class WeekdayRow extends StatelessWidget {
             child: item['days'][item['days'].keys.elementAt(index)]
                 ? BorderedText(
                     strokeWidth: context.select((ListsProvider L) => item['enabled'])
-                        ? (item['days'][item['days'].keys.elementAt(index)] ? 5 : 0)
-                        : (item['days'][item['days'].keys.elementAt(index)] ? 4 : 0),
+                        ? (item['days'][item['days'].keys.elementAt(index)] ? 6 : 0)
+                        : (item['days'][item['days'].keys.elementAt(index)] ? 3.5 : 0),
                     strokeColor: context.select((ListsProvider L) => item['enabled'])
-                        ? context.read<ThemeProvider>().colorOfAntiThemeBrightnessIfTrueAndViceVersa(
+                        ? context.read<ThemeProvider>().colorOfThemeBrightnessIfTrueAndViceVersa(
                               item['days'][item['days'].keys.elementAt(index)],
                               (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
                               .3, // 0.3
                               Colors.grey,
-                            )!
-                        : context.read<ThemeProvider>().colorOfAntiThemeBrightnessIfTrueAndViceVersa(
+                            )!.withOpacity(1)
+                        : context.read<ThemeProvider>().colorOfThemeBrightnessIfTrueAndViceVersa(
                               item['days'][item['days'].keys.elementAt(index)],
                               (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
-                              0.1, // 0.3
+                              0.4, // 0.3
                               Colors.grey,
-                            )!,
-                    child: decoratedWeekdayText(item, index, context),
+                            )!.withOpacity(0.7),
+                    // strokeColor: context.select((ListsProvider L) => item['enabled'])
+                    //     ? context.read<ThemeProvider>().colorOfAntiThemeBrightnessIfTrueAndViceVersa(
+                    //           item['days'][item['days'].keys.elementAt(index)],
+                    //           (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
+                    //           .3, // 0.3
+                    //           Colors.grey,
+                    //         )!.withOpacity(1)
+                    //     : context.read<ThemeProvider>().colorOfThemeBrightnessIfTrueAndViceVersa(
+                    //           item['days'][item['days'].keys.elementAt(index)],
+                    //           (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
+                    //           0.3, // 0.3
+                    //           Colors.grey,
+                    //         )!.withOpacity(0.5),
+                    child: weekdayText(item, index, context),
                   )
-                : decoratedWeekdayText(item, index, context),
+                : weekdayText(item, index, context),
           ),
         ),
       ),
     );
   }
 
-  Text decoratedWeekdayText(Map<String, dynamic> item, int index, BuildContext context) {
+  Text weekdayText(Map<String, dynamic> item, int index, BuildContext context) {
     return Text(
       '${item['days'].keys.elementAt(index)}',
       style: TextStyle(
         decorationThickness: 6,
-        color: context.read<ThemeProvider>().colorOfThemeBrightnessIfTrueAndViceVersa(
-              item['days'][item['days'].keys.elementAt(index)],
+        // color: context.read<ThemeProvider>().colorOfThemeBrightnessIfTrueAndViceVersa(
+        //       item['days'][item['days'].keys.elementAt(index)],
+        //       (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
+        //       0.1, // 0.3
+        //       Colors.grey,
+        //     ),
+        color: context.read<ThemeProvider>().colorOfAntiThemeBrightness(
               (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
               0.1, // 0.3
               Colors.grey,
