@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:noteit/pages/stopwatch_page.dart';
+import 'package:noteit/pages/timer_page.dart';
 import 'package:provider/provider.dart';
 
 import 'providers/theme_provider.dart';
@@ -31,14 +33,23 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return Consumer<ThemeProvider>(
       builder: (context, theme, _) => MaterialApp(
-        // title: 'Noter',
-        title: context.select((ThemeProvider T) => 'Noter') ,
-        theme: theme.currentTheme,
-        debugShowCheckedModeBanner: false,
-        home: const HomePage(
-          title: 'Noter',
-        ),
-      ),
+
+          // title: 'Wakey',
+          title: context.select((ThemeProvider T) => 'Wakey'),
+          theme: theme.currentTheme,
+          debugShowCheckedModeBanner: false,
+          home: const HomePage(
+            title: 'Wakey',
+          ),
+          // initialRoute: '/',
+          routes: {
+            '/homePage': (context) => const HomePage(
+                  title: 'Wakey',
+                ),
+            '/timerPage': (context) => const TimerPage(),
+            '/stopwatchPage': (context) => const StopwatchPage(),
+          }),
     );
   }
 }
+

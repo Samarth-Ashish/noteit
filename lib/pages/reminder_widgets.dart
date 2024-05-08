@@ -83,7 +83,7 @@ class ToggleReminderSwitch extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint('Switch ${item['colorIndex']} built \n ----------- \n');
+    // debugPrint('Switch ${item['colorIndex']} built \n ----------- \n');
 
     return Switch(
       activeTrackColor: context.read<ThemeProvider>().colorOfAntiThemeBrightness(
@@ -114,7 +114,7 @@ class WeekdayRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint('weekdays row ${item['colorIndex']}\n----');
+    // debugPrint('weekdays row ${item['colorIndex']}\n----');
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,

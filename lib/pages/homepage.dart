@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:noteit/pages/common_widgets.dart';
 import 'dart:ui';
 
 // import 'package:curved_navigation_bar/curved_navigation_bar.dart';
@@ -30,26 +31,7 @@ class _HomePageState extends State<HomePage> {
       child: Scaffold(
         drawer: appDrawer(context),
         extendBodyBehindAppBar: true,
-        appBar: AppBar(
-          // backgroundColor: (context.read<ThemeProvider>().isThemeDark ? Colors.black : Colors.white).withOpacity(appBarOpacity),
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          flexibleSpace: ClipRect(
-            child: BackdropFilter(
-              filter: ImageFilter.blur(
-                sigmaX: 10,
-                sigmaY: 10,
-              ),
-              child: Container(
-                color: Colors.transparent,
-              ),
-            ),
-          ),
-          title: Text(widget.title),
-          // actionsIconTheme: const IconThemeData(opticalSize: 15),
-          actions: themeSwitchWithIcons(context),
-          centerTitle: true,
-        ),
+        appBar: CommonAppBar(context, widget.title),
         //
         body: reminderListViewBuilder(context),
         floatingActionButton: FloatingActionButton(
@@ -75,12 +57,37 @@ class _HomePageState extends State<HomePage> {
             Icon(Icons.alarm),
             Icon(Icons.compare_arrows),
           ],
-          onTap: (index) {},
+          onTap: (index) {
+            switch (index) {
+              case 0:
+                Navigator.pushReplacementNamed(
+                  context,
+                  '/homePage',
+                );
+                break;
+              case 1:
+                Navigator.pushReplacementNamed(
+                  context,
+                  '/timerPage',
+                );
+                break;
+              case 2:
+                Navigator.pushReplacementNamed(
+                  context,
+                  '/stopwatchPage',
+                );
+                break;
+              default:
+                break;
+            }
+          },
         ),
         //
       ),
     );
   }
+
+  
 
   Drawer appDrawer(BuildContext context) {
     return Drawer(
@@ -675,6 +682,7 @@ class _HomePageState extends State<HomePage> {
           ),
           // child: reminderFrostedContainerMainContents(item, context), //* UNFROSTED
         ),
+        //
         Positioned(
           bottom: 0,
           right: 0,
