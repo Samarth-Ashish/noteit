@@ -29,6 +29,9 @@ class _HomePageState extends State<HomePage> {
 
     return SafeArea(
       child: Scaffold(
+        backgroundColor: context.read<ThemeProvider>().isThemeDark
+            ? context.read<ThemeProvider>().darkened(Colors.grey, 0.45)
+            : context.read<ThemeProvider>().lightened(Colors.grey, 0.25),
         drawer: appDrawer(context),
         extendBodyBehindAppBar: true,
         appBar: CommonAppBar(context, widget.title),
@@ -86,8 +89,6 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
-
-  
 
   Drawer appDrawer(BuildContext context) {
     return Drawer(
@@ -626,80 +627,115 @@ class _HomePageState extends State<HomePage> {
   Widget reminderFrostedContainerFromItem(Map<String, dynamic> item, {isFrosted = false}) {
     debugPrint('Reminder ${item['colorIndex']} built');
 
-    const double brightness = .1;
+    const double brightness = .3; // Greather the brigtness, more background-esque the color
     return Stack(
       // alignment: Alignment.bottomRight,
       children: [
         Padding(
-          padding: const EdgeInsets.only(bottom: 15),
-          child: GlassContainer.frostedGlass(
-            //*
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [
-                context
-                    .read<ThemeProvider>()
-                    .colorOfThemeBrightness(
-                      (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
-                      brightness,
-                      Colors.grey,
-                    )!
-                    .withOpacity(0.5),
-                context
-                    .read<ThemeProvider>()
-                    .colorOfThemeBrightness(
-                      (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
-                      brightness,
-                      Colors.grey,
-                    )!
-                    .withOpacity(0.8),
+          padding: const EdgeInsets.only(bottom: 15, top: 5, left: 5, right: 5),
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(25),
+              boxShadow: [
+                BoxShadow(
+                  offset: const Offset(5, 5),
+                  blurRadius: 6,
+                  spreadRadius: -6,
+                  color: context.read<ThemeProvider>().colorOfThemeBrightness(
+                        (item['colorIndex'] == null) ? Colors.grey : context.read<ListsProvider>().colorList[item['colorIndex']],
+                        0.275,
+                      )!,
+                  // color: context.read<ThemeProvider>().colorFromBrightnessOf(
+                  //       Colors.green,
+                  //       Colors.grey
+                  //     )!),
+                ),
+                BoxShadow(
+                  offset: const Offset(-4, -4),
+                  blurRadius: 10,
+                  spreadRadius: -12,
+                  color: context.read<ThemeProvider>().colorOfAntiThemeBrightness(
+                        (item['colorIndex'] == null) ? Colors.grey : context.read<ListsProvider>().colorList[item['colorIndex']],
+                        0.2,
+                      )!,
+                )
               ],
-              //
             ),
-            //
-            // color: context
-            //     .read<ThemeProvider>()
-            //     .colorOfThemeBrightness(
-            //       (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
-            //       .3,
-            //       Colors.grey,
-            //     )!
-            //     .withOpacity(0.5),
-            //
-            // color: (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']].withOpacity(0.5),
-            // blur: 15.0,
-            frostedOpacity: 0.4, //0.2
-            //*
-            margin: const EdgeInsets.all(5),
-            borderRadius: BorderRadius.circular(25),
-            borderWidth: 0,
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height / 7,
-            // duration: const Duration(milliseconds: 1000),
-            // child: reminderFrostedContainerMainContents(item, context),
-            child: ReminderContainer(item: item),
+            child: GlassContainer.frostedGlass(
+              // shadowColor: context
+              //     .read<ThemeProvider>()
+              //     .colorOfThemeBrightness(
+              //       (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
+              //       brightness,
+              //       Colors.grey,
+              //     )!
+              //     .withOpacity(0.5),
+              //*
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  context
+                      .read<ThemeProvider>()
+                      .colorOfThemeBrightness(
+                        (item['colorIndex'] == null) ? Colors.grey : context.read<ListsProvider>().colorList[item['colorIndex']],
+                        brightness,
+                      )!
+                      .withOpacity(0.95), // 0.5 default
+                  context
+                      .read<ThemeProvider>()
+                      .colorOfThemeBrightness(
+                        (item['colorIndex'] == null) ? Colors.grey : context.read<ListsProvider>().colorList[item['colorIndex']],
+                        brightness,
+                      )!
+                      .withOpacity(0.8), // 0.8 default
+                ],
+                //
+              ),
+              //
+              // color: context
+              //     .read<ThemeProvider>()
+              //     .colorOfThemeBrightness(
+              //       (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
+              //       .3,
+              //       Colors.grey,
+              //     )!
+              //     .withOpacity(0.5),
+              //
+              // color: (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']].withOpacity(0.5),
+              // blur: 15.0,
+              frostedOpacity: 1, //0.2
+              //*
+              margin: const EdgeInsets.all(5),
+              borderRadius: BorderRadius.circular(25),
+              borderWidth: 0,
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height / 7,
+              // duration: const Duration(milliseconds: 1000),
+              // child: reminderFrostedContainerMainContents(item, context),
+              child: ReminderContainerContents(item: item),
+            ),
           ),
           // child: reminderFrostedContainerMainContents(item, context), //* UNFROSTED
         ),
-        //
-        Positioned(
-          bottom: 0,
-          right: 0,
-          child: IconButton(
-            onPressed: () {
-              context.read<ListsProvider>().removeFromList(item);
-            },
-            icon: const FaIcon(FontAwesomeIcons.solidTrashCan),
-            // color: Colors.redAccent,
-            color: context.read<ThemeProvider>().colorOfAntiThemeBrightness(
-                  (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
-                  .2,
-                  Colors.grey,
-                ),
-            iconSize: 20,
-          ),
-        ),
+        // stack separation - trash icon after
+        // Positioned(
+        //   bottom: 0,
+        //   right: 0,
+        //   child: IconButton(
+        //     onPressed: () {
+        //       context.read<ListsProvider>().removeFromList(item);
+        //     },
+        //     icon: const FaIcon(FontAwesomeIcons.solidTrashCan),
+        //     // color: Colors.redAccent,
+        //     color: context.read<ThemeProvider>().colorOfAntiThemeBrightness(
+        //           (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
+        //           .2,
+        //           Colors.grey,
+        //         ),
+        //     iconSize: 20,
+        //   ),
+        // ),
       ],
     );
   }

@@ -43,13 +43,10 @@ class _MyAppState extends State<MyApp> {
           ),
           // initialRoute: '/',
           routes: {
-            '/homePage': (context) => const HomePage(
-                  title: 'Wakey',
-                ),
+            '/homePage': (context) => const HomePage(title: 'Wakey'),
             '/timerPage': (context) => const TimerPage(),
             '/stopwatchPage': (context) => const StopwatchPage(),
           }),
     );
   }
 }
-

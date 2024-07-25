@@ -20,6 +20,7 @@ class ThemeProvider extends ChangeNotifier {
     // scaffoldBackgroundColor: Colors.red,
   );
   final ThemeData darkTheme = ThemeData(
+    // scaffoldBackgroundColor: Colors.grey.shade700,
     colorScheme: ColorScheme.fromSeed(
       seedColor: Colors.blue,
       brightness: Brightness.dark,
@@ -68,7 +69,6 @@ class ThemeProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-
   Color? colorOfThemeBrightness(
     Color? color, [
     double amount = .1,
@@ -93,11 +93,19 @@ class ThemeProvider extends ChangeNotifier {
 
   //
 
-  Color? colorFromBrightnessOf(Color? color1, {Color color2 = Colors.grey}) {
+  Color? colorFromBrightnessOf(Color? color1, Color? color2) {
     return returnColorFromBrightnessOf(
       fromColor: color1,
       colorToConvert: color2,
     );
+  }
+
+  Color? darkened(Color? color, [double amount = .1]) {
+    return darken(color, amount);
+  }
+
+  Color? lightened(Color? color, [double amount = .1]) {
+    return lighten(color, amount);
   }
 }
 
@@ -106,7 +114,6 @@ Color? darken(Color? color, [double amount = .1]) {
   if (color == null) {
     return null;
   }
-
   assert(amount >= 0 && amount <= 1);
 
   final hsl = HSLColor.fromColor(color);
@@ -120,7 +127,6 @@ Color? lighten(Color? color, [double amount = .1]) {
   if (color == null) {
     return null;
   }
-
   assert(amount >= 0 && amount <= 1);
 
   final hsl = HSLColor.fromColor(color);
@@ -130,8 +136,11 @@ Color? lighten(Color? color, [double amount = .1]) {
 }
 
 //  returnColorFromBrightnessOf
-Color? returnColorFromBrightnessOf({Color? fromColor, Color colorToConvert = Colors.grey}) {
+Color? returnColorFromBrightnessOf({Color? fromColor, Color? colorToConvert}) {
   if (fromColor == null) {
+    return null;
+  }
+  if (colorToConvert == null) {
     return null;
   }
   // colorToConvert = colorToConvert ?? Colors.grey;
