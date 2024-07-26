@@ -33,6 +33,7 @@ class ListsProvider extends ChangeNotifier {
   }
 
   Future<void> saveLists() async {
+    // print(lists);
     final prefs = await SharedPreferences.getInstance();
     final jsonLists = jsonEncode(lists);
     await prefs.setString('lists', jsonLists);
@@ -53,6 +54,25 @@ class ListsProvider extends ChangeNotifier {
       'time': selectedTime!.millisecondsSinceEpoch,
       'enabled': enabled,
     });
+    saveLists();
+    notifyListeners();
+  }
+
+  Future<void> updateListAtIndex({
+    required int index,
+    Color? colorIndexFromColor,
+    String title = '',
+    Map<String, bool>? days,
+    DateTime? selectedTime,
+    bool? enabled,
+  }) async {
+    lists[index] = {
+      'colorIndex': (colorIndexFromColor == null) ? null : colorList.indexOf(colorIndexFromColor),
+      'title': title,
+      'days': days,
+      'time': selectedTime!.millisecondsSinceEpoch,
+      'enabled': enabled,
+    };
     saveLists();
     notifyListeners();
   }

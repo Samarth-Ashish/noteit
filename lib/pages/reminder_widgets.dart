@@ -25,14 +25,28 @@ class ReminderContainerContents extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 timeText(context),
+                const SizedBox(
+                  width: 10,
+                ),
                 if (item['title'] != '')
-                  Text(
-                    item['title'],
-                    style: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w600,
+                  Expanded(
+                    child: Center(
+                      child: Text(
+                        item['title'],
+                        overflow: TextOverflow.fade,
+                        maxLines: 1,
+                        softWrap: false,
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w600,
+                          color: (item['colorIndex'] == null) ? Colors.grey : context.read<ListsProvider>().colorList[item['colorIndex']],
+                        ),
+                      ),
                     ),
                   ),
+                const SizedBox(
+                  width: 10,
+                ),
                 SizedBox(
                   width: 50,
                   child: FittedBox(
@@ -52,27 +66,27 @@ class ReminderContainerContents extends StatelessWidget {
 
   BorderedText timeText(BuildContext context) {
     return BorderedText(
-                strokeWidth: context.select((ListsProvider L) => item['enabled']) ? 4 : 0,
-                strokeColor: context.select((ListsProvider L) => item['enabled'])
-                    ? context.read<ThemeProvider>().colorOfThemeBrightness(
-                          (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
-                          .3, // 0.3
-                          Colors.grey,
-                        )!
-                    : Colors.transparent,
-                child: Text(
-                  DateFormat.jm().format(DateTime.fromMillisecondsSinceEpoch(item['time'])).toString(),
-                  style: TextStyle(
-                    fontWeight: FontWeight.w500,
-                    fontSize: 20,
-                    color: context.read<ThemeProvider>().colorOfAntiThemeBrightness(
-                          (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
-                          .2,
-                          Colors.grey,
-                        ),
-                  ),
-                ),
-              );
+      strokeWidth: context.select((ListsProvider L) => item['enabled']) ? 4 : 0,
+      strokeColor: context.select((ListsProvider L) => item['enabled'])
+          ? context.read<ThemeProvider>().colorOfThemeBrightness(
+                (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
+                .3, // 0.3
+                Colors.grey,
+              )!
+          : Colors.transparent,
+      child: Text(
+        DateFormat.jm().format(DateTime.fromMillisecondsSinceEpoch(item['time'])).toString(),
+        style: TextStyle(
+          fontWeight: FontWeight.w500,
+          fontSize: 18,
+          color: context.read<ThemeProvider>().colorOfAntiThemeBrightness(
+                (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
+                .2,
+                Colors.grey,
+              ),
+        ),
+      ),
+    );
   }
 }
 

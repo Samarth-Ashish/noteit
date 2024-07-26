@@ -44,7 +44,15 @@ dependencies:
   intl: ^0.18.1
   glass_kit: ^3.0.0
   bordered_text: ^2.0.0
-  flutter_neumorphic: ^3.2.0
+  # flutter_neumorphic: ^3.2.0
+  # flutter_neumorphic:
+  #   git:
+  #     url: https://github.com/den0206/Flutter-Neumorphic.git
+  #     ref: feature/remoce_accentcolor
+  # flutter_neumorphic_plus: ^3.4.0
+  alarm: ^3.1.5
+
+
 
 
 
