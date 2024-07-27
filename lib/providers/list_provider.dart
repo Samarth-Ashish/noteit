@@ -18,22 +18,27 @@ class ListsProvider extends ChangeNotifier {
   ];
 
   ListsProvider() {
-    lists = [];
     getListsFromCache();
   }
 
   Future<void> getListsFromCache() async {
-    final prefs = await SharedPreferences.getInstance();
-    final jsonLists = prefs.getString('lists');
-    if (jsonLists != null) {
-      final decodedLists = jsonDecode(jsonLists) as List<dynamic>;
-      lists = decodedLists.cast<Map<String, dynamic>>();
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final jsonLists = prefs.getString('lists');
+      if (jsonLists != null) {
+        final decodedLists = jsonDecode(jsonLists) as List<dynamic>;
+        lists = decodedLists.cast<Map<String, dynamic>>();
+      } else {
+        lists = [];
+      }
+    } catch (error) {
+      // Handle error if needed
+      debugPrint("Error loading lists from cache: $error");
     }
     notifyListeners();
   }
 
   Future<void> saveLists() async {
-    // print(lists);
     final prefs = await SharedPreferences.getInstance();
     final jsonLists = jsonEncode(lists);
     await prefs.setString('lists', jsonLists);
@@ -53,9 +58,9 @@ class ListsProvider extends ChangeNotifier {
       'days': days,
       'time': selectedTime!.millisecondsSinceEpoch,
       'enabled': enabled,
+      // 'color': colorIndexFromColor,
     });
-    saveLists();
-    notifyListeners();
+    await saveLists();
   }
 
   Future<void> updateListAtIndex({
@@ -73,26 +78,22 @@ class ListsProvider extends ChangeNotifier {
       'time': selectedTime!.millisecondsSinceEpoch,
       'enabled': enabled,
     };
-    saveLists();
-    notifyListeners();
+    await saveLists();
   }
 
   Future<void> removeFromList(item) async {
     lists.remove(item);
-    saveLists();
-    notifyListeners();
+    await saveLists();
   }
 
   Future<void> resetNotes() async {
     lists = [];
-    saveLists();
-    notifyListeners();
+    await saveLists();
   }
 
   Future<void> setEnable(item, value) async {
     lists[lists.indexOf(item)]['enabled'] = value;
-    saveLists();
-    notifyListeners();
+    await saveLists();
   }
 }
 
