@@ -4,6 +4,7 @@ import 'package:noteit/pages/common_widgets.dart';
 
 // import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import '../modified_packages/curved_navigation_bar_modified/curved_navigation_bar_modified.dart';
+
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
@@ -13,7 +14,6 @@ import 'reminder_widgets.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key, required this.title});
-
   final String title;
 
   @override
@@ -27,7 +27,7 @@ class _HomePageState extends State<HomePage> {
     return SafeArea(
       child: Scaffold(
         backgroundColor: context.read<ThemeProvider>().isThemeDark
-            ? context.read<ThemeProvider>().darkened(Colors.grey, 0.45)
+            ? context.read<ThemeProvider>().darkened(Colors.grey, 0.5)
             : context.read<ThemeProvider>().lightened(Colors.grey, 0.25),
         drawer: appDrawer(context),
         extendBodyBehindAppBar: true,

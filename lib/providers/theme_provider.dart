@@ -91,12 +91,22 @@ class ThemeProvider extends ChangeNotifier {
     return condition ? colorOfAntiThemeBrightness(color, amount, defaultColor) : colorOfThemeBrightness(color, amount, defaultColor);
   }
 
-  //
+  Color? colorFromBrightnessIfDarkOrElse({required Color fromColorIfDark, required Color fromColorIfLight, required Color colorToConvert}) {
+    return isThemeDark
+        ? returnColorFromBrightnessOf(
+            fromColor: fromColorIfDark,
+            colorToConvert: colorToConvert,
+          )
+        : returnColorFromBrightnessOf(
+            fromColor: fromColorIfLight,
+            colorToConvert: colorToConvert,
+          );
+  }
 
-  Color? colorFromBrightnessOf(Color? color1, Color? color2) {
+  Color? colorFromBrightness({required Color fromColor, required Color colorToConvert}) {
     return returnColorFromBrightnessOf(
-      fromColor: color1,
-      colorToConvert: color2,
+      fromColor: fromColor,
+      colorToConvert: colorToConvert,
     );
   }
 
@@ -136,20 +146,14 @@ Color? lighten(Color? color, [double amount = .1]) {
 }
 
 //  returnColorFromBrightnessOf
-Color? returnColorFromBrightnessOf({Color? fromColor, Color? colorToConvert}) {
-  if (fromColor == null) {
-    return null;
-  }
-  if (colorToConvert == null) {
-    return null;
-  }
+Color? returnColorFromBrightnessOf({required Color fromColor, required Color colorToConvert}) {
   // colorToConvert = colorToConvert ?? Colors.grey;
 
   final fromColorHSL = HSLColor.fromColor(fromColor);
   final colorToConvertHSL = HSLColor.fromColor(colorToConvert);
 
   final hslBlended = HSLColor.fromAHSL(
-    colorToConvert.alpha.toDouble(),
+    colorToConvert.alpha.toDouble() / 255,
     colorToConvertHSL.hue,
     colorToConvertHSL.saturation,
     fromColorHSL.lightness,

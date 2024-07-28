@@ -43,7 +43,12 @@ class _MyAppState extends State<MyApp> {
         title: context.select((ThemeProvider T) => 'Wakey'),
         theme: theme.currentTheme,
         debugShowCheckedModeBanner: false,
-        home: const HomePage(title: 'Wakey'),
+        home: const AnimatedSwitcher(
+          duration: Duration(milliseconds: 2000),
+          switchInCurve: Curves.easeInOut,
+          switchOutCurve: Curves.easeInOutCubic,
+          child: HomePage(title: 'Wakey'),
+        ),
         // initialRoute: '/',
         routes: {
           '/homePage': (context) => const HomePage(title: 'Wakey'),

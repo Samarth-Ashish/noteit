@@ -41,7 +41,11 @@ class ReminderContainerContents extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.w600,
-                          color: (item['colorIndex'] == null) ? Colors.grey : context.read<ListsProvider>().colorList[item['colorIndex']],
+                          color: context.read<ThemeProvider>().colorOfThemeBrightness(
+                                (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
+                                .3, // .3
+                                Colors.grey,
+                              )!,
                         ),
                       ),
                     ),
@@ -135,7 +139,7 @@ class WeekdayRow extends StatelessWidget {
       children: List.generate(
         item['days'].keys.length,
         (index) => Flexible(
-          // child: GlassContainer.frostedGlass(
+          // child: GlassContainer.frostedGlass( //! Selected weekdays are circle-highlighted
           //   borderWidth: 0,
           //   shape: BoxShape.circle,
           //   // padding: const EdgeInsets.all(3),
@@ -276,6 +280,9 @@ Widget reminderContainerFromItem(BuildContext context, Map<String, dynamic> item
   // debugPrint('Reminder ${item['colorIndex']} built');
 
   const double brightness = .3; // Greather the brigtness, more background-esque the color
+  Color fromColorIfDark =  context.read<ThemeProvider>().darkened(Colors.grey, 0.5)!;
+  Color fromColorIfLight = Color.fromARGB(255, 226, 226, 226);
+
   return Stack(
     // alignment: Alignment.bottomRight,
     children: [
@@ -335,22 +342,25 @@ Widget reminderContainerFromItem(BuildContext context, Map<String, dynamic> item
                 colors: [
                   context
                       .read<ThemeProvider>()
-                      .colorOfThemeBrightness(
-                        (item['colorIndex'] == null) ? Colors.grey : context.read<ListsProvider>().colorList[item['colorIndex']],
-                        brightness,
+                      .colorFromBrightnessIfDarkOrElse(
+                        fromColorIfDark: fromColorIfDark,
+                        fromColorIfLight: fromColorIfLight,
+                        colorToConvert:
+                            (item['colorIndex'] == null) ? Colors.grey : context.read<ListsProvider>().colorList[item['colorIndex']],
                       )!
-                      .withOpacity(0.95), // 0.5 default
+                      .withOpacity(1), // 0.5 default
                   context
                       .read<ThemeProvider>()
-                      .colorOfThemeBrightness(
-                        (item['colorIndex'] == null) ? Colors.grey : context.read<ListsProvider>().colorList[item['colorIndex']],
-                        brightness,
+                      .colorFromBrightnessIfDarkOrElse(
+                        fromColorIfDark: fromColorIfDark,
+                        fromColorIfLight: fromColorIfLight,
+                        colorToConvert:
+                            (item['colorIndex'] == null) ? Colors.grey : context.read<ListsProvider>().colorList[item['colorIndex']],
                       )!
-                      .withOpacity(0.8), // 0.8 default
+                      .withOpacity(0.7), // 0.8 default
                 ],
-                //
               ),
-              //
+              //! alternate color
               // color: context
               //     .read<ThemeProvider>()
               //     .colorOfThemeBrightness(
@@ -362,7 +372,7 @@ Widget reminderContainerFromItem(BuildContext context, Map<String, dynamic> item
               //
               // color: (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']].withOpacity(0.5),
               // blur: 15.0,
-              frostedOpacity: 1, //0.2
+              frostedOpacity: 0.7, //0.2
               //*
               margin: const EdgeInsets.all(5),
               borderRadius: BorderRadius.circular(25),
@@ -371,7 +381,7 @@ Widget reminderContainerFromItem(BuildContext context, Map<String, dynamic> item
               height: MediaQuery.of(context).size.height / 7,
               // duration: const Duration(milliseconds: 1000),
               // child: reminderFrostedContainerMainContents(item, context),
-              child: ReminderContainerContents(item: item), //! INNER CONTENTS
+              // child: ReminderContainerContents(item: item), //! INNER CONTENTS
             ),
           ),
           // child: reminderFrostedContainerMainContents(item, context), //* UNFROSTED
