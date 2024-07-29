@@ -30,26 +30,7 @@ class ReminderContainerContents extends StatelessWidget {
                 const SizedBox(
                   width: 10,
                 ),
-                if (item['title'] != '')
-                  Expanded(
-                    child: Center(
-                      child: Text(
-                        item['title'],
-                        overflow: TextOverflow.fade,
-                        maxLines: 1,
-                        softWrap: false,
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w600,
-                          color: context.read<ThemeProvider>().colorOfThemeBrightness(
-                                (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
-                                .3, // .3
-                                Colors.grey,
-                              )!,
-                        ),
-                      ),
-                    ),
-                  ),
+                if (item['title'] != '') titleText(context),
                 const SizedBox(
                   width: 10,
                 ),
@@ -57,7 +38,7 @@ class ReminderContainerContents extends StatelessWidget {
                   width: 50,
                   child: FittedBox(
                     fit: BoxFit.contain,
-                    child: ToggleReminderSwitch(item: item),
+                    child: toggleReminderSwitch(context, item),
                   ),
                 ),
               ],
@@ -66,6 +47,28 @@ class ReminderContainerContents extends StatelessWidget {
           // weekdaysRow(item, context),
           WeekdayRow(item: item),
         ],
+      ),
+    );
+  }
+
+  Expanded titleText(BuildContext context) {
+    return Expanded(
+      child: Center(
+        child: Text(
+          item['title'],
+          overflow: TextOverflow.fade,
+          maxLines: 1,
+          softWrap: false,
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
+            color: context.read<ThemeProvider>().colorFromBrightnessIfDarkOrElse(
+                  fromColorIfDark: context.read<ThemeProvider>().darkened(Colors.grey, 0.5)!,
+                  fromColorIfLight: context.read<ThemeProvider>().lightened(Colors.grey, 0.5)!,
+                  colorToConvert: (item['colorIndex'] == null) ? Colors.grey : context.read<ListsProvider>().colorList[item['colorIndex']],
+                )!,
+          ),
+        ),
       ),
     );
   }
@@ -94,17 +97,8 @@ class ReminderContainerContents extends StatelessWidget {
       ),
     );
   }
-}
 
-class ToggleReminderSwitch extends StatelessWidget {
-  final Map<String, dynamic> item;
-
-  const ToggleReminderSwitch({Key? key, required this.item}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    // debugPrint('Switch ${item['colorIndex']} built \n ----------- \n');
-
+  Widget toggleReminderSwitch(BuildContext context, Map<String, dynamic> item) {
     return Switch(
       activeTrackColor: context.read<ThemeProvider>().colorOfAntiThemeBrightness(
             (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
@@ -206,6 +200,7 @@ class WeekdayRow extends StatelessWidget {
           //   ),
           // ),
           child: FittedBox(
+            //! days row
             fit: BoxFit.scaleDown,
             child: item['days'][item['days'].keys.elementAt(index)]
                 ? BorderedText(
@@ -280,8 +275,8 @@ Widget reminderContainerFromItem(BuildContext context, Map<String, dynamic> item
   // debugPrint('Reminder ${item['colorIndex']} built');
 
   const double brightness = .3; // Greather the brigtness, more background-esque the color
-  Color fromColorIfDark =  context.read<ThemeProvider>().darkened(Colors.grey, 0.5)!;
-  Color fromColorIfLight = Color.fromARGB(255, 226, 226, 226);
+  Color fromColorIfDark = context.read<ThemeProvider>().darkened(Colors.grey, 0.5)!;
+  Color fromColorIfLight = context.read<ThemeProvider>().lightened(Colors.grey, 0.3)!;
 
   return Stack(
     // alignment: Alignment.bottomRight,
@@ -327,15 +322,6 @@ Widget reminderContainerFromItem(BuildContext context, Map<String, dynamic> item
                   )
                 : null,
             child: GlassContainer.frostedGlass(
-              // shadowColor: context
-              //     .read<ThemeProvider>()
-              //     .colorOfThemeBrightness(
-              //       (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
-              //       brightness,
-              //       Colors.grey,
-              //     )!
-              //     .withOpacity(0.5),
-              //*
               gradient: LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
@@ -361,16 +347,6 @@ Widget reminderContainerFromItem(BuildContext context, Map<String, dynamic> item
                 ],
               ),
               //! alternate color
-              // color: context
-              //     .read<ThemeProvider>()
-              //     .colorOfThemeBrightness(
-              //       (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
-              //       .3,
-              //       Colors.grey,
-              //     )!
-              //     .withOpacity(0.5),
-              //
-              // color: (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']].withOpacity(0.5),
               // blur: 15.0,
               frostedOpacity: 0.7, //0.2
               //*
@@ -380,8 +356,7 @@ Widget reminderContainerFromItem(BuildContext context, Map<String, dynamic> item
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.height / 7,
               // duration: const Duration(milliseconds: 1000),
-              // child: reminderFrostedContainerMainContents(item, context),
-              // child: ReminderContainerContents(item: item), //! INNER CONTENTS
+              child: ReminderContainerContents(item: item), //! INNER CONTENTS
             ),
           ),
           // child: reminderFrostedContainerMainContents(item, context), //* UNFROSTED

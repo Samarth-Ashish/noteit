@@ -19,6 +19,7 @@ void main() async {
   runApp(
     MultiProvider(
       providers: [
+        // ChangeNotifierProvider.value(value: ThemeProvider),
         ChangeNotifierProvider<ThemeProvider>(create: (context) => ThemeProvider()),
         ChangeNotifierProvider<ListsProvider>(create: (context) => ListsProvider())
       ],

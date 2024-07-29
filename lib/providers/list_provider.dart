@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ListsProvider extends ChangeNotifier {
-  late List<Map<String, dynamic>> lists;
+  List<Map<String, dynamic>> lists = [];
 
   final List<Color> colorList = [
     Colors.transparent,

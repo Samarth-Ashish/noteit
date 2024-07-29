@@ -55,18 +55,15 @@ class ThemeProvider extends ChangeNotifier {
   Future<void> toggleTheme() async {
     isThemeDark = !isThemeDark;
     isThemeDark ? setDarkTheme() : setLightTheme();
-    saveThemePreferences();
-    notifyListeners();
+    await saveThemePreferences();
   }
 
   Future<void> setLightTheme() async {
     currentTheme = lightTheme;
-    notifyListeners();
   }
 
   Future<void> setDarkTheme() async {
     currentTheme = darkTheme;
-    notifyListeners();
   }
 
   Color? colorOfThemeBrightness(
@@ -119,6 +116,9 @@ class ThemeProvider extends ChangeNotifier {
   }
 }
 
+
+// ======================================================================================
+
 //  darken
 Color? darken(Color? color, [double amount = .1]) {
   if (color == null) {
@@ -161,6 +161,8 @@ Color? returnColorFromBrightnessOf({required Color fromColor, required Color col
 
   return hslBlended.toColor();
 }
+
+// ======================================================================================
 
 //themeSwitch
 Widget themeSwitch(BuildContext context) {
