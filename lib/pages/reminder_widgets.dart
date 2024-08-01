@@ -11,7 +11,6 @@ import '../providers/theme_provider.dart';
 
 class ReminderContainerContents extends StatelessWidget {
   final Map<String, dynamic> item;
-
   const ReminderContainerContents({Key? key, required this.item}) : super(key: key);
 
   @override
@@ -20,22 +19,20 @@ class ReminderContainerContents extends StatelessWidget {
       child: Column(
         // crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisAlignment: MainAxisAlignment.center,
+        // crossAxisAlignment: CrossAxisAlignment.stretch,
+        mainAxisSize: MainAxisSize.min,
         children: [
           Padding(
-            padding: const EdgeInsets.only(bottom: 10, left: 15, right: 15),
+            padding: const EdgeInsets.only(bottom: 10, left: 12, right: 12),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 timeText(context),
-                const SizedBox(
-                  width: 10,
-                ),
+                const SizedBox(width: 10),
                 if (item['title'] != '') titleText(context),
-                const SizedBox(
-                  width: 10,
-                ),
+                const SizedBox(width: 10),
                 SizedBox(
-                  width: 50,
+                  width: 45,
                   child: FittedBox(
                     fit: BoxFit.contain,
                     child: toggleReminderSwitch(context, item),
@@ -62,9 +59,27 @@ class ReminderContainerContents extends StatelessWidget {
           style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.w600,
-            color: context.read<ThemeProvider>().colorFromBrightnessIfDarkOrElse(
-                  fromColorIfDark: context.read<ThemeProvider>().darkened(Colors.grey, 0.5)!,
-                  fromColorIfLight: context.read<ThemeProvider>().lightened(Colors.grey, 0.5)!,
+            shadows: [
+              Shadow(
+                offset: const Offset(0, 0),
+                blurRadius: 6,
+                color: context.read<ThemeProvider>().colorFromBrightnessIfConditionTrueOrElseAndIfDarkOrElse(
+                      condition: item['enabled'],
+                      fromColorIfTrueAndDark: context.read<ThemeProvider>().lightened(Colors.grey, 0.2)!,
+                      fromColorIfFalseAndDark: context.read<ThemeProvider>().darkened(Colors.grey, 0.25)!,
+                      fromColorIfTrueAndLight: context.read<ThemeProvider>().darkened(Colors.grey, 0)!,
+                      fromColorIfFalseAndLight: context.read<ThemeProvider>().lightened(Colors.grey, 0.1)!,
+                      colorToConvert:
+                          (item['colorIndex'] == null) ? Colors.grey : context.read<ListsProvider>().colorList[item['colorIndex']],
+                    )!,
+              ),
+            ],
+            color: context.read<ThemeProvider>().colorFromBrightnessIfConditionTrueOrElseAndIfDarkOrElse(
+                  condition: item['enabled'],
+                  fromColorIfTrueAndDark: context.read<ThemeProvider>().lightened(Colors.grey, 0.2)!,
+                  fromColorIfFalseAndDark: context.read<ThemeProvider>().darkened(Colors.grey, 0.25)!,
+                  fromColorIfTrueAndLight: context.read<ThemeProvider>().darkened(Colors.grey, 0.1)!,
+                  fromColorIfFalseAndLight: context.read<ThemeProvider>().lightened(Colors.grey, 0.1)!,
                   colorToConvert: (item['colorIndex'] == null) ? Colors.grey : context.read<ListsProvider>().colorList[item['colorIndex']],
                 )!,
           ),
@@ -75,23 +90,26 @@ class ReminderContainerContents extends StatelessWidget {
 
   BorderedText timeText(BuildContext context) {
     return BorderedText(
-      strokeWidth: context.select((ListsProvider L) => item['enabled']) ? 4 : 0,
+      strokeWidth: context.select((ListsProvider L) => item['enabled']) ? 6 : 0,
       strokeColor: context.select((ListsProvider L) => item['enabled'])
-          ? context.read<ThemeProvider>().colorOfThemeBrightness(
-                (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
-                .3, // 0.3
-                Colors.grey,
+          ? context.read<ThemeProvider>().colorFromBrightnessIfDarkOrElse(
+                fromColorIfDark: context.read<ThemeProvider>().darkened(Colors.grey, 0.35)!,
+                fromColorIfLight: context.read<ThemeProvider>().lightened(Colors.grey, 0.23)!,
+                colorToConvert: (item['colorIndex'] == null) ? Colors.grey : context.read<ListsProvider>().colorList[item['colorIndex']],
               )!
-          : Colors.transparent,
+          : Colors.black.withOpacity(0),
       child: Text(
         DateFormat.jm().format(DateTime.fromMillisecondsSinceEpoch(item['time'])).toString(),
         style: TextStyle(
-          fontWeight: FontWeight.w500,
+          fontWeight: FontWeight.bold,
           fontSize: 18,
-          color: context.read<ThemeProvider>().colorOfAntiThemeBrightness(
-                (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
-                .2,
-                Colors.grey,
+          color: context.read<ThemeProvider>().colorFromBrightnessIfConditionTrueOrElseAndIfDarkOrElse(
+                condition: item['enabled'],
+                fromColorIfTrueAndDark: context.read<ThemeProvider>().lightened(Colors.grey, 0.15)!,
+                fromColorIfFalseAndDark: context.read<ThemeProvider>().darkened(Colors.grey, 0.35)!, //!
+                fromColorIfTrueAndLight: context.read<ThemeProvider>().darkened(Colors.grey, 0.1)!,
+                fromColorIfFalseAndLight: context.read<ThemeProvider>().lightened(Colors.grey, 0.15)!, //!
+                colorToConvert: (item['colorIndex'] == null) ? Colors.grey : context.read<ListsProvider>().colorList[item['colorIndex']],
               ),
         ),
       ),
@@ -100,16 +118,16 @@ class ReminderContainerContents extends StatelessWidget {
 
   Widget toggleReminderSwitch(BuildContext context, Map<String, dynamic> item) {
     return Switch(
-      activeTrackColor: context.read<ThemeProvider>().colorOfAntiThemeBrightness(
-            (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
-            .2,
-            Colors.grey.shade600,
-          ),
-      activeColor: context.read<ThemeProvider>().colorOfThemeBrightness(
-            (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
-            .2,
-            Colors.grey.shade600,
-          ),
+      activeTrackColor: context.read<ThemeProvider>().colorFromBrightnessIfDarkOrElse(
+            fromColorIfLight: context.read<ThemeProvider>().lightened(Colors.grey, 0.17)!,
+            fromColorIfDark: context.read<ThemeProvider>().darkened(Colors.grey, 0.4)!,
+            colorToConvert: (item['colorIndex'] == null) ? Colors.grey : context.read<ListsProvider>().colorList[item['colorIndex']],
+          )!,
+      activeColor: context.read<ThemeProvider>().colorFromBrightnessIfDarkOrElse(
+            fromColorIfLight: context.read<ThemeProvider>().darkened(Colors.grey, 0)!,
+            fromColorIfDark: context.read<ThemeProvider>().lightened(Colors.grey, 0)!,
+            colorToConvert: (item['colorIndex'] == null) ? Colors.grey : context.read<ListsProvider>().colorList[item['colorIndex']],
+          )!,
       // inactiveThumbColor: (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
       inactiveTrackColor: Colors.transparent,
       value: context.select((ListsProvider L) => item['enabled']),
@@ -210,35 +228,29 @@ class WeekdayRow extends StatelessWidget {
                     strokeColor: context.select((ListsProvider L) => item['enabled'])
                         ? context
                             .read<ThemeProvider>()
-                            .colorOfThemeBrightnessIfTrueAndViceVersa(
-                              item['days'][item['days'].keys.elementAt(index)],
-                              (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
-                              .3, // 0.3
-                              Colors.grey,
+                            .colorFromBrightnessIfConditionTrueOrElseAndIfDarkOrElse(
+                              condition: item['enabled'],
+                              fromColorIfTrueAndDark: context.read<ThemeProvider>().darkened(Colors.grey, 0.3)!,
+                              fromColorIfFalseAndDark: context.read<ThemeProvider>().darkened(Colors.grey, 0.35)!,
+                              fromColorIfTrueAndLight: context.read<ThemeProvider>().lightened(Colors.grey, 0.15)!,
+                              fromColorIfFalseAndLight: context.read<ThemeProvider>().darkened(Colors.grey, 0)!,
+                              colorToConvert:
+                                  (item['colorIndex'] == null) ? Colors.grey : context.read<ListsProvider>().colorList[item['colorIndex']],
                             )!
                             .withOpacity(1)
                         : context
                             .read<ThemeProvider>()
-                            .colorOfThemeBrightnessIfTrueAndViceVersa(
-                              item['days'][item['days'].keys.elementAt(index)],
-                              (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
-                              0.4, // 0.3
-                              Colors.grey,
+                            .colorFromBrightnessIfConditionTrueOrElseAndIfDarkOrElse(
+                              condition: item['enabled'],
+                              fromColorIfTrueAndDark: context.read<ThemeProvider>().darkened(Colors.grey, 0.3)!,
+                              fromColorIfFalseAndDark: context.read<ThemeProvider>().darkened(Colors.grey, 0.35)!,
+                              fromColorIfTrueAndLight: context.read<ThemeProvider>().lightened(Colors.grey, 0.15)!,
+                              fromColorIfFalseAndLight: context.read<ThemeProvider>().darkened(Colors.grey, 0)!,
+                              colorToConvert:
+                                  (item['colorIndex'] == null) ? Colors.grey : context.read<ListsProvider>().colorList[item['colorIndex']],
                             )!
-                            .withOpacity(0.7),
-                    // strokeColor: context.select((ListsProvider L) => item['enabled'])
-                    //     ? context.read<ThemeProvider>().colorOfAntiThemeBrightnessIfTrueAndViceVersa(
-                    //           item['days'][item['days'].keys.elementAt(index)],
-                    //           (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
-                    //           .3, // 0.3
-                    //           Colors.grey,
-                    //         )!.withOpacity(1)
-                    //     : context.read<ThemeProvider>().colorOfThemeBrightnessIfTrueAndViceVersa(
-                    //           item['days'][item['days'].keys.elementAt(index)],
-                    //           (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
-                    //           0.3, // 0.3
-                    //           Colors.grey,
-                    //         )!.withOpacity(0.5),
+                            .withOpacity(1),
+                    strokeJoin: StrokeJoin.round,
                     child: weekdayText(item, index, context),
                   )
                 : weekdayText(item, index, context),
@@ -252,17 +264,14 @@ class WeekdayRow extends StatelessWidget {
     return Text(
       '${item['days'].keys.elementAt(index)}',
       style: TextStyle(
-        decorationThickness: 6,
-        // color: context.read<ThemeProvider>().colorOfThemeBrightnessIfTrueAndViceVersa(
-        //       item['days'][item['days'].keys.elementAt(index)],
-        //       (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
-        //       0.1, // 0.3
-        //       Colors.grey,
-        //     ),
-        color: context.read<ThemeProvider>().colorOfAntiThemeBrightness(
-              (item['colorIndex'] == null) ? null : context.read<ListsProvider>().colorList[item['colorIndex']],
-              0.1, // 0.3
-              Colors.grey,
+        // decorationThickness: 6,
+        color: context.read<ThemeProvider>().colorFromBrightnessIfConditionTrueOrElseAndIfDarkOrElse(
+              condition: item['days'][item['days'].keys.elementAt(index)] && item['enabled'],
+              fromColorIfTrueAndDark: context.read<ThemeProvider>().lightened(Colors.grey, 0)!,
+              fromColorIfFalseAndDark: context.read<ThemeProvider>().darkened(Colors.grey, 0.25)!,
+              fromColorIfTrueAndLight: context.read<ThemeProvider>().darkened(Colors.grey, 0.15)!,
+              fromColorIfFalseAndLight: context.read<ThemeProvider>().lightened(Colors.grey, 0.1)!,
+              colorToConvert: (item['colorIndex'] == null) ? Colors.grey : context.read<ListsProvider>().colorList[item['colorIndex']],
             ),
         fontSize: 18,
         fontWeight: item['days'][item['days'].keys.elementAt(index)] ? FontWeight.bold : FontWeight.w500,
@@ -274,9 +283,8 @@ class WeekdayRow extends StatelessWidget {
 Widget reminderContainerFromItem(BuildContext context, Map<String, dynamic> item, int index, {isFrosted = false}) {
   // debugPrint('Reminder ${item['colorIndex']} built');
 
-  const double brightness = .3; // Greather the brigtness, more background-esque the color
-  Color fromColorIfDark = context.read<ThemeProvider>().darkened(Colors.grey, 0.5)!;
-  Color fromColorIfLight = context.read<ThemeProvider>().lightened(Colors.grey, 0.3)!;
+  Color fromColorIfDark = context.read<ThemeProvider>().darkened(Colors.grey, 0.55)!;
+  Color fromColorIfLight = context.read<ThemeProvider>().lightened(Colors.grey, 0.33)!;
 
   return Stack(
     // alignment: Alignment.bottomRight,
@@ -294,7 +302,7 @@ Widget reminderContainerFromItem(BuildContext context, Map<String, dynamic> item
           );
         },
         child: Padding(
-          padding: const EdgeInsets.all(7),
+          padding: const EdgeInsets.all(5),
           child: Container(
             decoration: item['enabled']
                 ? BoxDecoration(
@@ -304,18 +312,28 @@ Widget reminderContainerFromItem(BuildContext context, Map<String, dynamic> item
                         offset: const Offset(3, 3),
                         blurRadius: 10,
                         spreadRadius: -8,
-                        color: context.read<ThemeProvider>().darkened(
-                              (item['colorIndex'] == null) ? Colors.grey : context.read<ListsProvider>().colorList[item['colorIndex']],
-                              0.25,
+                        color: context.read<ThemeProvider>().colorFromBrightnessIfConditionTrueOrElseAndIfDarkOrElse(
+                              condition: true,
+                              fromColorIfTrueAndDark: context.read<ThemeProvider>().lightened(Colors.grey, 0.15)!,
+                              fromColorIfFalseAndDark: context.read<ThemeProvider>().darkened(Colors.grey, 0.35)!, //!
+                              fromColorIfTrueAndLight: context.read<ThemeProvider>().lightened(Colors.white, 0.95)!,
+                              fromColorIfFalseAndLight: context.read<ThemeProvider>().lightened(Colors.grey, 0.15)!, //!
+                              colorToConvert:
+                                  (item['colorIndex'] == null) ? Colors.grey : context.read<ListsProvider>().colorList[item['colorIndex']],
                             )!,
                       ),
                       BoxShadow(
                         offset: const Offset(-3, -3), // (-3, -3)
                         blurRadius: 10, // 10
                         spreadRadius: -8, // -7
-                        color: context.read<ThemeProvider>().lightened(
-                              (item['colorIndex'] == null) ? Colors.grey : context.read<ListsProvider>().colorList[item['colorIndex']],
-                              0.15,
+                        color: context.read<ThemeProvider>().colorFromBrightnessIfConditionTrueOrElseAndIfDarkOrElse(
+                              condition: true,
+                              fromColorIfTrueAndDark: context.read<ThemeProvider>().darkened(Colors.grey, 0.35)!,
+                              fromColorIfFalseAndDark: context.read<ThemeProvider>().darkened(Colors.grey, 0.35)!, //!
+                              fromColorIfTrueAndLight: context.read<ThemeProvider>().darkened(Colors.grey, 0.3)!,
+                              fromColorIfFalseAndLight: context.read<ThemeProvider>().lightened(Colors.grey, 0.15)!, //!
+                              colorToConvert:
+                                  (item['colorIndex'] == null) ? Colors.grey : context.read<ListsProvider>().colorList[item['colorIndex']],
                             )!,
                       )
                     ],
@@ -343,7 +361,7 @@ Widget reminderContainerFromItem(BuildContext context, Map<String, dynamic> item
                         colorToConvert:
                             (item['colorIndex'] == null) ? Colors.grey : context.read<ListsProvider>().colorList[item['colorIndex']],
                       )!
-                      .withOpacity(0.7), // 0.8 default
+                      .withOpacity(0.75), // 0.8 default
                 ],
               ),
               //! alternate color

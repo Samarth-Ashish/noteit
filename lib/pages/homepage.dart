@@ -27,8 +27,8 @@ class _HomePageState extends State<HomePage> {
     return SafeArea(
       child: Scaffold(
         backgroundColor: context.read<ThemeProvider>().isThemeDark
-            ? context.read<ThemeProvider>().darkened(Colors.grey, 0.5)
-            : context.read<ThemeProvider>().lightened(Colors.grey, 0.25),
+            ? context.read<ThemeProvider>().darkened(Colors.grey, 0.55)
+            : context.read<ThemeProvider>().lightened(Colors.grey, 0.15),
         drawer: appDrawer(context),
         extendBodyBehindAppBar: true,
         appBar: CommonAppBar(context, widget.title),

@@ -100,6 +100,48 @@ class ThemeProvider extends ChangeNotifier {
           );
   }
 
+  Color? colorFromBrightnessIfConditionTrueOrElse(
+      {required bool condition, required Color fromColorIfTrue, required Color fromColorIfFalse, required Color colorToConvert}) {
+    return condition
+        ? returnColorFromBrightnessOf(
+            fromColor: fromColorIfTrue,
+            colorToConvert: colorToConvert,
+          )
+        : returnColorFromBrightnessOf(
+            fromColor: fromColorIfFalse,
+            colorToConvert: colorToConvert,
+          );
+  }
+
+  Color? colorFromBrightnessIfConditionTrueOrElseAndIfDarkOrElse({
+    required bool condition,
+    required Color fromColorIfTrueAndDark,
+    required Color fromColorIfFalseAndDark,
+    required Color fromColorIfTrueAndLight,
+    required Color fromColorIfFalseAndLight,
+    required Color colorToConvert,
+  }) {
+    return isThemeDark
+        ? (condition
+            ? returnColorFromBrightnessOf(
+                fromColor: fromColorIfTrueAndDark,
+                colorToConvert: colorToConvert,
+              )
+            : returnColorFromBrightnessOf(
+                fromColor: fromColorIfFalseAndDark,
+                colorToConvert: colorToConvert,
+              ))
+        : (condition
+            ? returnColorFromBrightnessOf(
+                fromColor: fromColorIfTrueAndLight,
+                colorToConvert: colorToConvert,
+              )
+            : returnColorFromBrightnessOf(
+                fromColor: fromColorIfFalseAndLight,
+                colorToConvert: colorToConvert,
+              ));
+  }
+
   Color? colorFromBrightness({required Color fromColor, required Color colorToConvert}) {
     return returnColorFromBrightnessOf(
       fromColor: fromColor,
@@ -115,7 +157,6 @@ class ThemeProvider extends ChangeNotifier {
     return lighten(color, amount);
   }
 }
-
 
 // ======================================================================================
 
