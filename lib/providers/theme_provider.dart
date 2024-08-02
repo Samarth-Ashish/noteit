@@ -156,6 +156,20 @@ class ThemeProvider extends ChangeNotifier {
   Color? lightened(Color? color, [double amount = .1]) {
     return lighten(color, amount);
   }
+
+  Color backgroundEsqueColor({required Color color, double amount = 0}) {
+    return returnColorFromBrightnessOf(
+      fromColor: isThemeDark ? darkened(Colors.grey, amount)! : lightened(Colors.grey, amount)!,
+      colorToConvert: color,
+    )!;
+  }
+
+  Color antiBackgroundEsqueColor({required Color color, double amount = 0}) {
+    return returnColorFromBrightnessOf(
+      fromColor: isThemeDark ? lightened(Colors.grey, amount)! : darkened(Colors.grey, amount)!,
+      colorToConvert: color,
+    )!;
+  }
 }
 
 // ======================================================================================

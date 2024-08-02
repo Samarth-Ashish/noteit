@@ -434,13 +434,15 @@ void showNewReminderCreationDialog(
 
   showDialog(
     context: context,
+    barrierDismissible: false,
     builder: (context) {
       return StatefulBuilder(
         builder: (context, setState) {
           return AlertDialog(
             insetPadding: EdgeInsets.zero,
-            backgroundColor: context.read<ThemeProvider>().colorOfThemeBrightness(reminderColor, .3),
+            backgroundColor: context.read<ThemeProvider>().backgroundEsqueColor(color: reminderColor ?? Colors.grey, amount: 0.4),
             title: SizedBox(
+              // color: Colors.grey,
               width: MediaQuery.of(context).size.width * 0.8,
               height: 50,
               child: Row(
@@ -632,138 +634,158 @@ void showNewReminderCreationDialog(
                 ],
               ),
             ),
+            titlePadding: const EdgeInsets.all(0.0),
+            actionsPadding: const EdgeInsets.symmetric(vertical: 10),
+            actionsAlignment: MainAxisAlignment.center,
             // ! content
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                // SizedBox(
-                //   width: 50,
-                //   child: FittedBox(
-                //     fit: BoxFit.contain,
-                //     child: themeSwitch(context),
-                //   ),
-                // ),
-                SizedBox(
-                  width: double.infinity,
-                  height: 50,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    mainAxisSize: MainAxisSize.max,
-                    // crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: days.entries
-                        .map(
-                          (entry) => Flexible(
-                            child: GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  days[entry.key] = !days[entry.key]!;
-                                });
-                              },
-                              child: AnimatedContainer(
-                                duration: const Duration(milliseconds: 200),
-                                padding: const EdgeInsets.all(1),
-                                // margin: const EdgeInsets.all(1),
-                                width: 30,
-                                height: 30,
-                                // width: MediaQuery.of(context).size.width * 0.1,
-                                // height: MediaQuery.of(context).size.width * 0.1,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: days[entry.key]!
-                                      ? context.read<ThemeProvider>().colorOfAntiThemeBrightness(
-                                            reminderColor,
-                                            .2,
-                                            Colors.grey,
-                                          )
-                                      : null,
-                                ),
-                                child: FittedBox(
-                                  fit: BoxFit.scaleDown,
-                                  child: Text(
-                                    entry.key,
-                                    style: TextStyle(
-                                      color: context.read<ThemeProvider>().colorOfThemeBrightnessIfTrueAndViceVersa(
-                                            days[entry.key]!,
-                                            reminderColor,
-                                            .2,
-                                            Colors.grey,
-                                          ),
-                                      // fontSize: 10,
-                                      fontWeight: FontWeight.w500,
+            content: Container(
+              constraints: const BoxConstraints(),
+              padding: const EdgeInsets.all(8.0),
+              decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                colors: [
+                  context.read<ThemeProvider>().backgroundEsqueColor(color: reminderColor ?? Colors.grey, amount: 0.4),
+                  context.read<ThemeProvider>().backgroundEsqueColor(color: reminderColor ?? Colors.grey, amount: 0.5),
+                  context.read<ThemeProvider>().backgroundEsqueColor(color: reminderColor ?? Colors.grey, amount: 0.5),
+                  context.read<ThemeProvider>().backgroundEsqueColor(color: reminderColor ?? Colors.grey, amount: 0.4),
+                ],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+              )),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // SizedBox(
+                  //   width: 50,
+                  //   child: FittedBox(
+                  //     fit: BoxFit.contain,
+                  //     child: themeSwitch(context),
+                  //   ),
+                  // ),
+                  SizedBox(
+                    width: double.infinity,
+                    height: 50,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      mainAxisSize: MainAxisSize.max,
+                      // crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: days.entries
+                          .map(
+                            (entry) => Flexible(
+                              child: GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    days[entry.key] = !days[entry.key]!;
+                                  });
+                                },
+                                child: AnimatedContainer(
+                                  duration: const Duration(milliseconds: 200),
+                                  padding: const EdgeInsets.all(1),
+                                  // margin: const EdgeInsets.all(1),
+                                  width: 30,
+                                  height: 30,
+                                  // width: MediaQuery.of(context).size.width * 0.1,
+                                  // height: MediaQuery.of(context).size.width * 0.1,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: days[entry.key]!
+                                        ? context.read<ThemeProvider>().colorOfAntiThemeBrightness(
+                                              reminderColor,
+                                              .2,
+                                              Colors.grey,
+                                            )
+                                        : null,
+                                  ),
+                                  child: FittedBox(
+                                    fit: BoxFit.scaleDown,
+                                    child: Text(
+                                      entry.key,
+                                      style: TextStyle(
+                                        color: context.read<ThemeProvider>().colorOfThemeBrightnessIfTrueAndViceVersa(
+                                              days[entry.key]!,
+                                              reminderColor,
+                                              .2,
+                                              Colors.grey,
+                                            ),
+                                        // fontSize: 10,
+                                        fontWeight: FontWeight.w500,
+                                      ),
                                     ),
                                   ),
                                 ),
                               ),
                             ),
-                          ),
-                        )
-                        .toList(),
-                  ),
-                ),
-                FittedBox(
-                  child: Container(
-                    // decoration: ShapeDecoration(
-                    //   color: context.read<ThemeProvider>().colorOfThemeBrightness(
-                    //     reminderColor,
-                    //     0.25,
-                    //   ),
-                    //   shape: ,
-                    // ),
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        width: 2,
-                        color: context.read<ThemeProvider>().colorOfAntiThemeBrightness(
-                              reminderColor,
-                              0.2,
-                              Colors.blueGrey,
-                            )!,
-                      ),
-                      borderRadius: const BorderRadius.all(
-                        Radius.circular(30),
-                      ),
+                          )
+                          .toList(),
                     ),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 5),
-                      child: TimePickerSpinner(
-                        //! time picker
-                        time: reminderTime,
-                        // spacing: 10,
-                        itemHeight: 35,
-                        minutesInterval: 5,
-                        // alignment: Alignment.center,
-                        // itemWidth: 40,
-                        // separator: ':',
-                        isShowSeconds: false,
-                        normalTextStyle: TextStyle(
-                          fontSize: 17,
-                          fontWeight: FontWeight.w600,
-                          color: context.read<ThemeProvider>().colorOfThemeBrightness(
-                                    reminderColor,
-                                    0.2,
-                                  ) ??
-                              (context.read<ThemeProvider>().isThemeDark ? Colors.grey.shade700 : Colors.grey.shade400),
-                        ),
-                        highlightedTextStyle: TextStyle(
-                          fontSize: 25,
-                          fontWeight: FontWeight.w600,
+                  ),
+                  FittedBox(
+                    child: Container(
+                      // decoration: ShapeDecoration(
+                      //   color: context.read<ThemeProvider>().colorOfThemeBrightness(
+                      //     reminderColor,
+                      //     0.25,
+                      //   ),
+                      //   shape: ,
+                      // ),
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          width: 2,
                           color: context.read<ThemeProvider>().colorOfAntiThemeBrightness(
                                 reminderColor,
                                 0.2,
                                 Colors.blueGrey,
-                              ),
+                              )!,
                         ),
-                        isForce2Digits: true,
-                        onTimeChange: (dateTime) {
-                          setState(() {
-                            reminderTime = dateTime;
-                          });
-                        },
+                        borderRadius: const BorderRadius.all(
+                          Radius.circular(30),
+                        ),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 5),
+                        child: TimePickerSpinner(
+                          //! time picker
+                          time: reminderTime,
+                          // spacing: 10,
+                          itemHeight: 35,
+                          minutesInterval: 5,
+                          // alignment: Alignment.center,
+                          // itemWidth: 40,
+                          // separator: ':',
+                          isShowSeconds: false,
+                          normalTextStyle: TextStyle(
+                            fontSize: 17,
+                            fontWeight: FontWeight.w600,
+                            color: context.read<ThemeProvider>().colorOfThemeBrightness(
+                                      reminderColor,
+                                      0.2,
+                                    ) ??
+                                (context.read<ThemeProvider>().isThemeDark ? Colors.grey.shade700 : Colors.grey.shade400),
+                          ),
+                          highlightedTextStyle: TextStyle(
+                            fontSize: 25,
+                            fontWeight: FontWeight.w600,
+                            color: context.read<ThemeProvider>().colorOfAntiThemeBrightness(
+                                  reminderColor,
+                                  0.2,
+                                  Colors.blueGrey,
+                                ),
+                          ),
+                          isForce2Digits: true,
+                          onTimeChange: (dateTime) {
+                            setState(() {
+                              reminderTime = dateTime;
+                            });
+                          },
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
+            contentPadding: const EdgeInsets.all(0.0),
+
             // backgroundColor: Colors.grey[200],
             actions: [
               TextButton(
