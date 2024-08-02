@@ -222,9 +222,9 @@ class WeekdayRow extends StatelessWidget {
             fit: BoxFit.scaleDown,
             child: item['days'][item['days'].keys.elementAt(index)]
                 ? BorderedText(
-                    strokeWidth: context.select((ListsProvider L) => item['enabled'])
-                        ? (item['days'][item['days'].keys.elementAt(index)] ? 6 : 0)
-                        : (item['days'][item['days'].keys.elementAt(index)] ? 3.5 : 0),
+                    strokeWidth: context.select((ListsProvider L) => item['days'][item['days'].keys.elementAt(index)])
+                        ? (item['enabled'] ? 5 : 2)
+                        : 0,
                     strokeColor: context.select((ListsProvider L) => item['enabled'])
                         ? context
                             .read<ThemeProvider>()
@@ -233,7 +233,7 @@ class WeekdayRow extends StatelessWidget {
                               fromColorIfTrueAndDark: context.read<ThemeProvider>().darkened(Colors.grey, 0.3)!,
                               fromColorIfFalseAndDark: context.read<ThemeProvider>().darkened(Colors.grey, 0.35)!,
                               fromColorIfTrueAndLight: context.read<ThemeProvider>().lightened(Colors.grey, 0.15)!,
-                              fromColorIfFalseAndLight: context.read<ThemeProvider>().darkened(Colors.grey, 0)!,
+                              fromColorIfFalseAndLight: context.read<ThemeProvider>().lightened(Colors.grey, 0.2)!,
                               colorToConvert:
                                   (item['colorIndex'] == null) ? Colors.grey : context.read<ListsProvider>().colorList[item['colorIndex']],
                             )!
@@ -245,7 +245,7 @@ class WeekdayRow extends StatelessWidget {
                               fromColorIfTrueAndDark: context.read<ThemeProvider>().darkened(Colors.grey, 0.3)!,
                               fromColorIfFalseAndDark: context.read<ThemeProvider>().darkened(Colors.grey, 0.35)!,
                               fromColorIfTrueAndLight: context.read<ThemeProvider>().lightened(Colors.grey, 0.15)!,
-                              fromColorIfFalseAndLight: context.read<ThemeProvider>().darkened(Colors.grey, 0)!,
+                              fromColorIfFalseAndLight: context.read<ThemeProvider>().lightened(Colors.grey, 0.2)!,
                               colorToConvert:
                                   (item['colorIndex'] == null) ? Colors.grey : context.read<ListsProvider>().colorList[item['colorIndex']],
                             )!
@@ -366,7 +366,7 @@ Widget reminderContainerFromItem(BuildContext context, Map<String, dynamic> item
               ),
               //! alternate color
               // blur: 15.0,
-              frostedOpacity: 0.7, //0.2
+              frostedOpacity: 0.6, //0.2
               //*
               margin: const EdgeInsets.all(5),
               borderRadius: BorderRadius.circular(25),
